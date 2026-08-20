@@ -236,17 +236,19 @@
       display: flex;
       gap: 10px;
       align-items: center;
+      flex-wrap: wrap;
     }
 
     .btn-action-icon {
       background: none;
       border: none;
       color: #b3b3b3;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 4px;
+      text-decoration: none;
     }
 
     .btn-action-icon:hover {
@@ -396,7 +398,7 @@
       <div class="hero-text">
         <span style="font-size: 12px; font-weight: bold; color: #fff; text-transform: uppercase;">🔥 Musique 100% Fonctionnelle</span>
         <h1>Écoute tes sons directement</h1>
-        <p>Lecteur MP3 rapide et lisible directement dans le navigateur.</p>
+        <p>Lecteur MP3 rapide et téléchargement direct pour tes édits.</p>
       </div>
     </div>
 
@@ -421,6 +423,7 @@
         <audio controls src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3"></audio>
         <div class="card-actions">
           <button class="btn-action-icon btn-like" onclick="toggleLike(this, 'card-1')">♥ <span class="like-count">15</span></button>
+          <a href="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" download="Montagem_Ritmada.mp3" target="_blank" class="btn-action-icon" title="Télécharger le MP3">⬇️ Télécharger</a>
           <button class="btn-action-icon" onclick="shareTrack('Montagem Ritmada')">🔗</button>
           <button class="btn-action-icon" onclick="toggleComments('card-1')">💬 Commentaires</button>
         </div>
@@ -441,6 +444,7 @@
         <audio controls src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a7315b.mp3"></audio>
         <div class="card-actions">
           <button class="btn-action-icon btn-like" onclick="toggleLike(this, 'card-2')">♥ <span class="like-count">30</span></button>
+          <a href="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a7315b.mp3" download="Phonk_Beat.mp3" target="_blank" class="btn-action-icon" title="Télécharger le MP3">⬇️ Télécharger</a>
           <button class="btn-action-icon" onclick="shareTrack('Phonk Beat')">🔗</button>
           <button class="btn-action-icon" onclick="toggleComments('card-2')">💬 Commentaires</button>
         </div>
@@ -670,6 +674,7 @@
         <audio controls src="${track.audioUrl}"></audio>
         <div class="card-actions">
           <button class="btn-action-icon btn-like" onclick="toggleLike(this, '${cardId}')">♥ <span class="like-count">${track.likes || 0}</span></button>
+          <a href="${track.audioUrl}" download="${track.title}.mp3" target="_blank" class="btn-action-icon" title="Télécharger le MP3">⬇️ Télécharger</a>
           <button class="btn-action-icon" onclick="shareTrack('${track.title}')">🔗</button>
           <button class="btn-action-icon" onclick="toggleComments('${cardId}')">💬 Commentaires</button>
         </div>
