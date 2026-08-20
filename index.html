@@ -263,7 +263,7 @@
 
     .card-actions {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       align-items: center;
     }
 
@@ -276,24 +276,79 @@
       border-radius: 20px;
       text-decoration: none;
       font-weight: bold;
-      font-size: 12px;
+      font-size: 11px;
     }
 
     .btn-dl:hover {
       background-color: #1ed760;
     }
 
-    .btn-like {
+    .btn-action-icon {
       background: none;
       border: none;
       color: #b3b3b3;
-      font-size: 18px;
+      font-size: 16px;
       cursor: pointer;
       transition: color 0.2s;
     }
 
+    .btn-action-icon:hover {
+      color: #fff;
+    }
+
     .btn-like.liked {
       color: #1db954;
+    }
+
+    /* Zone de commentaires */
+    .comments-section {
+      display: none;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid #333;
+    }
+
+    .comments-list {
+      max-height: 80px;
+      overflow-y: auto;
+      margin-bottom: 8px;
+      font-size: 11px;
+    }
+
+    .comment-item {
+      margin-bottom: 4px;
+      color: #ccc;
+    }
+
+    .comment-item strong {
+      color: #1db954;
+    }
+
+    .comment-input-box {
+      display: flex;
+      gap: 4px;
+    }
+
+    .comment-input-box input {
+      flex: 1;
+      background: #282828;
+      border: 1px solid #333;
+      color: #fff;
+      border-radius: 12px;
+      padding: 4px 8px;
+      font-size: 11px;
+      outline: none;
+    }
+
+    .comment-input-box button {
+      background: #1db954;
+      border: none;
+      color: #000;
+      font-weight: bold;
+      border-radius: 12px;
+      padding: 4px 8px;
+      font-size: 10px;
+      cursor: pointer;
     }
 
     /* Modals */
@@ -420,7 +475,7 @@
         <span style="font-size: 12px; font-weight: bold; letter-spacing: 1px; color: #fff; text-transform: uppercase;">🔥 Titre du Moment</span>
         <h1>Montagem Ritmada</h1>
         <p>Le meilleur du Brazilian Funk à écouter et télécharger en HD.</p>
-        <button class="btn-hero-play" onclick="playTrack('Montagem Ritmada', 'Brazilian Funk', 'funk1.mp3', 'card-hero')">▶ Écouter maintenant</button>
+        <button class="btn-hero-play" onclick="playTrack('Montagem Ritmada', 'Brazilian Funk', 'funk1.mp3', 'card-1')">▶ Écouter maintenant</button>
       </div>
     </div>
 
@@ -436,7 +491,18 @@
         <div class="card-stats">▶ <span id="plays-card-1">124</span> écoutes</div>
         <div class="card-actions">
           <a href="funk1.mp3" download class="btn-dl" onclick="event.stopPropagation()">Télécharger</a>
-          <button class="btn-like" onclick="toggleLike(this, event)">♥</button>
+          <button class="btn-action-icon btn-like" onclick="toggleLike(this, event)">♥</button>
+          <button class="btn-action-icon" onclick="toggleComments('card-1', event)">💬</button>
+        </div>
+
+        <div class="comments-section" id="comments-card-1" onclick="event.stopPropagation()">
+          <div class="comments-list" id="list-card-1">
+            <div class="comment-item"><strong>Admin:</strong> Trop lourd ce son !</div>
+          </div>
+          <div class="comment-input-box">
+            <input type="text" id="input-card-1" placeholder="Écrire un commentaire...">
+            <button onclick="addComment('card-1')">Envoyer</button>
+          </div>
         </div>
       </div>
 
@@ -448,7 +514,16 @@
         <div class="card-stats">▶ <span id="plays-card-2">89</span> écoutes</div>
         <div class="card-actions">
           <a href="phonk1.mp3" download class="btn-dl" onclick="event.stopPropagation()">Télécharger</a>
-          <button class="btn-like" onclick="toggleLike(this, event)">♥</button>
+          <button class="btn-action-icon btn-like" onclick="toggleLike(this, event)">♥</button>
+          <button class="btn-action-icon" onclick="toggleComments('card-2', event)">💬</button>
+        </div>
+
+        <div class="comments-section" id="comments-card-2" onclick="event.stopPropagation()">
+          <div class="comments-list" id="list-card-2"></div>
+          <div class="comment-input-box">
+            <input type="text" id="input-card-2" placeholder="Écrire un commentaire...">
+            <button onclick="addComment('card-2')">Envoyer</button>
+          </div>
         </div>
       </div>
 
@@ -521,12 +596,35 @@
     }
 
     function incrementPlayCount(cardId) {
-      const targetId = cardId === 'card-hero' ? 'card-1' : cardId;
-      const countSpan = document.getElementById(`plays-${targetId}`);
+      const countSpan = document.getElementById(`plays-${cardId}`);
       if (countSpan) {
         let currentCount = parseInt(countSpan.textContent) || 0;
         countSpan.textContent = currentCount + 1;
       }
+    }
+
+    function toggleComments(cardId, event) {
+      event.stopPropagation();
+      const sec = document.getElementById(`comments-${cardId}`);
+      if (sec) {
+        sec.style.display = sec.style.display === 'block' ? 'none' : 'block';
+      }
+    }
+
+    function addComment(cardId) {
+      const input = document.getElementById(`input-${cardId}`);
+      const text = input.value.trim();
+      if (!text) return;
+
+      const user = localStorage.getItem('currentUser') || 'Anonyme';
+      const list = document.getElementById(`list-${cardId}`);
+
+      const item = document.createElement('div');
+      item.className = 'comment-item';
+      item.innerHTML = `<strong>${user}:</strong> ${text}`;
+      list.appendChild(item);
+
+      input.value = '';
     }
 
     function setActiveMenu(element) {
@@ -673,7 +771,15 @@
         <div class="card-stats">▶ <span id="plays-${cardId}">${track.plays || 0}</span> écoutes</div>
         <div class="card-actions">
           <a href="${track.audioUrl}" download="${track.title}.mp3" class="btn-dl" onclick="event.stopPropagation()">Télécharger</a>
-          <button class="btn-like" onclick="toggleLike(this, event)">♥</button>
+          <button class="btn-action-icon btn-like" onclick="toggleLike(this, event)">♥</button>
+          <button class="btn-action-icon" onclick="toggleComments('${cardId}', event)">💬</button>
+        </div>
+        <div class="comments-section" id="comments-${cardId}" onclick="event.stopPropagation()">
+          <div class="comments-list" id="list-${cardId}"></div>
+          <div class="comment-input-box">
+            <input type="text" id="input-${cardId}" placeholder="Écrire un commentaire...">
+            <button onclick="addComment('${cardId}')">Envoyer</button>
+          </div>
         </div>
       `;
       document.getElementById('musicContainer').appendChild(newCard);
