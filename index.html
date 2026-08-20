@@ -184,9 +184,44 @@
       max-width: 400px;
     }
 
+    /* Barre de tri */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
     .header-title {
       font-size: 24px;
-      margin-bottom: 20px;
+    }
+
+    .sort-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sort-label {
+      font-size: 13px;
+      color: #b3b3b3;
+    }
+
+    .sort-select {
+      background-color: #242424;
+      border: 1px solid #333;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 13px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .sort-select:focus {
+      border-color: #1db954;
     }
 
     /* Grille de musiques */
@@ -247,9 +282,12 @@
       background: none;
       border: none;
       color: #b3b3b3;
-      font-size: 16px;
+      font-size: 14px;
       cursor: pointer;
       transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .btn-action-icon:hover {
@@ -404,19 +442,29 @@
       </div>
     </div>
 
-    <h2 class="header-title" id="sectionTitle">Toutes les musiques</h2>
+    <div class="section-header">
+      <h2 class="header-title" id="sectionTitle">Toutes les musiques</h2>
+      <div class="sort-container">
+        <span class="sort-label">Trier par :</span>
+        <select class="sort-select" id="sortSelect" onchange="sortTracks()">
+          <option value="recent">Plus récents</option>
+          <option value="likes">Plus likés</option>
+          <option value="alpha">Ordre alphabétique</option>
+        </select>
+      </div>
+    </div>
 
     <div class="grid-container" id="musicContainer">
 
       <!-- Carte 1 : Spotify -->
-      <div class="card item-music funk" id="card-1">
+      <div class="card item-music funk" id="card-1" data-timestamp="1700000000000" data-likes="12" data-title="Montagem Ritmada">
         <div class="embed-container">
           <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/6habF14Lq9A9q9z8m2rmA3?utm_source=generator" height="152" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
         </div>
         <div class="card-title">Montagem Ritmada</div>
         <div class="card-genre">Brazilian Funk</div>
         <div class="card-actions">
-          <button class="btn-action-icon btn-like" onclick="toggleLike(this)">♥</button>
+          <button class="btn-action-icon btn-like" onclick="toggleLike(this, 'card-1')">♥ <span class="like-count">12</span></button>
           <button class="btn-action-icon" onclick="shareTrack('Montagem Ritmada')">🔗</button>
           <button class="btn-action-icon" onclick="toggleComments('card-1')">💬 Commentaires</button>
         </div>
@@ -431,14 +479,14 @@
       </div>
 
       <!-- Carte 2 : SoundCloud -->
-      <div class="card item-music phonk" id="card-2">
+      <div class="card item-music phonk" id="card-2" data-timestamp="1700000001000" data-likes="25" data-title="Phonk Remix">
         <div class="embed-container">
           <iframe height="152" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1183307206&color=%231db954&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
         </div>
         <div class="card-title">Phonk Remix</div>
         <div class="card-genre">Phonk</div>
         <div class="card-actions">
-          <button class="btn-action-icon btn-like" onclick="toggleLike(this)">♥</button>
+          <button class="btn-action-icon btn-like" onclick="toggleLike(this, 'card-2')">♥ <span class="like-count">25</span></button>
           <button class="btn-action-icon" onclick="shareTrack('Phonk Remix')">🔗</button>
           <button class="btn-action-icon" onclick="toggleComments('card-2')">💬 Commentaires</button>
         </div>
@@ -492,7 +540,47 @@
       loadSavedData();
       loadSavedTracks();
       checkUserSession();
+      sortTracks();
     };
+
+    function sortTracks() {
+      const container = document.getElementById('musicContainer');
+      const cards = Array.from(container.getElementsByClassName('card'));
+      const sortType = document.getElementById('sortSelect').value;
+
+      cards.sort((a, b) => {
+        if (sortType === 'recent') {
+          return parseInt(b.dataset.timestamp) - parseInt(a.dataset.timestamp);
+        } else if (sortType === 'likes') {
+          return parseInt(b.dataset.likes) - parseInt(a.dataset.likes);
+        } else if (sortType === 'alpha') {
+          return a.dataset.title.localeCompare(b.dataset.title);
+        }
+      });
+
+      cards.forEach(card => container.appendChild(card));
+    }
+
+    function toggleLike(btn, cardId) {
+      const card = document.getElementById(cardId);
+      let countSpan = btn.querySelector('.like-count');
+      let currentLikes = parseInt(card.dataset.likes) || 0;
+
+      if (btn.classList.contains('liked')) {
+        btn.classList.remove('liked');
+        currentLikes--;
+      } else {
+        btn.classList.add('liked');
+        currentLikes++;
+      }
+
+      card.dataset.likes = currentLikes;
+      countSpan.textContent = currentLikes;
+
+      if (document.getElementById('sortSelect').value === 'likes') {
+        sortTracks();
+      }
+    }
 
     function toggleComments(cardId) {
       const sec = document.getElementById(`comments-${cardId}`);
@@ -590,10 +678,6 @@
       });
     }
 
-    function toggleLike(btn) {
-      btn.classList.toggle('liked');
-    }
-
     function openModal(id) {
       document.getElementById(id).style.display = 'flex';
     }
@@ -648,20 +732,20 @@
         return;
       }
 
-      // Traitement automatique des liens Spotify simple
       if (embedCode.includes('open.spotify.com/track/')) {
         const trackId = embedCode.split('track/')[1].split('?')[0];
         embedCode = `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/${trackId}?utm_source=generator" height="152" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
       }
 
       const id = 'user-card-' + Date.now();
-      const trackObj = { id, title, genre, embedCode };
+      const trackObj = { id, title, genre, embedCode, timestamp: Date.now(), likes: 0 };
       
       let saved = JSON.parse(localStorage.getItem('userEmbedTracks') || '[]');
       saved.push(trackObj);
       localStorage.setItem('userEmbedTracks', JSON.stringify(saved));
 
       renderTrack(trackObj);
+      sortTracks();
       closeModal('modalOverlay');
 
       document.getElementById('trackTitle').value = '';
@@ -674,12 +758,16 @@
       const cardId = track.id || ('card-' + Math.random().toString(36).substr(2, 9));
       newCard.className = `card item-music ${track.genre}`;
       newCard.id = cardId;
+      newCard.dataset.timestamp = track.timestamp || Date.now();
+      newCard.dataset.likes = track.likes || 0;
+      newCard.dataset.title = track.title;
+
       newCard.innerHTML = `
         <div class="embed-container">${track.embedCode}</div>
         <div class="card-title">${track.title}</div>
         <div class="card-genre">${genreName}</div>
         <div class="card-actions">
-          <button class="btn-action-icon btn-like" onclick="toggleLike(this)">♥</button>
+          <button class="btn-action-icon btn-like" onclick="toggleLike(this, '${cardId}')">♥ <span class="like-count">${track.likes || 0}</span></button>
           <button class="btn-action-icon" onclick="shareTrack('${track.title}')">🔗</button>
           <button class="btn-action-icon" onclick="toggleComments('${cardId}')">💬 Commentaires</button>
         </div>
