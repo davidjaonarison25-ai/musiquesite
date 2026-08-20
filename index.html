@@ -61,6 +61,28 @@
       overflow-y: auto;
     }
 
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .search-input {
+      background-color: #242424;
+      border: 1px solid #333;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 20px;
+      width: 280px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: #1db954;
+    }
+
     .header-title {
       font-size: 28px;
       margin-bottom: 20px;
@@ -77,12 +99,14 @@
       background-color: #181818;
       padding: 16px;
       border-radius: 8px;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.2s ease;
       cursor: pointer;
+      position: relative;
     }
 
     .card:hover {
       background-color: #282828;
+      transform: translateY(-4px);
     }
 
     .card img {
@@ -109,9 +133,14 @@
       margin-bottom: 12px;
     }
 
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
     .btn-dl {
-      display: block;
-      width: 100%;
+      flex: 1;
       text-align: center;
       background-color: #1db954;
       color: #000;
@@ -124,6 +153,19 @@
 
     .btn-dl:hover {
       background-color: #1ed760;
+    }
+
+    .btn-like {
+      background: none;
+      border: none;
+      color: #b3b3b3;
+      font-size: 18px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .btn-like.liked {
+      color: #1db954;
     }
 
     /* Lecteur en bas (Player) */
@@ -152,6 +194,12 @@
     .now-playing-title {
       font-size: 14px;
       font-weight: 600;
+      color: #fff;
+    }
+
+    .now-playing-artist {
+      font-size: 12px;
+      color: #a7a7a7;
     }
 
     audio {
@@ -173,32 +221,44 @@
 
   <!-- Zone de contenu -->
   <div class="main-content">
-    <h2 class="header-title">Musiques & Beats</h2>
+    <div class="top-bar">
+      <h2 class="header-title">Musiques & Beats</h2>
+      <input type="text" class="search-input" id="searchInput" onkeyup="searchMusic()" placeholder="🔍 Rechercher un titre ou genre...">
+    </div>
 
     <div class="grid-container">
 
       <!-- Carte 1 : Funk -->
-      <div class="card item-music funk">
+      <div class="card item-music funk" onclick="playTrack('Montagem Ritmada', 'Brazilian Funk', 'funk1.mp3')">
         <img src="pochette1.jpg" alt="Pochette" onerror="this.src='https://via.placeholder.com/150/181818/1db954?text=Funk'">
         <div class="card-title">Montagem Ritmada</div>
         <div class="card-genre">Brazilian Funk</div>
-        <a href="funk1.mp3" download class="btn-dl">Télécharger MP3</a>
+        <div class="card-actions">
+          <a href="funk1.mp3" download class="btn-dl" onclick="event.stopPropagation()">Télécharger</a>
+          <button class="btn-like" onclick="toggleLike(this, event)">♥</button>
+        </div>
       </div>
 
       <!-- Carte 2 : Phonk -->
-      <div class="card item-music phonk">
+      <div class="card item-music phonk" onclick="playTrack('Imposter Syndrome', 'Phonk', 'phonk1.mp3')">
         <img src="pochette2.jpg" alt="Pochette" onerror="this.src='https://via.placeholder.com/150/181818/1db954?text=Phonk'">
         <div class="card-title">Imposter Syndrome</div>
         <div class="card-genre">Phonk</div>
-        <a href="phonk1.mp3" download class="btn-dl">Télécharger MP3</a>
+        <div class="card-actions">
+          <a href="phonk1.mp3" download class="btn-dl" onclick="event.stopPropagation()">Télécharger</a>
+          <button class="btn-like" onclick="toggleLike(this, event)">♥</button>
+        </div>
       </div>
 
       <!-- Carte 3 : Pop -->
-      <div class="card item-music pop">
+      <div class="card item-music pop" onclick="playTrack('Titre Pop 1', 'Pop', 'pop1.mp3')">
         <img src="pochette3.jpg" alt="Pochette" onerror="this.src='https://via.placeholder.com/150/181818/1db954?text=Pop'">
-        <div class="card-title">Titre Pop</div>
+        <div class="card-title">Titre Pop 1</div>
         <div class="card-genre">Pop</div>
-        <a href="pop1.mp3" download class="btn-dl">Télécharger MP3</a>
+        <div class="card-actions">
+          <a href="pop1.mp3" download class="btn-dl" onclick="event.stopPropagation()">Télécharger</a>
+          <button class="btn-like" onclick="toggleLike(this, event)">♥</button>
+        </div>
       </div>
 
     </div>
@@ -208,17 +268,33 @@
   <div class="player-bar">
     <div class="now-playing">
       <div>
-        <div class="now-playing-title">Lecteur Audio</div>
+        <div class="now-playing-title" id="currentTitle">Sélectionne un titre</div>
+        <div class="now-playing-artist" id="currentGenre">-</div>
       </div>
     </div>
 
     <!-- Lecteur principal -->
-    <audio controls>
-      <source src="funk1.mp3" type="audio/mpeg">
+    <audio controls id="mainPlayer">
+      <source id="audioSource" src="funk1.mp3" type="audio/mpeg">
     </audio>
   </div>
 
   <script>
+    // Lancer une musique lors du clic sur une carte
+    function playTrack(title, genre, src) {
+      const player = document.getElementById('mainPlayer');
+      const source = document.getElementById('audioSource');
+      const titleElem = document.getElementById('currentTitle');
+      const genreElem = document.getElementById('currentGenre');
+
+      titleElem.textContent = title;
+      genreElem.textContent = genre;
+      source.src = src;
+      player.load();
+      player.play();
+    }
+
+    // Filtre des catégories
     function filterGenre(genre) {
       const items = document.querySelectorAll('.item-music');
       const menuItems = document.querySelectorAll('.menu-item');
@@ -233,6 +309,27 @@
           item.style.display = 'none';
         }
       });
+    }
+
+    // Barre de recherche
+    function searchMusic() {
+      const input = document.getElementById('searchInput').value.toLowerCase();
+      const items = document.querySelectorAll('.item-music');
+
+      items.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (text.includes(input)) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    // Bouton de Like
+    function toggleLike(btn, event) {
+      event.stopPropagation(); // Évite de lancer la musique au clic sur le coeur
+      btn.classList.toggle('liked');
     }
   </script>
 
