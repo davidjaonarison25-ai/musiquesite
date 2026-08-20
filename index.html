@@ -488,17 +488,16 @@
         <img src="pochette1.jpg" alt="Pochette" onerror="this.src='https://via.placeholder.com/150/181818/1db954?text=Funk'">
         <div class="card-title">Montagem Ritmada</div>
         <div class="card-genre">Brazilian Funk</div>
-        <div class="card-stats">▶ <span id="plays-card-1">124</span> écoutes</div>
+        <div class="card-stats">▶ <span id="plays-card-1">0</span> écoutes</div>
         <div class="card-actions">
           <a href="funk1.mp3" download class="btn-dl" onclick="event.stopPropagation()">Télécharger</a>
           <button class="btn-action-icon btn-like" onclick="toggleLike(this, event)">♥</button>
+          <button class="btn-action-icon" onclick="shareTrack('Montagem Ritmada', event)">🔗</button>
           <button class="btn-action-icon" onclick="toggleComments('card-1', event)">💬</button>
         </div>
 
         <div class="comments-section" id="comments-card-1" onclick="event.stopPropagation()">
-          <div class="comments-list" id="list-card-1">
-            <div class="comment-item"><strong>Admin:</strong> Trop lourd ce son !</div>
-          </div>
+          <div class="comments-list" id="list-card-1"></div>
           <div class="comment-input-box">
             <input type="text" id="input-card-1" placeholder="Écrire un commentaire...">
             <button onclick="addComment('card-1')">Envoyer</button>
@@ -511,10 +510,11 @@
         <img src="pochette2.jpg" alt="Pochette" onerror="this.src='https://via.placeholder.com/150/181818/1db954?text=Phonk'">
         <div class="card-title">Imposter Syndrome</div>
         <div class="card-genre">Phonk</div>
-        <div class="card-stats">▶ <span id="plays-card-2">89</span> écoutes</div>
+        <div class="card-stats">▶ <span id="plays-card-2">0</span> écoutes</div>
         <div class="card-actions">
           <a href="phonk1.mp3" download class="btn-dl" onclick="event.stopPropagation()">Télécharger</a>
           <button class="btn-action-icon btn-like" onclick="toggleLike(this, event)">♥</button>
+          <button class="btn-action-icon" onclick="shareTrack('Imposter Syndrome', event)">🔗</button>
           <button class="btn-action-icon" onclick="toggleComments('card-2', event)">💬</button>
         </div>
 
@@ -576,9 +576,15 @@
   </div>
 
   <script>
+    let currentCardId = null;
+
     window.onload = function() {
+      loadSavedData();
       loadSavedTracks();
       checkUserSession();
+
+      const player = document.getElementById('mainPlayer');
+      player.onended = playNextTrack;
     };
 
     function playTrack(title, genre, src, cardId) {
@@ -587,6 +593,7 @@
       document.getElementById('currentTitle').textContent = title;
       document.getElementById('currentGenre').textContent = genre;
       source.src = src;
+      currentCardId = cardId;
       player.load();
       player.play();
 
@@ -595,11 +602,29 @@
       }
     }
 
+    function playNextTrack() {
+      const visibleCards = Array.from(document.querySelectorAll('.card')).filter(card => card.style.display !== 'none');
+      if (visibleCards.length === 0) return;
+
+      let currentIndex = visibleCards.findIndex(card => card.id === currentCardId);
+      let nextIndex = (currentIndex + 1) % visibleCards.length;
+      let nextCard = visibleCards[nextIndex];
+
+      if (nextCard) {
+        nextCard.click();
+      }
+    }
+
     function incrementPlayCount(cardId) {
       const countSpan = document.getElementById(`plays-${cardId}`);
       if (countSpan) {
         let currentCount = parseInt(countSpan.textContent) || 0;
-        countSpan.textContent = currentCount + 1;
+        let newCount = currentCount + 1;
+        countSpan.textContent = newCount;
+
+        let playsData = JSON.parse(localStorage.getItem('playsData') || '{}');
+        playsData[cardId] = newCount;
+        localStorage.setItem('playsData', JSON.stringify(playsData));
       }
     }
 
@@ -617,14 +642,45 @@
       if (!text) return;
 
       const user = localStorage.getItem('currentUser') || 'Anonyme';
-      const list = document.getElementById(`list-${cardId}`);
+      const commentObj = { user, text };
 
-      const item = document.createElement('div');
-      item.className = 'comment-item';
-      item.innerHTML = `<strong>${user}:</strong> ${text}`;
-      list.appendChild(item);
+      renderComment(cardId, commentObj);
+
+      let commentsData = JSON.parse(localStorage.getItem('commentsData') || '{}');
+      if (!commentsData[cardId]) commentsData[cardId] = [];
+      commentsData[cardId].push(commentObj);
+      localStorage.setItem('commentsData', JSON.stringify(commentsData));
 
       input.value = '';
+    }
+
+    function renderComment(cardId, commentObj) {
+      const list = document.getElementById(`list-${cardId}`);
+      if (list) {
+        const item = document.createElement('div');
+        item.className = 'comment-item';
+        item.innerHTML = `<strong>${commentObj.user}:</strong> ${commentObj.text}`;
+        list.appendChild(item);
+      }
+    }
+
+    function shareTrack(title, event) {
+      event.stopPropagation();
+      navigator.clipboard.writeText(window.location.href);
+      alert(`Lien pour "${title}" copié dans le presse-papier !`);
+    }
+
+    function loadSavedData() {
+      let playsData = JSON.parse(localStorage.getItem('playsData') || '{}');
+      for (let cardId in playsData) {
+        const countSpan = document.getElementById(`plays-${cardId}`);
+        if (countSpan) countSpan.textContent = playsData[cardId];
+      }
+
+      let commentsData = JSON.parse(localStorage.getItem('commentsData') || '{}');
+      for (let cardId in commentsData) {
+        commentsData[cardId].forEach(commentObj => renderComment(cardId, commentObj));
+      }
     }
 
     function setActiveMenu(element) {
@@ -772,6 +828,7 @@
         <div class="card-actions">
           <a href="${track.audioUrl}" download="${track.title}.mp3" class="btn-dl" onclick="event.stopPropagation()">Télécharger</a>
           <button class="btn-action-icon btn-like" onclick="toggleLike(this, event)">♥</button>
+          <button class="btn-action-icon" onclick="shareTrack('${track.title}', event)">🔗</button>
           <button class="btn-action-icon" onclick="toggleComments('${cardId}', event)">💬</button>
         </div>
         <div class="comments-section" id="comments-${cardId}" onclick="event.stopPropagation()">
