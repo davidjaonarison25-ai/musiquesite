@@ -20,7 +20,7 @@
       overflow: hidden;
     }
 
-    /* Sidebar (Menu de gauche) */
+    /* Sidebar */
     .sidebar {
       width: 240px;
       background-color: #000;
@@ -85,7 +85,6 @@
       border-color: #1db954;
     }
 
-    /* Bouton Publier */
     .btn-publish {
       background-color: #1db954;
       color: #000;
@@ -103,8 +102,51 @@
       transform: scale(1.05);
     }
 
+    /* Bannière Tendance (Hero Banner) */
+    .hero-banner {
+      background: linear-gradient(135deg, #1db954 0%, #000000 100%);
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+
+    .hero-text h1 {
+      font-size: 36px;
+      margin-bottom: 10px;
+      font-weight: 800;
+    }
+
+    .hero-text p {
+      color: #e0e0e0;
+      font-size: 14px;
+      margin-bottom: 20px;
+      max-width: 400px;
+    }
+
+    .btn-hero-play {
+      background-color: #1db954;
+      color: #000;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 30px;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .btn-hero-play:hover {
+      background-color: #1ed760;
+      transform: scale(1.05);
+    }
+
     .header-title {
-      font-size: 28px;
+      font-size: 24px;
       margin-bottom: 20px;
     }
 
@@ -186,7 +228,7 @@
       color: #1db954;
     }
 
-    /* Modal (Fenêtre Ajouter) */
+    /* Modal */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -240,7 +282,7 @@
       cursor: pointer;
     }
 
-    /* Lecteur Audio Fixe */
+    /* Player */
     .player-bar {
       position: fixed;
       bottom: 0;
@@ -273,7 +315,7 @@
 </head>
 <body>
 
-  <!-- Menu latéral -->
+  <!-- Sidebar -->
   <div class="sidebar">
     <div class="logo">Passfoot App</div>
     <div class="menu-item active" onclick="filterGenre('all')">🏠 Accueil</div>
@@ -289,7 +331,17 @@
       <button class="btn-publish" onclick="openModal()">➕ Publier une musique</button>
     </div>
 
-    <h2 class="header-title">Musiques & Beats</h2>
+    <!-- Bannière Tendance -->
+    <div class="hero-banner" id="heroBanner">
+      <div class="hero-text">
+        <span style="font-size: 12px; font-weight: bold; letter-spacing: 1px; color: #fff; text-transform: uppercase;">🔥 Titre du Moment</span>
+        <h1>Montagem Ritmada</h1>
+        <p>Le meilleur du Brazilian Funk à écouter et télécharger en HD.</p>
+        <button class="btn-hero-play" onclick="playTrack('Montagem Ritmada', 'Brazilian Funk', 'funk1.mp3')">▶ Écouter maintenant</button>
+      </div>
+    </div>
+
+    <h2 class="header-title">Toutes les musiques</h2>
 
     <div class="grid-container" id="musicContainer">
 
@@ -318,7 +370,7 @@
     </div>
   </div>
 
-  <!-- Modal d'ajout de musique -->
+  <!-- Modal -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
       <h3>Publier un morceau</h3>
@@ -337,7 +389,7 @@
     </div>
   </div>
 
-  <!-- Barre de lecture -->
+  <!-- Player -->
   <div class="player-bar">
     <div>
       <div class="now-playing-title" id="currentTitle">Sélectionne un titre</div>
@@ -362,8 +414,15 @@
 
     function filterGenre(genre) {
       const items = document.querySelectorAll('.item-music');
+      const banner = document.getElementById('heroBanner');
       document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
       event.target.classList.add('active');
+
+      if (genre === 'all') {
+        banner.style.display = 'flex';
+      } else {
+        banner.style.display = 'none';
+      }
 
       items.forEach(item => {
         if (genre === 'all' || item.classList.contains(genre)) {
@@ -386,7 +445,6 @@
       btn.classList.toggle('liked');
     }
 
-    /* Gestion de la fenêtre Publier */
     function openModal() {
       document.getElementById('modalOverlay').style.display = 'flex';
     }
@@ -424,7 +482,6 @@
       document.getElementById('musicContainer').appendChild(newCard);
       closeModal();
 
-      // Reinitialiser les champs
       document.getElementById('trackTitle').value = '';
       fileInput.value = '';
     }
