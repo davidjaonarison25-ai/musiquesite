@@ -62,7 +62,7 @@
       flex: 1;
       background: linear-gradient(to bottom, #1e1e1e, #121212);
       border-radius: 8px;
-      margin: 8px 8px 90px 0;
+      margin: 8px 8px 20px 0;
       padding: 24px;
       overflow-y: auto;
     }
@@ -123,11 +123,6 @@
       font-weight: bold;
       cursor: pointer;
       font-size: 13px;
-      transition: background-color 0.2s;
-    }
-
-    .btn-login:hover {
-      background-color: #333;
     }
 
     .user-profile {
@@ -153,21 +148,12 @@
       font-size: 12px;
     }
 
-    .user-name {
-      font-size: 13px;
-      font-weight: 600;
-    }
-
     /* Hero Banner */
     .hero-banner {
       background: linear-gradient(135deg, #1db954 0%, #000000 100%);
       border-radius: 12px;
       padding: 30px;
       margin-bottom: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.5);
     }
 
@@ -180,8 +166,6 @@
     .hero-text p {
       color: #e0e0e0;
       font-size: 14px;
-      margin-bottom: 20px;
-      max-width: 400px;
     }
 
     /* Barre de tri */
@@ -198,17 +182,6 @@
       font-size: 24px;
     }
 
-    .sort-container {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .sort-label {
-      font-size: 13px;
-      color: #b3b3b3;
-    }
-
     .sort-select {
       background-color: #242424;
       border: 1px solid #333;
@@ -218,10 +191,6 @@
       font-size: 13px;
       outline: none;
       cursor: pointer;
-    }
-
-    .sort-select:focus {
-      border-color: #1db954;
     }
 
     /* Grille de musiques */
@@ -236,7 +205,6 @@
       padding: 16px;
       border-radius: 8px;
       transition: background-color 0.3s ease, transform 0.2s ease;
-      position: relative;
     }
 
     .card:hover {
@@ -244,38 +212,30 @@
       transform: translateY(-4px);
     }
 
-    .embed-container {
-      width: 100%;
-      margin-bottom: 12px;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .embed-container iframe {
-      width: 100%;
-      border: none;
-    }
-
     .card-title {
       font-size: 16px;
       font-weight: bold;
       margin-bottom: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     .card-genre {
       font-size: 12px;
       color: #a7a7a7;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
+    }
+
+    /* Lecteur MP3 audio de la carte */
+    audio {
+      width: 100%;
+      height: 36px;
+      margin-bottom: 10px;
+      border-radius: 20px;
     }
 
     .card-actions {
       display: flex;
       gap: 10px;
       align-items: center;
-      margin-top: 8px;
     }
 
     .btn-action-icon {
@@ -284,7 +244,6 @@
       color: #b3b3b3;
       font-size: 14px;
       cursor: pointer;
-      transition: color 0.2s;
       display: flex;
       align-items: center;
       gap: 4px;
@@ -298,7 +257,7 @@
       color: #1db954;
     }
 
-    /* Zone de commentaires */
+    /* Comments */
     .comments-section {
       display: none;
       margin-top: 12px;
@@ -369,7 +328,6 @@
       border-radius: 12px;
       width: 90%;
       max-width: 450px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.8);
     }
 
     .modal h3 {
@@ -423,7 +381,7 @@
       <input type="text" class="search-input" id="searchInput" onkeyup="searchMusic()" placeholder="🔍 Rechercher...">
       
       <div class="user-actions">
-        <button class="btn-publish" onclick="openModal('modalOverlay')">➕ Intégrer un son</button>
+        <button class="btn-publish" onclick="openModal('modalOverlay')">➕ Ajouter un son MP3</button>
         <button class="btn-login" id="loginBtn" onclick="openModal('loginModalOverlay')">Se connecter</button>
         
         <div class="user-profile" id="userProfile" onclick="logout()">
@@ -436,16 +394,16 @@
     <!-- Hero Banner -->
     <div class="hero-banner" id="heroBanner">
       <div class="hero-text">
-        <span style="font-size: 12px; font-weight: bold; letter-spacing: 1px; color: #fff; text-transform: uppercase;">🔥 Titres Officiels</span>
-        <h1>Écoute les vrais morceaux</h1>
-        <p>Lecteurs intégrés Spotify et SoundCloud en haute qualité.</p>
+        <span style="font-size: 12px; font-weight: bold; color: #fff; text-transform: uppercase;">🔥 Musique 100% Fonctionnelle</span>
+        <h1>Écoute tes sons directement</h1>
+        <p>Lecteur MP3 rapide et lisible directement dans le navigateur.</p>
       </div>
     </div>
 
     <div class="section-header">
       <h2 class="header-title" id="sectionTitle">Toutes les musiques</h2>
-      <div class="sort-container">
-        <span class="sort-label">Trier par :</span>
+      <div>
+        <span style="font-size: 13px; color: #b3b3b3;">Trier par :</span>
         <select class="sort-select" id="sortSelect" onchange="sortTracks()">
           <option value="recent">Plus récents</option>
           <option value="likes">Plus likés</option>
@@ -456,15 +414,13 @@
 
     <div class="grid-container" id="musicContainer">
 
-      <!-- Carte 1 : Spotify -->
-      <div class="card item-music funk" id="card-1" data-timestamp="1700000000000" data-likes="12" data-title="Montagem Ritmada">
-        <div class="embed-container">
-          <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/6habF14Lq9A9q9z8m2rmA3?utm_source=generator" height="152" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-        </div>
+      <!-- Exemple 1 -->
+      <div class="card item-music funk" id="card-1" data-timestamp="1700000000000" data-likes="15" data-title="Montagem Ritmada">
         <div class="card-title">Montagem Ritmada</div>
         <div class="card-genre">Brazilian Funk</div>
+        <audio controls src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3"></audio>
         <div class="card-actions">
-          <button class="btn-action-icon btn-like" onclick="toggleLike(this, 'card-1')">♥ <span class="like-count">12</span></button>
+          <button class="btn-action-icon btn-like" onclick="toggleLike(this, 'card-1')">♥ <span class="like-count">15</span></button>
           <button class="btn-action-icon" onclick="shareTrack('Montagem Ritmada')">🔗</button>
           <button class="btn-action-icon" onclick="toggleComments('card-1')">💬 Commentaires</button>
         </div>
@@ -478,16 +434,14 @@
         </div>
       </div>
 
-      <!-- Carte 2 : SoundCloud -->
-      <div class="card item-music phonk" id="card-2" data-timestamp="1700000001000" data-likes="25" data-title="Phonk Remix">
-        <div class="embed-container">
-          <iframe height="152" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1183307206&color=%231db954&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
-        </div>
-        <div class="card-title">Phonk Remix</div>
+      <!-- Exemple 2 -->
+      <div class="card item-music phonk" id="card-2" data-timestamp="1700000001000" data-likes="30" data-title="Phonk Beat">
+        <div class="card-title">Phonk Beat</div>
         <div class="card-genre">Phonk</div>
+        <audio controls src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a7315b.mp3"></audio>
         <div class="card-actions">
-          <button class="btn-action-icon btn-like" onclick="toggleLike(this, 'card-2')">♥ <span class="like-count">25</span></button>
-          <button class="btn-action-icon" onclick="shareTrack('Phonk Remix')">🔗</button>
+          <button class="btn-action-icon btn-like" onclick="toggleLike(this, 'card-2')">♥ <span class="like-count">30</span></button>
+          <button class="btn-action-icon" onclick="shareTrack('Phonk Beat')">🔗</button>
           <button class="btn-action-icon" onclick="toggleComments('card-2')">💬 Commentaires</button>
         </div>
 
@@ -503,18 +457,17 @@
     </div>
   </div>
 
-  <!-- Modal Publier Embed -->
+  <!-- Modal Publier MP3 -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
-      <h3>Intégrer une vraie musique</h3>
+      <h3>Ajouter un fichier audio MP3</h3>
       <input type="text" id="trackTitle" placeholder="Titre du morceau" required>
       <select id="trackGenre">
         <option value="funk">Funk</option>
         <option value="phonk">Phonk</option>
         <option value="pop">Pop</option>
       </select>
-      <label style="font-size: 12px; color: #aaa; display: block; margin-bottom: 5px;">Code d'intégration (Embed) ou Lien Spotify/SoundCloud :</label>
-      <input type="text" id="embedUrl" placeholder="Coller le lien Spotify ou le code iframe SoundCloud">
+      <input type="text" id="audioUrl" placeholder="Lien direct MP3 (ex: https://... .mp3)">
       <div class="modal-buttons">
         <button class="btn-cancel" onclick="closeModal('modalOverlay')">Annuler</button>
         <button class="btn-publish" onclick="addMusic()">Ajouter</button>
@@ -525,7 +478,7 @@
   <!-- Modal Connexion -->
   <div class="modal-overlay" id="loginModalOverlay">
     <div class="modal">
-      <h3>Connexion à Passfoot</h3>
+      <h3>Connexion</h3>
       <input type="text" id="usernameInput" placeholder="Nom d'utilisateur" required>
       <input type="password" id="passwordInput" placeholder="Mot de passe">
       <div class="modal-buttons">
@@ -537,7 +490,6 @@
 
   <script>
     window.onload = function() {
-      loadSavedData();
       loadSavedTracks();
       checkUserSession();
       sortTracks();
@@ -595,56 +547,28 @@
       if (!text) return;
 
       const user = localStorage.getItem('currentUser') || 'Anonyme';
-      const commentObj = { user, text };
-
-      renderComment(cardId, commentObj);
-
-      let commentsData = JSON.parse(localStorage.getItem('commentsData') || '{}');
-      if (!commentsData[cardId]) commentsData[cardId] = [];
-      commentsData[cardId].push(commentObj);
-      localStorage.setItem('commentsData', JSON.stringify(commentsData));
-
-      input.value = '';
-    }
-
-    function renderComment(cardId, commentObj) {
       const list = document.getElementById(`list-${cardId}`);
       if (list) {
         const item = document.createElement('div');
         item.className = 'comment-item';
-        item.innerHTML = `<strong>${commentObj.user}:</strong> ${commentObj.text}`;
+        item.innerHTML = `<strong>${user}:</strong> ${text}`;
         list.appendChild(item);
       }
+      input.value = '';
     }
 
     function shareTrack(title) {
       navigator.clipboard.writeText(window.location.href);
-      alert(`Lien pour "${title}" copié dans le presse-papier !`);
-    }
-
-    function loadSavedData() {
-      let commentsData = JSON.parse(localStorage.getItem('commentsData') || '{}');
-      for (let cardId in commentsData) {
-        commentsData[cardId].forEach(commentObj => renderComment(cardId, commentObj));
-      }
-    }
-
-    function setActiveMenu(element) {
-      document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
-      if (element) element.classList.add('active');
+      alert(`Lien pour "${title}" copié !`);
     }
 
     function filterGenre(genre, element) {
-      setActiveMenu(element);
-      const items = document.querySelectorAll('.item-music');
-      const banner = document.getElementById('heroBanner');
-      document.getElementById('sectionTitle').textContent = genre === 'all' ? 'Toutes les musiques' : genre.toUpperCase();
+      document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+      if (element) element.classList.add('active');
 
-      if (genre === 'all') {
-        banner.style.display = 'flex';
-      } else {
-        banner.style.display = 'none';
-      }
+      const items = document.querySelectorAll('.item-music');
+      document.getElementById('sectionTitle').textContent = genre === 'all' ? 'Toutes les musiques' : genre.toUpperCase();
+      document.getElementById('heroBanner').style.display = (genre === 'all') ? 'block' : 'none';
 
       items.forEach(item => {
         if (genre === 'all' || item.classList.contains(genre)) {
@@ -656,18 +580,14 @@
     }
 
     function showFavorites(element) {
-      setActiveMenu(element);
+      document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+      if (element) element.classList.add('active');
       document.getElementById('heroBanner').style.display = 'none';
       document.getElementById('sectionTitle').textContent = 'Titres Likés 💚';
       
-      const items = document.querySelectorAll('.item-music');
-      items.forEach(item => {
+      document.querySelectorAll('.item-music').forEach(item => {
         const likeBtn = item.querySelector('.btn-like');
-        if (likeBtn && likeBtn.classList.contains('liked')) {
-          item.style.display = 'block';
-        } else {
-          item.style.display = 'none';
-        }
+        item.style.display = (likeBtn && likeBtn.classList.contains('liked')) ? 'block' : 'none';
       });
     }
 
@@ -678,25 +598,15 @@
       });
     }
 
-    function openModal(id) {
-      document.getElementById(id).style.display = 'flex';
-    }
-
-    function closeModal(id) {
-      document.getElementById(id).style.display = 'none';
-    }
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
     function login() {
       const username = document.getElementById('usernameInput').value.trim();
-      if (!username) {
-        alert("Entre un nom d'utilisateur !");
-        return;
-      }
+      if (!username) return;
       localStorage.setItem('currentUser', username);
       updateUserUI(username);
       closeModal('loginModalOverlay');
-      document.getElementById('usernameInput').value = '';
-      document.getElementById('passwordInput').value = '';
     }
 
     function logout() {
@@ -709,9 +619,7 @@
 
     function checkUserSession() {
       const savedUser = localStorage.getItem('currentUser');
-      if (savedUser) {
-        updateUserUI(savedUser);
-      }
+      if (savedUser) updateUserUI(savedUser);
     }
 
     function updateUserUI(username) {
@@ -725,35 +633,29 @@
     function addMusic() {
       const title = document.getElementById('trackTitle').value;
       const genre = document.getElementById('trackGenre').value;
-      let embedCode = document.getElementById('embedUrl').value.trim();
+      const audioUrl = document.getElementById('audioUrl').value.trim();
 
-      if (!title || !embedCode) {
-        alert('Remplis le titre et insère un lien ou code d embed !');
+      if (!title || !audioUrl) {
+        alert('Remplis le titre et le lien MP3 !');
         return;
       }
 
-      if (embedCode.includes('open.spotify.com/track/')) {
-        const trackId = embedCode.split('track/')[1].split('?')[0];
-        embedCode = `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/${trackId}?utm_source=generator" height="152" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
-      }
-
       const id = 'user-card-' + Date.now();
-      const trackObj = { id, title, genre, embedCode, timestamp: Date.now(), likes: 0 };
+      const trackObj = { id, title, genre, audioUrl, timestamp: Date.now(), likes: 0 };
       
-      let saved = JSON.parse(localStorage.getItem('userEmbedTracks') || '[]');
+      let saved = JSON.parse(localStorage.getItem('userAudioTracks') || '[]');
       saved.push(trackObj);
-      localStorage.setItem('userEmbedTracks', JSON.stringify(saved));
+      localStorage.setItem('userAudioTracks', JSON.stringify(saved));
 
       renderTrack(trackObj);
       sortTracks();
       closeModal('modalOverlay');
 
       document.getElementById('trackTitle').value = '';
-      document.getElementById('embedUrl').value = '';
+      document.getElementById('audioUrl').value = '';
     }
 
     function renderTrack(track) {
-      const genreName = track.genre.toUpperCase();
       const newCard = document.createElement('div');
       const cardId = track.id || ('card-' + Math.random().toString(36).substr(2, 9));
       newCard.className = `card item-music ${track.genre}`;
@@ -763,9 +665,9 @@
       newCard.dataset.title = track.title;
 
       newCard.innerHTML = `
-        <div class="embed-container">${track.embedCode}</div>
         <div class="card-title">${track.title}</div>
-        <div class="card-genre">${genreName}</div>
+        <div class="card-genre">${track.genre.toUpperCase()}</div>
+        <audio controls src="${track.audioUrl}"></audio>
         <div class="card-actions">
           <button class="btn-action-icon btn-like" onclick="toggleLike(this, '${cardId}')">♥ <span class="like-count">${track.likes || 0}</span></button>
           <button class="btn-action-icon" onclick="shareTrack('${track.title}')">🔗</button>
@@ -783,7 +685,7 @@
     }
 
     function loadSavedTracks() {
-      let saved = JSON.parse(localStorage.getItem('userEmbedTracks') || '[]');
+      let saved = JSON.parse(localStorage.getItem('userAudioTracks') || '[]');
       saved.forEach(renderTrack);
     }
   </script>
