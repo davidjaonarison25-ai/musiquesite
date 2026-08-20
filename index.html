@@ -51,6 +51,12 @@
       color: #fff;
     }
 
+    .menu-divider {
+      height: 1px;
+      background: #282828;
+      margin: 10px 0;
+    }
+
     /* Zone Principale */
     .main-content {
       flex: 1;
@@ -213,6 +219,7 @@
       border-radius: 8px;
       transition: background-color 0.3s ease, transform 0.2s ease;
       cursor: pointer;
+      position: relative;
     }
 
     .card:hover {
@@ -232,7 +239,7 @@
     .card-title {
       font-size: 16px;
       font-weight: bold;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -241,7 +248,17 @@
     .card-genre {
       font-size: 12px;
       color: #a7a7a7;
+      margin-bottom: 8px;
+    }
+
+    .card-stats {
+      font-size: 11px;
+      color: #1db954;
+      font-weight: 600;
       margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .card-actions {
@@ -272,6 +289,7 @@
       color: #b3b3b3;
       font-size: 18px;
       cursor: pointer;
+      transition: color 0.2s;
     }
 
     .btn-like.liked {
@@ -372,10 +390,12 @@
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="logo">Passfoot App</div>
-    <div class="menu-item active" onclick="filterGenre('all')">🏠 Accueil</div>
-    <div class="menu-item" onclick="filterGenre('funk')">🔥 Funk</div>
-    <div class="menu-item" onclick="filterGenre('phonk')">⚡ Phonk</div>
-    <div class="menu-item" onclick="filterGenre('pop')">🎵 Pop</div>
+    <div class="menu-item active" onclick="filterGenre('all', this)">🏠 Accueil</div>
+    <div class="menu-item" onclick="filterGenre('funk', this)">🔥 Funk</div>
+    <div class="menu-item" onclick="filterGenre('phonk', this)">⚡ Phonk</div>
+    <div class="menu-item" onclick="filterGenre('pop', this)">🎵 Pop</div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="showFavorites(this)">💚 Titres Likés</div>
   </div>
 
   <!-- Zone de contenu -->
@@ -400,19 +420,20 @@
         <span style="font-size: 12px; font-weight: bold; letter-spacing: 1px; color: #fff; text-transform: uppercase;">🔥 Titre du Moment</span>
         <h1>Montagem Ritmada</h1>
         <p>Le meilleur du Brazilian Funk à écouter et télécharger en HD.</p>
-        <button class="btn-hero-play" onclick="playTrack('Montagem Ritmada', 'Brazilian Funk', 'funk1.mp3')">▶ Écouter maintenant</button>
+        <button class="btn-hero-play" onclick="playTrack('Montagem Ritmada', 'Brazilian Funk', 'funk1.mp3', 'card-hero')">▶ Écouter maintenant</button>
       </div>
     </div>
 
-    <h2 class="header-title">Toutes les musiques</h2>
+    <h2 class="header-title" id="sectionTitle">Toutes les musiques</h2>
 
     <div class="grid-container" id="musicContainer">
 
       <!-- Carte 1 -->
-      <div class="card item-music funk" onclick="playTrack('Montagem Ritmada', 'Brazilian Funk', 'funk1.mp3')">
+      <div class="card item-music funk" id="card-1" onclick="playTrack('Montagem Ritmada', 'Brazilian Funk', 'funk1.mp3', 'card-1')">
         <img src="pochette1.jpg" alt="Pochette" onerror="this.src='https://via.placeholder.com/150/181818/1db954?text=Funk'">
         <div class="card-title">Montagem Ritmada</div>
         <div class="card-genre">Brazilian Funk</div>
+        <div class="card-stats">▶ <span id="plays-card-1">124</span> écoutes</div>
         <div class="card-actions">
           <a href="funk1.mp3" download class="btn-dl" onclick="event.stopPropagation()">Télécharger</a>
           <button class="btn-like" onclick="toggleLike(this, event)">♥</button>
@@ -420,10 +441,11 @@
       </div>
 
       <!-- Carte 2 -->
-      <div class="card item-music phonk" onclick="playTrack('Imposter Syndrome', 'Phonk', 'phonk1.mp3')">
+      <div class="card item-music phonk" id="card-2" onclick="playTrack('Imposter Syndrome', 'Phonk', 'phonk1.mp3', 'card-2')">
         <img src="pochette2.jpg" alt="Pochette" onerror="this.src='https://via.placeholder.com/150/181818/1db954?text=Phonk'">
         <div class="card-title">Imposter Syndrome</div>
         <div class="card-genre">Phonk</div>
+        <div class="card-stats">▶ <span id="plays-card-2">89</span> écoutes</div>
         <div class="card-actions">
           <a href="phonk1.mp3" download class="btn-dl" onclick="event.stopPropagation()">Télécharger</a>
           <button class="btn-like" onclick="toggleLike(this, event)">♥</button>
@@ -484,7 +506,7 @@
       checkUserSession();
     };
 
-    function playTrack(title, genre, src) {
+    function playTrack(title, genre, src, cardId) {
       const player = document.getElementById('mainPlayer');
       const source = document.getElementById('audioSource');
       document.getElementById('currentTitle').textContent = title;
@@ -492,13 +514,31 @@
       source.src = src;
       player.load();
       player.play();
+
+      if (cardId) {
+        incrementPlayCount(cardId);
+      }
     }
 
-    function filterGenre(genre) {
+    function incrementPlayCount(cardId) {
+      const targetId = cardId === 'card-hero' ? 'card-1' : cardId;
+      const countSpan = document.getElementById(`plays-${targetId}`);
+      if (countSpan) {
+        let currentCount = parseInt(countSpan.textContent) || 0;
+        countSpan.textContent = currentCount + 1;
+      }
+    }
+
+    function setActiveMenu(element) {
+      document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+      if (element) element.classList.add('active');
+    }
+
+    function filterGenre(genre, element) {
+      setActiveMenu(element);
       const items = document.querySelectorAll('.item-music');
       const banner = document.getElementById('heroBanner');
-      document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
-      event.target.classList.add('active');
+      document.getElementById('sectionTitle').textContent = genre === 'all' ? 'Toutes les musiques' : genre.toUpperCase();
 
       if (genre === 'all') {
         banner.style.display = 'flex';
@@ -508,6 +548,22 @@
 
       items.forEach(item => {
         if (genre === 'all' || item.classList.contains(genre)) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    function showFavorites(element) {
+      setActiveMenu(element);
+      document.getElementById('heroBanner').style.display = 'none';
+      document.getElementById('sectionTitle').textContent = 'Titres Likés 💚';
+      
+      const items = document.querySelectorAll('.item-music');
+      items.forEach(item => {
+        const likeBtn = item.querySelector('.btn-like');
+        if (likeBtn && likeBtn.classList.contains('liked')) {
           item.style.display = 'block';
         } else {
           item.style.display = 'none';
@@ -588,7 +644,8 @@
         return;
       }
 
-      const trackObj = { title, genre, audioUrl };
+      const id = 'user-card-' + Date.now();
+      const trackObj = { id, title, genre, audioUrl, plays: 0 };
       
       let saved = JSON.parse(localStorage.getItem('userTracks') || '[]');
       saved.push(trackObj);
@@ -605,12 +662,15 @@
     function renderTrack(track) {
       const genreName = track.genre.toUpperCase();
       const newCard = document.createElement('div');
+      const cardId = track.id || ('card-' + Math.random().toString(36).substr(2, 9));
       newCard.className = `card item-music ${track.genre}`;
-      newCard.onclick = () => playTrack(track.title, genreName, track.audioUrl);
+      newCard.id = cardId;
+      newCard.onclick = () => playTrack(track.title, genreName, track.audioUrl, cardId);
       newCard.innerHTML = `
         <img src="https://via.placeholder.com/150/181818/1db954?text=${genreName}">
         <div class="card-title">${track.title}</div>
         <div class="card-genre">${genreName}</div>
+        <div class="card-stats">▶ <span id="plays-${cardId}">${track.plays || 0}</span> écoutes</div>
         <div class="card-actions">
           <a href="${track.audioUrl}" download="${track.title}.mp3" class="btn-dl" onclick="event.stopPropagation()">Télécharger</a>
           <button class="btn-like" onclick="toggleLike(this, event)">♥</button>
