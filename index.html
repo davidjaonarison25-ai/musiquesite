@@ -184,23 +184,6 @@
       max-width: 400px;
     }
 
-    .btn-hero-play {
-      background-color: #1db954;
-      color: #000;
-      border: none;
-      padding: 12px 28px;
-      border-radius: 30px;
-      font-weight: bold;
-      font-size: 15px;
-      cursor: pointer;
-      transition: transform 0.2s, background-color 0.2s;
-    }
-
-    .btn-hero-play:hover {
-      background-color: #1ed760;
-      transform: scale(1.05);
-    }
-
     .header-title {
       font-size: 24px;
       margin-bottom: 20px;
@@ -209,7 +192,7 @@
     /* Grille de musiques */
     .grid-container {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 20px;
     }
 
@@ -218,7 +201,6 @@
       padding: 16px;
       border-radius: 8px;
       transition: background-color 0.3s ease, transform 0.2s ease;
-      cursor: pointer;
       position: relative;
     }
 
@@ -227,13 +209,16 @@
       transform: translateY(-4px);
     }
 
-    .card img {
+    .embed-container {
       width: 100%;
-      aspect-ratio: 1;
-      object-fit: cover;
-      border-radius: 6px;
       margin-bottom: 12px;
-      background-color: #333;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .embed-container iframe {
+      width: 100%;
+      border: none;
     }
 
     .card-title {
@@ -251,36 +236,11 @@
       margin-bottom: 8px;
     }
 
-    .card-stats {
-      font-size: 11px;
-      color: #1db954;
-      font-weight: 600;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
     .card-actions {
       display: flex;
-      gap: 6px;
+      gap: 10px;
       align-items: center;
-    }
-
-    .btn-dl {
-      flex: 1;
-      text-align: center;
-      background-color: #1db954;
-      color: #000;
-      padding: 8px 0;
-      border-radius: 20px;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 11px;
-    }
-
-    .btn-dl:hover {
-      background-color: #1ed760;
+      margin-top: 8px;
     }
 
     .btn-action-icon {
@@ -370,7 +330,7 @@
       padding: 30px;
       border-radius: 12px;
       width: 90%;
-      max-width: 400px;
+      max-width: 450px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.8);
     }
 
@@ -404,47 +364,13 @@
       border-radius: 20px;
       cursor: pointer;
     }
-
-    /* Player */
-    .player-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 80px;
-      background-color: #000;
-      border-top: 1px solid #282828;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
-    }
-
-    .now-playing {
-      width: 250px;
-    }
-
-    .now-playing-title {
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .now-playing-artist {
-      font-size: 12px;
-      color: #a7a7a7;
-    }
-
-    audio {
-      width: 450px;
-      height: 40px;
-    }
   </style>
 </head>
 <body>
 
   <!-- Sidebar -->
   <div class="sidebar">
-    <div class="logo">Passfoot App</div>
+    <div class="logo">Passfoot Music</div>
     <div class="menu-item active" onclick="filterGenre('all', this)">🏠 Accueil</div>
     <div class="menu-item" onclick="filterGenre('funk', this)">🔥 Funk</div>
     <div class="menu-item" onclick="filterGenre('phonk', this)">⚡ Phonk</div>
@@ -459,7 +385,7 @@
       <input type="text" class="search-input" id="searchInput" onkeyup="searchMusic()" placeholder="🔍 Rechercher...">
       
       <div class="user-actions">
-        <button class="btn-publish" onclick="openModal('modalOverlay')">➕ Publier</button>
+        <button class="btn-publish" onclick="openModal('modalOverlay')">➕ Intégrer un son</button>
         <button class="btn-login" id="loginBtn" onclick="openModal('loginModalOverlay')">Se connecter</button>
         
         <div class="user-profile" id="userProfile" onclick="logout()">
@@ -472,10 +398,9 @@
     <!-- Hero Banner -->
     <div class="hero-banner" id="heroBanner">
       <div class="hero-text">
-        <span style="font-size: 12px; font-weight: bold; letter-spacing: 1px; color: #fff; text-transform: uppercase;">🔥 Titre du Moment</span>
-        <h1>Montagem Ritmada</h1>
-        <p>Le meilleur du Brazilian Funk à écouter et télécharger en HD.</p>
-        <button class="btn-hero-play" onclick="playTrack('Montagem Ritmada', 'Brazilian Funk', 'funk1.mp3', 'card-1')">▶ Écouter maintenant</button>
+        <span style="font-size: 12px; font-weight: bold; letter-spacing: 1px; color: #fff; text-transform: uppercase;">🔥 Titres Officiels</span>
+        <h1>Écoute les vrais morceaux</h1>
+        <p>Lecteurs intégrés Spotify et SoundCloud en haute qualité.</p>
       </div>
     </div>
 
@@ -483,20 +408,20 @@
 
     <div class="grid-container" id="musicContainer">
 
-      <!-- Carte 1 -->
-      <div class="card item-music funk" id="card-1" onclick="playTrack('Montagem Ritmada', 'Brazilian Funk', 'funk1.mp3', 'card-1')">
-        <img src="pochette1.jpg" alt="Pochette" onerror="this.src='https://via.placeholder.com/150/181818/1db954?text=Funk'">
+      <!-- Carte 1 : Spotify -->
+      <div class="card item-music funk" id="card-1">
+        <div class="embed-container">
+          <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/6habF14Lq9A9q9z8m2rmA3?utm_source=generator" height="152" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
         <div class="card-title">Montagem Ritmada</div>
         <div class="card-genre">Brazilian Funk</div>
-        <div class="card-stats">▶ <span id="plays-card-1">0</span> écoutes</div>
         <div class="card-actions">
-          <a href="funk1.mp3" download class="btn-dl" onclick="event.stopPropagation()">Télécharger</a>
-          <button class="btn-action-icon btn-like" onclick="toggleLike(this, event)">♥</button>
-          <button class="btn-action-icon" onclick="shareTrack('Montagem Ritmada', event)">🔗</button>
-          <button class="btn-action-icon" onclick="toggleComments('card-1', event)">💬</button>
+          <button class="btn-action-icon btn-like" onclick="toggleLike(this)">♥</button>
+          <button class="btn-action-icon" onclick="shareTrack('Montagem Ritmada')">🔗</button>
+          <button class="btn-action-icon" onclick="toggleComments('card-1')">💬 Commentaires</button>
         </div>
 
-        <div class="comments-section" id="comments-card-1" onclick="event.stopPropagation()">
+        <div class="comments-section" id="comments-card-1">
           <div class="comments-list" id="list-card-1"></div>
           <div class="comment-input-box">
             <input type="text" id="input-card-1" placeholder="Écrire un commentaire...">
@@ -505,20 +430,20 @@
         </div>
       </div>
 
-      <!-- Carte 2 -->
-      <div class="card item-music phonk" id="card-2" onclick="playTrack('Imposter Syndrome', 'Phonk', 'phonk1.mp3', 'card-2')">
-        <img src="pochette2.jpg" alt="Pochette" onerror="this.src='https://via.placeholder.com/150/181818/1db954?text=Phonk'">
-        <div class="card-title">Imposter Syndrome</div>
+      <!-- Carte 2 : SoundCloud -->
+      <div class="card item-music phonk" id="card-2">
+        <div class="embed-container">
+          <iframe height="152" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1183307206&color=%231db954&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
+        </div>
+        <div class="card-title">Phonk Remix</div>
         <div class="card-genre">Phonk</div>
-        <div class="card-stats">▶ <span id="plays-card-2">0</span> écoutes</div>
         <div class="card-actions">
-          <a href="phonk1.mp3" download class="btn-dl" onclick="event.stopPropagation()">Télécharger</a>
-          <button class="btn-action-icon btn-like" onclick="toggleLike(this, event)">♥</button>
-          <button class="btn-action-icon" onclick="shareTrack('Imposter Syndrome', event)">🔗</button>
-          <button class="btn-action-icon" onclick="toggleComments('card-2', event)">💬</button>
+          <button class="btn-action-icon btn-like" onclick="toggleLike(this)">♥</button>
+          <button class="btn-action-icon" onclick="shareTrack('Phonk Remix')">🔗</button>
+          <button class="btn-action-icon" onclick="toggleComments('card-2')">💬 Commentaires</button>
         </div>
 
-        <div class="comments-section" id="comments-card-2" onclick="event.stopPropagation()">
+        <div class="comments-section" id="comments-card-2">
           <div class="comments-list" id="list-card-2"></div>
           <div class="comment-input-box">
             <input type="text" id="input-card-2" placeholder="Écrire un commentaire...">
@@ -530,19 +455,18 @@
     </div>
   </div>
 
-  <!-- Modal Publier -->
+  <!-- Modal Publier Embed -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
-      <h3>Publier un morceau</h3>
+      <h3>Intégrer une vraie musique</h3>
       <input type="text" id="trackTitle" placeholder="Titre du morceau" required>
       <select id="trackGenre">
         <option value="funk">Funk</option>
         <option value="phonk">Phonk</option>
         <option value="pop">Pop</option>
       </select>
-      <label style="font-size: 12px; color: #aaa;">Lien MP3 ou Fichier Audio :</label>
-      <input type="file" id="trackFile" accept="audio/*">
-      <input type="text" id="trackUrl" placeholder="Ou coller le nom/lien du fichier (ex: musique.mp3)">
+      <label style="font-size: 12px; color: #aaa; display: block; margin-bottom: 5px;">Code d'intégration (Embed) ou Lien Spotify/SoundCloud :</label>
+      <input type="text" id="embedUrl" placeholder="Coller le lien Spotify ou le code iframe SoundCloud">
       <div class="modal-buttons">
         <button class="btn-cancel" onclick="closeModal('modalOverlay')">Annuler</button>
         <button class="btn-publish" onclick="addMusic()">Ajouter</button>
@@ -563,73 +487,14 @@
     </div>
   </div>
 
-  <!-- Player -->
-  <div class="player-bar">
-    <div class="now-playing">
-      <div class="now-playing-title" id="currentTitle">Sélectionne un titre</div>
-      <div class="now-playing-artist" id="currentGenre">-</div>
-    </div>
-
-    <audio controls id="mainPlayer">
-      <source id="audioSource" src="" type="audio/mpeg">
-    </audio>
-  </div>
-
   <script>
-    let currentCardId = null;
-
     window.onload = function() {
       loadSavedData();
       loadSavedTracks();
       checkUserSession();
-
-      const player = document.getElementById('mainPlayer');
-      player.onended = playNextTrack;
     };
 
-    function playTrack(title, genre, src, cardId) {
-      const player = document.getElementById('mainPlayer');
-      const source = document.getElementById('audioSource');
-      document.getElementById('currentTitle').textContent = title;
-      document.getElementById('currentGenre').textContent = genre;
-      source.src = src;
-      currentCardId = cardId;
-      player.load();
-      player.play();
-
-      if (cardId) {
-        incrementPlayCount(cardId);
-      }
-    }
-
-    function playNextTrack() {
-      const visibleCards = Array.from(document.querySelectorAll('.card')).filter(card => card.style.display !== 'none');
-      if (visibleCards.length === 0) return;
-
-      let currentIndex = visibleCards.findIndex(card => card.id === currentCardId);
-      let nextIndex = (currentIndex + 1) % visibleCards.length;
-      let nextCard = visibleCards[nextIndex];
-
-      if (nextCard) {
-        nextCard.click();
-      }
-    }
-
-    function incrementPlayCount(cardId) {
-      const countSpan = document.getElementById(`plays-${cardId}`);
-      if (countSpan) {
-        let currentCount = parseInt(countSpan.textContent) || 0;
-        let newCount = currentCount + 1;
-        countSpan.textContent = newCount;
-
-        let playsData = JSON.parse(localStorage.getItem('playsData') || '{}');
-        playsData[cardId] = newCount;
-        localStorage.setItem('playsData', JSON.stringify(playsData));
-      }
-    }
-
-    function toggleComments(cardId, event) {
-      event.stopPropagation();
+    function toggleComments(cardId) {
       const sec = document.getElementById(`comments-${cardId}`);
       if (sec) {
         sec.style.display = sec.style.display === 'block' ? 'none' : 'block';
@@ -664,19 +529,12 @@
       }
     }
 
-    function shareTrack(title, event) {
-      event.stopPropagation();
+    function shareTrack(title) {
       navigator.clipboard.writeText(window.location.href);
       alert(`Lien pour "${title}" copié dans le presse-papier !`);
     }
 
     function loadSavedData() {
-      let playsData = JSON.parse(localStorage.getItem('playsData') || '{}');
-      for (let cardId in playsData) {
-        const countSpan = document.getElementById(`plays-${cardId}`);
-        if (countSpan) countSpan.textContent = playsData[cardId];
-      }
-
       let commentsData = JSON.parse(localStorage.getItem('commentsData') || '{}');
       for (let cardId in commentsData) {
         commentsData[cardId].forEach(commentObj => renderComment(cardId, commentObj));
@@ -732,8 +590,7 @@
       });
     }
 
-    function toggleLike(btn, event) {
-      event.stopPropagation();
+    function toggleLike(btn) {
       btn.classList.toggle('liked');
     }
 
@@ -784,33 +641,31 @@
     function addMusic() {
       const title = document.getElementById('trackTitle').value;
       const genre = document.getElementById('trackGenre').value;
-      const fileInput = document.getElementById('trackFile');
-      const urlInput = document.getElementById('trackUrl').value;
+      let embedCode = document.getElementById('embedUrl').value.trim();
 
-      let audioUrl = "";
-
-      if (fileInput.files.length > 0) {
-        audioUrl = URL.createObjectURL(fileInput.files[0]);
-      } else if (urlInput.trim() !== "") {
-        audioUrl = urlInput.trim();
-      } else {
-        alert('Remplis le titre et choisis un fichier ou tape un nom de fichier !');
+      if (!title || !embedCode) {
+        alert('Remplis le titre et insère un lien ou code d embed !');
         return;
       }
 
+      // Traitement automatique des liens Spotify simple
+      if (embedCode.includes('open.spotify.com/track/')) {
+        const trackId = embedCode.split('track/')[1].split('?')[0];
+        embedCode = `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/${trackId}?utm_source=generator" height="152" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
+      }
+
       const id = 'user-card-' + Date.now();
-      const trackObj = { id, title, genre, audioUrl, plays: 0 };
+      const trackObj = { id, title, genre, embedCode };
       
-      let saved = JSON.parse(localStorage.getItem('userTracks') || '[]');
+      let saved = JSON.parse(localStorage.getItem('userEmbedTracks') || '[]');
       saved.push(trackObj);
-      localStorage.setItem('userTracks', JSON.stringify(saved));
+      localStorage.setItem('userEmbedTracks', JSON.stringify(saved));
 
       renderTrack(trackObj);
       closeModal('modalOverlay');
 
       document.getElementById('trackTitle').value = '';
-      document.getElementById('trackUrl').value = '';
-      fileInput.value = '';
+      document.getElementById('embedUrl').value = '';
     }
 
     function renderTrack(track) {
@@ -819,19 +674,16 @@
       const cardId = track.id || ('card-' + Math.random().toString(36).substr(2, 9));
       newCard.className = `card item-music ${track.genre}`;
       newCard.id = cardId;
-      newCard.onclick = () => playTrack(track.title, genreName, track.audioUrl, cardId);
       newCard.innerHTML = `
-        <img src="https://via.placeholder.com/150/181818/1db954?text=${genreName}">
+        <div class="embed-container">${track.embedCode}</div>
         <div class="card-title">${track.title}</div>
         <div class="card-genre">${genreName}</div>
-        <div class="card-stats">▶ <span id="plays-${cardId}">${track.plays || 0}</span> écoutes</div>
         <div class="card-actions">
-          <a href="${track.audioUrl}" download="${track.title}.mp3" class="btn-dl" onclick="event.stopPropagation()">Télécharger</a>
-          <button class="btn-action-icon btn-like" onclick="toggleLike(this, event)">♥</button>
-          <button class="btn-action-icon" onclick="shareTrack('${track.title}', event)">🔗</button>
-          <button class="btn-action-icon" onclick="toggleComments('${cardId}', event)">💬</button>
+          <button class="btn-action-icon btn-like" onclick="toggleLike(this)">♥</button>
+          <button class="btn-action-icon" onclick="shareTrack('${track.title}')">🔗</button>
+          <button class="btn-action-icon" onclick="toggleComments('${cardId}')">💬 Commentaires</button>
         </div>
-        <div class="comments-section" id="comments-${cardId}" onclick="event.stopPropagation()">
+        <div class="comments-section" id="comments-${cardId}">
           <div class="comments-list" id="list-${cardId}"></div>
           <div class="comment-input-box">
             <input type="text" id="input-${cardId}" placeholder="Écrire un commentaire...">
@@ -843,7 +695,7 @@
     }
 
     function loadSavedTracks() {
-      let saved = JSON.parse(localStorage.getItem('userTracks') || '[]');
+      let saved = JSON.parse(localStorage.getItem('userEmbedTracks') || '[]');
       saved.forEach(renderTrack);
     }
   </script>
