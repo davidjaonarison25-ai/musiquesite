@@ -3,145 +3,229 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mon Site de Musique</title>
+  <title>Passfoot Music</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #121212;
-      color: white;
-      text-align: center;
-      padding: 40px 20px;
-    }
-    h1 {
-      margin-bottom: 25px;
-    }
-    
-    /* Boutons de filtres */
-    .filter-menu {
-      margin-bottom: 30px;
-    }
-    .btn-filter {
-      background-color: #282828;
-      color: white;
-      border: 1px solid #333;
-      padding: 10px 20px;
-      margin: 5px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: all 0.2s ease;
-    }
-    .btn-filter:hover, .btn-filter.active {
-      background-color: #1db954;
-      color: white;
-      border-color: #1db954;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    /* Grille des sons */
-    .music-container {
+    body {
+      background-color: #000;
+      color: #fff;
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Sidebar (Menu de gauche) */
+    .sidebar {
+      width: 240px;
+      background-color: #000;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
       gap: 20px;
     }
-    .card {
-      background: #1e1e1e;
-      padding: 20px;
-      border-radius: 12px;
-      width: 300px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    }
-    .genre-tag {
-      display: inline-block;
-      background-color: #333;
-      padding: 4px 10px;
-      border-radius: 10px;
-      font-size: 12px;
-      margin-bottom: 10px;
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
       color: #1db954;
-      font-weight: bold;
+      margin-bottom: 10px;
     }
-    audio {
-      width: 100%;
-      margin: 15px 0;
-    }
-    .btn-download {
-      display: inline-block;
-      background-color: #1db954;
-      color: white;
-      padding: 10px 20px;
+
+    .menu-item {
+      color: #b3b3b3;
       text-decoration: none;
-      border-radius: 20px;
-      font-weight: bold;
-      transition: transform 0.2s;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 8px 0;
+      cursor: pointer;
+      transition: 0.2s;
     }
-    .btn-download:hover {
-      transform: scale(1.05);
+
+    .menu-item:hover, .menu-item.active {
+      color: #fff;
+    }
+
+    /* Zone Principale */
+    .main-content {
+      flex: 1;
+      background: linear-gradient(to bottom, #1e1e1e, #121212);
+      border-radius: 8px;
+      margin: 8px 8px 90px 0;
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    .header-title {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    /* Grille de musiques */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background-color: #181818;
+      padding: 16px;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      background-color: #282828;
+    }
+
+    .card img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      background-color: #333;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-genre {
+      font-size: 12px;
+      color: #a7a7a7;
+      margin-bottom: 12px;
+    }
+
+    .btn-dl {
+      display: block;
+      width: 100%;
+      text-align: center;
+      background-color: #1db954;
+      color: #000;
+      padding: 8px 0;
+      border-radius: 20px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    .btn-dl:hover {
       background-color: #1ed760;
+    }
+
+    /* Lecteur en bas (Player) */
+    .player-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
+      background-color: #000;
+      border-top: 1px solid #282828;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      box-sizing: border-box;
+    }
+
+    .now-playing {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 250px;
+    }
+
+    .now-playing-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    audio {
+      width: 400px;
+      height: 40px;
     }
   </style>
 </head>
 <body>
 
-  <h1>🎵 Écouter et Télécharger</h1>
-
-  <!-- Menu de sélection des genres -->
-  <div class="filter-menu">
-    <button class="btn-filter active" onclick="filterMusic('all')">Tous</button>
-    <button class="btn-filter" onclick="filterMusic('funk')">Funk</button>
-    <button class="btn-filter" onclick="filterMusic('pop')">Pop</button>
-    <button class="btn-filter" onclick="filterMusic('phonk')">Phonk</button>
+  <!-- Menu latéral -->
+  <div class="sidebar">
+    <div class="logo">Passfoot App</div>
+    <div class="menu-item active" onclick="filterGenre('all')">🏠 Accueil</div>
+    <div class="menu-item" onclick="filterGenre('funk')">🔥 Funk</div>
+    <div class="menu-item" onclick="filterGenre('phonk')">⚡ Phonk</div>
+    <div class="menu-item" onclick="filterGenre('pop')">🎵 Pop</div>
   </div>
 
-  <!-- Catalogue de musique -->
-  <div class="music-container">
+  <!-- Zone de contenu -->
+  <div class="main-content">
+    <h2 class="header-title">Musiques & Beats</h2>
 
-    <!-- Morceau 1 : Funk -->
-    <div class="card music-item funk">
-      <span class="genre-tag">FUNK</span>
-      <h3>Titre Funk 1</h3>
-      <audio controls>
-        <source src="funk1.mp3" type="audio/mpeg">
-      </audio>
-      <br><br>
-      <a href="funk1.mp3" download class="btn-download">Télécharger MP3</a>
+    <div class="grid-container">
+
+      <!-- Carte 1 : Funk -->
+      <div class="card item-music funk">
+        <img src="pochette1.jpg" alt="Pochette" onerror="this.src='https://via.placeholder.com/150/181818/1db954?text=Funk'">
+        <div class="card-title">Montagem Ritmada</div>
+        <div class="card-genre">Brazilian Funk</div>
+        <a href="funk1.mp3" download class="btn-dl">Télécharger MP3</a>
+      </div>
+
+      <!-- Carte 2 : Phonk -->
+      <div class="card item-music phonk">
+        <img src="pochette2.jpg" alt="Pochette" onerror="this.src='https://via.placeholder.com/150/181818/1db954?text=Phonk'">
+        <div class="card-title">Imposter Syndrome</div>
+        <div class="card-genre">Phonk</div>
+        <a href="phonk1.mp3" download class="btn-dl">Télécharger MP3</a>
+      </div>
+
+      <!-- Carte 3 : Pop -->
+      <div class="card item-music pop">
+        <img src="pochette3.jpg" alt="Pochette" onerror="this.src='https://via.placeholder.com/150/181818/1db954?text=Pop'">
+        <div class="card-title">Titre Pop</div>
+        <div class="card-genre">Pop</div>
+        <a href="pop1.mp3" download class="btn-dl">Télécharger MP3</a>
+      </div>
+
     </div>
-
-    <!-- Morceau 2 : Pop -->
-    <div class="card music-item pop">
-      <span class="genre-tag">POP</span>
-      <h3>Titre Pop 1</h3>
-      <audio controls>
-        <source src="pop1.mp3" type="audio/mpeg">
-      </audio>
-      <br><br>
-      <a href="pop1.mp3" download class="btn-download">Télécharger MP3</a>
-    </div>
-
-    <!-- Morceau 3 : Phonk -->
-    <div class="card music-item phonk">
-      <span class="genre-tag">PHONK</span>
-      <h3>Titre Phonk 1</h3>
-      <audio controls>
-        <source src="phonk1.mp3" type="audio/mpeg">
-      </audio>
-      <br><br>
-      <a href="phonk1.mp3" download class="btn-download">Télécharger MP3</a>
-    </div>
-
   </div>
 
-  <!-- Script pour faire fonctionner le filtrage -->
+  <!-- Barre de lecture Spotify en bas -->
+  <div class="player-bar">
+    <div class="now-playing">
+      <div>
+        <div class="now-playing-title">Lecteur Audio</div>
+      </div>
+    </div>
+
+    <!-- Lecteur principal -->
+    <audio controls>
+      <source src="funk1.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+
   <script>
-    function filterMusic(genre) {
-      const items = document.querySelectorAll('.music-item');
-      const buttons = document.querySelectorAll('.btn-filter');
+    function filterGenre(genre) {
+      const items = document.querySelectorAll('.item-music');
+      const menuItems = document.querySelectorAll('.menu-item');
 
-      // Gestion du bouton actif
-      buttons.forEach(btn => btn.classList.remove('active'));
+      menuItems.forEach(item => item.classList.remove('active'));
       event.target.classList.add('active');
 
-      // Filtrage des éléments
       items.forEach(item => {
         if (genre === 'all' || item.classList.contains(genre)) {
           item.style.display = 'block';
