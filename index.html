@@ -66,6 +66,8 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 25px;
+      gap: 15px;
+      flex-wrap: wrap;
     }
 
     .search-input {
@@ -74,13 +76,31 @@
       color: #fff;
       padding: 10px 18px;
       border-radius: 20px;
-      width: 280px;
+      width: 250px;
       font-size: 14px;
       outline: none;
     }
 
     .search-input:focus {
       border-color: #1db954;
+    }
+
+    /* Bouton Publier */
+    .btn-publish {
+      background-color: #1db954;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 14px;
+      transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .btn-publish:hover {
+      background-color: #1ed760;
+      transform: scale(1.05);
     }
 
     .header-title {
@@ -101,7 +121,6 @@
       border-radius: 8px;
       transition: background-color 0.3s ease, transform 0.2s ease;
       cursor: pointer;
-      position: relative;
     }
 
     .card:hover {
@@ -161,14 +180,67 @@
       color: #b3b3b3;
       font-size: 18px;
       cursor: pointer;
-      transition: color 0.2s;
     }
 
     .btn-like.liked {
       color: #1db954;
     }
 
-    /* Lecteur en bas (Player) */
+    /* Modal (Fenêtre Ajouter) */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal {
+      background-color: #181818;
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+    }
+
+    .modal h3 {
+      margin-bottom: 20px;
+      color: #1db954;
+    }
+
+    .modal input, .modal select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      background: #282828;
+      border: 1px solid #333;
+      color: white;
+      border-radius: 6px;
+      outline: none;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .btn-cancel {
+      background: #333;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    /* Lecteur Audio Fixe */
     .player-bar {
       position: fixed;
       bottom: 0;
@@ -181,20 +253,11 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 24px;
-      box-sizing: border-box;
-    }
-
-    .now-playing {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      width: 250px;
     }
 
     .now-playing-title {
       font-size: 14px;
       font-weight: 600;
-      color: #fff;
     }
 
     .now-playing-artist {
@@ -222,13 +285,15 @@
   <!-- Zone de contenu -->
   <div class="main-content">
     <div class="top-bar">
-      <h2 class="header-title">Musiques & Beats</h2>
-      <input type="text" class="search-input" id="searchInput" onkeyup="searchMusic()" placeholder="🔍 Rechercher un titre ou genre...">
+      <input type="text" class="search-input" id="searchInput" onkeyup="searchMusic()" placeholder="🔍 Rechercher...">
+      <button class="btn-publish" onclick="openModal()">➕ Publier une musique</button>
     </div>
 
-    <div class="grid-container">
+    <h2 class="header-title">Musiques & Beats</h2>
 
-      <!-- Carte 1 : Funk -->
+    <div class="grid-container" id="musicContainer">
+
+      <!-- Carte 1 -->
       <div class="card item-music funk" onclick="playTrack('Montagem Ritmada', 'Brazilian Funk', 'funk1.mp3')">
         <img src="pochette1.jpg" alt="Pochette" onerror="this.src='https://via.placeholder.com/150/181818/1db954?text=Funk'">
         <div class="card-title">Montagem Ritmada</div>
@@ -239,7 +304,7 @@
         </div>
       </div>
 
-      <!-- Carte 2 : Phonk -->
+      <!-- Carte 2 -->
       <div class="card item-music phonk" onclick="playTrack('Imposter Syndrome', 'Phonk', 'phonk1.mp3')">
         <img src="pochette2.jpg" alt="Pochette" onerror="this.src='https://via.placeholder.com/150/181818/1db954?text=Phonk'">
         <div class="card-title">Imposter Syndrome</div>
@@ -250,56 +315,54 @@
         </div>
       </div>
 
-      <!-- Carte 3 : Pop -->
-      <div class="card item-music pop" onclick="playTrack('Titre Pop 1', 'Pop', 'pop1.mp3')">
-        <img src="pochette3.jpg" alt="Pochette" onerror="this.src='https://via.placeholder.com/150/181818/1db954?text=Pop'">
-        <div class="card-title">Titre Pop 1</div>
-        <div class="card-genre">Pop</div>
-        <div class="card-actions">
-          <a href="pop1.mp3" download class="btn-dl" onclick="event.stopPropagation()">Télécharger</a>
-          <button class="btn-like" onclick="toggleLike(this, event)">♥</button>
-        </div>
-      </div>
-
     </div>
   </div>
 
-  <!-- Barre de lecture Spotify en bas -->
-  <div class="player-bar">
-    <div class="now-playing">
-      <div>
-        <div class="now-playing-title" id="currentTitle">Sélectionne un titre</div>
-        <div class="now-playing-artist" id="currentGenre">-</div>
+  <!-- Modal d'ajout de musique -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h3>Publier un morceau</h3>
+      <input type="text" id="trackTitle" placeholder="Titre du morceau" required>
+      <select id="trackGenre">
+        <option value="funk">Funk</option>
+        <option value="phonk">Phonk</option>
+        <option value="pop">Pop</option>
+      </select>
+      <label style="font-size: 12px; color: #aaa;">Fichier Audio (MP3) :</label>
+      <input type="file" id="trackFile" accept="audio/*" required>
+      <div class="modal-buttons">
+        <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+        <button class="btn-publish" onclick="addMusic()">Ajouter</button>
       </div>
     </div>
+  </div>
 
-    <!-- Lecteur principal -->
+  <!-- Barre de lecture -->
+  <div class="player-bar">
+    <div>
+      <div class="now-playing-title" id="currentTitle">Sélectionne un titre</div>
+      <div class="now-playing-artist" id="currentGenre">-</div>
+    </div>
+
     <audio controls id="mainPlayer">
-      <source id="audioSource" src="funk1.mp3" type="audio/mpeg">
+      <source id="audioSource" src="" type="audio/mpeg">
     </audio>
   </div>
 
   <script>
-    // Lancer une musique lors du clic sur une carte
     function playTrack(title, genre, src) {
       const player = document.getElementById('mainPlayer');
       const source = document.getElementById('audioSource');
-      const titleElem = document.getElementById('currentTitle');
-      const genreElem = document.getElementById('currentGenre');
-
-      titleElem.textContent = title;
-      genreElem.textContent = genre;
+      document.getElementById('currentTitle').textContent = title;
+      document.getElementById('currentGenre').textContent = genre;
       source.src = src;
       player.load();
       player.play();
     }
 
-    // Filtre des catégories
     function filterGenre(genre) {
       const items = document.querySelectorAll('.item-music');
-      const menuItems = document.querySelectorAll('.menu-item');
-
-      menuItems.forEach(item => item.classList.remove('active'));
+      document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
       event.target.classList.add('active');
 
       items.forEach(item => {
@@ -311,25 +374,59 @@
       });
     }
 
-    // Barre de recherche
     function searchMusic() {
       const input = document.getElementById('searchInput').value.toLowerCase();
-      const items = document.querySelectorAll('.item-music');
-
-      items.forEach(item => {
-        const text = item.textContent.toLowerCase();
-        if (text.includes(input)) {
-          item.style.display = 'block';
-        } else {
-          item.style.display = 'none';
-        }
+      document.querySelectorAll('.item-music').forEach(item => {
+        item.style.display = item.textContent.toLowerCase().includes(input) ? 'block' : 'none';
       });
     }
 
-    // Bouton de Like
     function toggleLike(btn, event) {
-      event.stopPropagation(); // Évite de lancer la musique au clic sur le coeur
+      event.stopPropagation();
       btn.classList.toggle('liked');
+    }
+
+    /* Gestion de la fenêtre Publier */
+    function openModal() {
+      document.getElementById('modalOverlay').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').style.display = 'none';
+    }
+
+    function addMusic() {
+      const title = document.getElementById('trackTitle').value;
+      const genre = document.getElementById('trackGenre').value;
+      const fileInput = document.getElementById('trackFile');
+
+      if (!title || fileInput.files.length === 0) {
+        alert('Remplis le titre et choisis un fichier audio !');
+        return;
+      }
+
+      const audioUrl = URL.createObjectURL(fileInput.files[0]);
+      const genreName = genre.toUpperCase();
+
+      const newCard = document.createElement('div');
+      newCard.className = `card item-music ${genre}`;
+      newCard.onclick = () => playTrack(title, genreName, audioUrl);
+      newCard.innerHTML = `
+        <img src="https://via.placeholder.com/150/181818/1db954?text=${genreName}">
+        <div class="card-title">${title}</div>
+        <div class="card-genre">${genreName}</div>
+        <div class="card-actions">
+          <a href="${audioUrl}" download="${title}.mp3" class="btn-dl" onclick="event.stopPropagation()">Télécharger</a>
+          <button class="btn-like" onclick="toggleLike(this, event)">♥</button>
+        </div>
+      `;
+
+      document.getElementById('musicContainer').appendChild(newCard);
+      closeModal();
+
+      // Reinitialiser les champs
+      document.getElementById('trackTitle').value = '';
+      fileInput.value = '';
     }
   </script>
 
