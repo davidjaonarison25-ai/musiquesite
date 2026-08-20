@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon Site de Musique</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: white;
+      text-align: center;
+      padding: 50px 20px;
+    }
+    .card {
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 400px;
+      margin: 20px auto;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    audio {
+      width: 100%;
+      margin: 15px 0;
+    }
+    .btn-download {
+      display: inline-block;
+      background-color: #1db954;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎵 Écouter et Télécharger</h1>
+
+  <div class="card">
+    <h3>Nom du morceau</h3>
+    <!-- Lecteur audio -->
+    <audio controls>
+      <source src="musique.mp3" type="audio/mpeg">
+      Ton navigateur ne supporte pas le lecteur audio.
+    </audio>
+    <br><br>
+    <!-- Bouton de téléchargement -->
+    <a href="musique.mp3" download class="btn-download">Télécharger MP3</a>
+  </div>
+
+</body>
+</html>
