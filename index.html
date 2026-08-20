@@ -102,7 +102,7 @@
       transform: scale(1.05);
     }
 
-    /* Bannière Tendance (Hero Banner) */
+    /* Hero Banner */
     .hero-banner {
       background: linear-gradient(135deg, #1db954 0%, #000000 100%);
       border-radius: 12px;
@@ -282,7 +282,7 @@
       cursor: pointer;
     }
 
-    /* Player */
+    /* Player style Spotify */
     .player-bar {
       position: fixed;
       bottom: 0;
@@ -297,6 +297,10 @@
       padding: 0 24px;
     }
 
+    .now-playing {
+      width: 250px;
+    }
+
     .now-playing-title {
       font-size: 14px;
       font-weight: 600;
@@ -308,7 +312,7 @@
     }
 
     audio {
-      width: 400px;
+      width: 450px;
       height: 40px;
     }
   </style>
@@ -380,8 +384,9 @@
         <option value="phonk">Phonk</option>
         <option value="pop">Pop</option>
       </select>
-      <label style="font-size: 12px; color: #aaa;">Fichier Audio (MP3) :</label>
-      <input type="file" id="trackFile" accept="audio/*" required>
+      <label style="font-size: 12px; color: #aaa;">Lien MP3 ou Fichier Audio :</label>
+      <input type="file" id="trackFile" accept="audio/*">
+      <input type="text" id="trackUrl" placeholder="Ou coller le nom/lien du fichier (ex: musique.mp3)">
       <div class="modal-buttons">
         <button class="btn-cancel" onclick="closeModal()">Annuler</button>
         <button class="btn-publish" onclick="addMusic()">Ajouter</button>
@@ -391,7 +396,7 @@
 
   <!-- Player -->
   <div class="player-bar">
-    <div>
+    <div class="now-playing">
       <div class="now-playing-title" id="currentTitle">Sélectionne un titre</div>
       <div class="now-playing-artist" id="currentGenre">-</div>
     </div>
@@ -402,6 +407,11 @@
   </div>
 
   <script>
+    // Charger les musiques sauvegardées au démarrage
+    window.onload = function() {
+      loadSavedTracks();
+    };
+
     function playTrack(title, genre, src) {
       const player = document.getElementById('mainPlayer');
       const source = document.getElementById('audioSource');
@@ -453,37 +463,59 @@
       document.getElementById('modalOverlay').style.display = 'none';
     }
 
+    // Ajouter une musique et la sauvegarder dans le localStorage
     function addMusic() {
       const title = document.getElementById('trackTitle').value;
       const genre = document.getElementById('trackGenre').value;
       const fileInput = document.getElementById('trackFile');
+      const urlInput = document.getElementById('trackUrl').value;
 
-      if (!title || fileInput.files.length === 0) {
-        alert('Remplis le titre et choisis un fichier audio !');
+      let audioUrl = "";
+
+      if (fileInput.files.length > 0) {
+        audioUrl = URL.createObjectURL(fileInput.files[0]);
+      } else if (urlInput.trim() !== "") {
+        audioUrl = urlInput.trim();
+      } else {
+        alert('Remplis le titre et choisis un fichier ou tape un nom de fichier !');
         return;
       }
 
-      const audioUrl = URL.createObjectURL(fileInput.files[0]);
-      const genreName = genre.toUpperCase();
+      const trackObj = { title, genre, audioUrl };
+      
+      // Sauvegarder dans le navigateur
+      let saved = JSON.parse(localStorage.getItem('userTracks') || '[]');
+      saved.push(trackObj);
+      localStorage.setItem('userTracks', JSON.stringify(saved));
 
-      const newCard = document.createElement('div');
-      newCard.className = `card item-music ${genre}`;
-      newCard.onclick = () => playTrack(title, genreName, audioUrl);
-      newCard.innerHTML = `
-        <img src="https://via.placeholder.com/150/181818/1db954?text=${genreName}">
-        <div class="card-title">${title}</div>
-        <div class="card-genre">${genreName}</div>
-        <div class="card-actions">
-          <a href="${audioUrl}" download="${title}.mp3" class="btn-dl" onclick="event.stopPropagation()">Télécharger</a>
-          <button class="btn-like" onclick="toggleLike(this, event)">♥</button>
-        </div>
-      `;
-
-      document.getElementById('musicContainer').appendChild(newCard);
+      renderTrack(trackObj);
       closeModal();
 
       document.getElementById('trackTitle').value = '';
+      document.getElementById('trackUrl').value = '';
       fileInput.value = '';
+    }
+
+    function renderTrack(track) {
+      const genreName = track.genre.toUpperCase();
+      const newCard = document.createElement('div');
+      newCard.className = `card item-music ${track.genre}`;
+      newCard.onclick = () => playTrack(track.title, genreName, track.audioUrl);
+      newCard.innerHTML = `
+        <img src="https://via.placeholder.com/150/181818/1db954?text=${genreName}">
+        <div class="card-title">${track.title}</div>
+        <div class="card-genre">${genreName}</div>
+        <div class="card-actions">
+          <a href="${track.audioUrl}" download="${track.title}.mp3" class="btn-dl" onclick="event.stopPropagation()">Télécharger</a>
+          <button class="btn-like" onclick="toggleLike(this, event)">♥</button>
+        </div>
+      `;
+      document.getElementById('musicContainer').appendChild(newCard);
+    }
+
+    function loadSavedTracks() {
+      let saved = JSON.parse(localStorage.getItem('userTracks') || '[]');
+      saved.forEach(renderTrack);
     }
   </script>
 
