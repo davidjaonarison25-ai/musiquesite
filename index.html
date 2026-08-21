@@ -174,6 +174,7 @@
       border-radius: 8px;
       cursor: pointer;
       font-weight: bold;
+      transition: background 0.2s;
     }
 
     .option-btn:hover { background: #475569; }
@@ -223,7 +224,7 @@
     <p>Centre de Mini-Jeux</p>
   </header>
 
-  <!-- Selecteur de jeux -->
+  <!-- Sélecteur de jeux -->
   <div class="game-nav">
     <button class="nav-btn active" onclick="switchGame('penalties', this)">⚽ Tir au But</button>
     <button class="nav-btn" onclick="switchGame('quiz', this)">🧠 Quiz Foot</button>
@@ -276,7 +277,7 @@
   </div>
 
   <script>
-    // System d'onglets
+    // Système d'onglets
     function switchGame(gameId, btn) {
       document.querySelectorAll('.game-section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -351,11 +352,16 @@
       document.getElementById('saves').textContent = 0;
     }
 
-    /* LOGIQUE 2: QUIZ FOOT */
+    /* LOGIQUE 2: QUIZ FOOT (8 QUESTIONS) */
     const quizData = [
       { q: "Quel pays a remporté la Coupe du Monde 2022 ?", options: ["France", "Brésil", "Argentine", "Allemagne"], answer: 2 },
       { q: "Quel joueur possède le plus de Ballons d'Or ?", options: ["Ronaldo", "Messi", "Cruyff", "Zidane"], answer: 1 },
-      { q: "Combien de temps dure un match de football réglementaire ?", options: ["80 min", "90 min", "100 min", "120 min"], answer: 1 }
+      { q: "Combien de temps dure un match de football réglementaire ?", options: ["80 min", "90 min", "100 min", "120 min"], answer: 1 },
+      { q: "Quel pays a remporté la toute première Coupe du Monde en 1930 ?", options: ["Brésil", "Uruguay", "Italie", "Argentine"], answer: 1 },
+      { q: "Quel club détient le record du plus grand nombre de Ligues des Champions ?", options: ["AC Milan", "FC Barcelone", "Real Madrid", "Bayern Munich"], answer: 2 },
+      { q: "Qui détient le record du but le plus rapide de l'histoire de la Coupe du Monde (11 secondes) ?", options: ["Hakan Şükür", "Pelé", "Kylian Mbappé", "Ronaldo Nazário"], answer: 0 },
+      { q: "En quelle année le premier Ballon d'Or a-t-il été attribué ?", options: ["1950", "1956", "1962", "1970"], answer: 1 },
+      { q: "Quel joueur est le seul à avoir remporté 3 Coupes du Monde en tant que joueur ?", options: ["Maradona", "Zinedine Zidane", "Pelé", "Manoel Garrincha"], answer: 2 }
     ];
     let currentQ = 0, quizScore = 0;
 
@@ -400,14 +406,14 @@
         bestJuggle = juggles;
         document.getElementById('juggle-best').textContent = bestJuggle;
       }
-      ballY = 30; // Remonter le ballon
-      ballSpeed = -4; // Impulsion vers le haut
+      ballY = 30;
+      ballSpeed = -4;
     }
 
     function gameLoopJuggling() {
-      ballSpeed += 0.2; // Gravité
+      ballSpeed += 0.2;
       ballY += ballSpeed;
-      if(ballY > 260) { // Sol touché
+      if(ballY > 260) {
         document.getElementById('juggle-msg').textContent = "💥 Perdu ! Le ballon a touché le sol.";
         resetJuggling();
         return;
