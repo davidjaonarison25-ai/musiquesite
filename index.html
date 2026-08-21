@@ -56,23 +56,23 @@
   <div id="char-select-screen">
     <h2 style="color:#00f0ff">Choisis ton Joueur</h2>
     <div class="char-grid">
-      <div class="char-card selected" onclick="selectChar(0)">
+      <div class="char-card selected" id="card-0" onclick="selectChar(0)">
         <div class="char-avatar">⚡</div>
         <h3>Speedy</h3>
         <p style="font-size:0.75rem; color:#94a3b8; margin-top:4px;">Tir Éclair</p>
       </div>
-      <div class="char-card" onclick="selectChar(1)">
+      <div class="char-card" id="card-1" onclick="selectChar(1)">
         <div class="char-avatar">🔥</div>
         <h3>Striker</h3>
         <p style="font-size:0.75rem; color:#94a3b8; margin-top:4px;">Tir Enflammé</p>
       </div>
-      <div class="char-card" onclick="selectChar(2)">
+      <div class="char-card" id="card-2" onclick="selectChar(2)">
         <div class="char-avatar">❄️</div>
         <h3>Freezer</h3>
         <p style="font-size:0.75rem; color:#94a3b8; margin-top:4px;">Gel Adversaire</p>
       </div>
     </div>
-    <button class="btn-start" onclick="startGame()">Lancer le Match !</button>
+    <button class="btn-start" id="start-btn">Lancer le Match !</button>
   </div>
 
   <!-- JEU -->
@@ -97,189 +97,183 @@
   </div>
 
   <script>
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
+    window.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('gameCanvas');
+      const ctx = canvas.getContext('2d');
 
-    const characters = [
-      { name: "Speedy", color: "#38bdf8", power: "speed" },
-      { name: "Striker", color: "#f59e0b", power: "fire" },
-      { name: "Freezer", color: "#a855f7", power: "freeze" }
-    ];
+      const characters = [
+        { name: "Speedy", color: "#38bdf8", power: "speed" },
+        { name: "Striker", color: "#f59e0b", power: "fire" },
+        { name: "Freezer", color: "#a855f7", power: "freeze" }
+      ];
 
-    let selectedCharIdx = 0;
-    let score1 = 0, score2 = 0, timeLeft = 60;
-    let gameOver = false, timerInt;
+      let selectedCharIdx = 0;
+      let score1 = 0, score2 = 0, timeLeft = 60;
+      let gameOver = false, timerInt;
 
-    const gravity = 0.45;
-    const groundY = 350;
+      const gravity = 0.45;
+      const groundY = 350;
 
-    // Joueurs & Ballon
-    const p1 = { x: 150, y: 250, vx: 0, vy: 0, size: 28, headSize: 22, color: '#38bdf8', isGrounded: false, powerProgress: 0, isFrozen: false };
-    const p2 = { x: 610, y: 250, vx: 0, vy: 0, size: 28, headSize: 22, color: '#ef4444', isGrounded: false, powerProgress: 0, isFrozen: false };
-    const ball = { x: 400, y: 150, vx: 0, vy: 0, radius: 14, bounce: 0.75, isFire: false };
+      const p1 = { x: 150, y: 250, vx: 0, vy: 0, size: 28, headSize: 22, color: '#38bdf8', isGrounded: false, powerProgress: 0, isFrozen: false };
+      const p2 = { x: 610, y: 250, vx: 0, vy: 0, size: 28, headSize: 22, color: '#ef4444', isGrounded: false, powerProgress: 0, isFrozen: false };
+      const ball = { x: 400, y: 150, vx: 0, vy: 0, radius: 14, bounce: 0.75, isFire: false };
 
-    const keys = {};
-    window.addEventListener('keydown', e => keys[e.code] = true);
-    window.addEventListener('keyup', e => keys[e.code] = false);
+      const keys = {};
+      window.addEventListener('keydown', e => keys[e.code] = true);
+      window.addEventListener('keyup', e => keys[e.code] = false);
 
-    function selectChar(idx) {
-      selectedCharIdx = idx;
-      document.querySelectorAll('.char-card').forEach((c, i) => {
-        c.classList.toggle('selected', i === idx);
-      });
-    }
+      window.selectChar = function(idx) {
+        selectedCharIdx = idx;
+        document.querySelectorAll('.char-card').forEach((c, i) => {
+          c.classList.toggle('selected', i === idx);
+        });
+      };
 
-    function startGame() {
-      document.getElementById('char-select-screen').style.display = 'none';
-      document.getElementById('game-container').style.display = 'flex';
-      p1.color = characters[selectedCharIdx].color;
-      document.getElementById('p1-name').textContent = characters[selectedCharIdx].name;
+      document.getElementById('start-btn').addEventListener('click', () => {
+        document.getElementById('char-select-screen').style.display = 'none';
+        document.getElementById('game-container').style.display = 'flex';
+        p1.color = characters[selectedCharIdx].color;
+        document.getElementById('p1-name').textContent = characters[selectedCharIdx].name;
 
-      timerInt = setInterval(() => {
-        if(timeLeft > 0 && !gameOver) {
-          timeLeft--;
-          document.getElementById('timer').textContent = timeLeft;
-        } else if(timeLeft === 0) {
-          gameOver = true;
-          alert(`Fin du match ! Score : ${score1} - ${score2}`);
-          clearInterval(timerInt);
-        }
-      }, 1000);
-    }
-
-    function resetPositions() {
-      p1.x = 150; p1.y = 250; p1.vx = 0; p1.vy = 0; p1.isFrozen = false;
-      p2.x = 610; p2.y = 250; p2.vx = 0; p2.vy = 0; p2.isFrozen = false;
-      ball.x = 400; ball.y = 150; ball.vx = 0; ball.vy = 0; ball.isFire = false;
-    }
-
-    function triggerPower(player, opponent) {
-      if(player.powerProgress < 100) return;
-      player.powerProgress = 0;
-
-      const charPower = (player === p1) ? characters[selectedCharIdx].power : "fire";
-
-      if(charPower === "fire") {
-        ball.isFire = true;
-        ball.vx = (player === p1) ? 18 : -18;
-        ball.vy = -4;
-      } else if(charPower === "freeze") {
-        opponent.isFrozen = true;
-        setTimeout(() => opponent.isFrozen = false, 2500);
-      } else if(charPower === "speed") {
-        player.vx = (player === p1) ? 15 : -15;
-      }
-    }
-
-    function update() {
-      if(gameOver) return;
-
-      // Déplacements J1
-      if(!p1.isFrozen) {
-        if (keys['ArrowLeft']) p1.vx = -5;
-        else if (keys['ArrowRight']) p1.vx = 5;
-        else p1.vx = 0;
-
-        if (keys['ArrowUp'] && p1.isGrounded) { p1.vy = -11; p1.isGrounded = false; }
-        if (keys['KeyK']) triggerPower(p1, p2);
-      } else p1.vx = 0;
-
-      // IA J2
-      if(!p2.isFrozen) {
-        if (ball.x > 350) {
-          if (ball.x > p2.x + 10) p2.vx = 3.5;
-          else if (ball.x < p2.x - 10) p2.vx = -3.5;
-          else p2.vx = 0;
-
-          if (ball.y < p2.y - 30 && p2.isGrounded && Math.abs(ball.x - p2.x) < 40) {
-            p2.vy = -10; p2.isGrounded = false;
+        timerInt = setInterval(() => {
+          if(timeLeft > 0 && !gameOver) {
+            timeLeft--;
+            document.getElementById('timer').textContent = timeLeft;
+          } else if(timeLeft === 0) {
+            gameOver = true;
+            alert(`Fin du match ! Score : ${score1} - ${score2}`);
+            clearInterval(timerInt);
           }
-        } else {
-          if (p2.x < 620) p2.vx = 3; else p2.vx = 0;
-        }
-        if(p2.powerProgress >= 100 && Math.abs(ball.x - p2.x) < 100) triggerPower(p2, p1);
-      } else p2.vx = 0;
+        }, 1000);
 
-      // Physique Joueurs
-      [p1, p2].forEach(p => {
-        p.vy += gravity; p.x += p.vx; p.y += p.vy;
-        if (p.y + p.size >= groundY) { p.y = groundY - p.size; p.vy = 0; p.isGrounded = true; }
-        if (p.x - p.size < 0) p.x = p.size;
-        if (p.x + p.size > canvas.width) p.x = canvas.width - p.size;
-
-        if(p.powerProgress < 100) p.powerProgress += 0.15;
+        gameLoop();
       });
 
-      document.getElementById('p1-power').style.width = `${p1.powerProgress}%`;
-      document.getElementById('p2-power').style.width = `${p2.powerProgress}%`;
+      function resetPositions() {
+        p1.x = 150; p1.y = 250; p1.vx = 0; p1.vy = 0; p1.isFrozen = false;
+        p2.x = 610; p2.y = 250; p2.vx = 0; p2.vy = 0; p2.isFrozen = false;
+        ball.x = 400; ball.y = 150; ball.vx = 0; ball.vy = 0; ball.isFire = false;
+      }
 
-      // Physique Ballon
-      ball.vy += gravity * 0.7; ball.x += ball.vx; ball.y += ball.vy;
-      ball.vx *= 0.99;
+      function triggerPower(player, opponent) {
+        if(player.powerProgress < 100) return;
+        player.powerProgress = 0;
 
-      if (ball.y + ball.radius >= groundY) { ball.y = groundY - ball.radius; ball.vy = -ball.vy * ball.bounce; }
-      if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width) ball.vx = -ball.vx * ball.bounce;
+        const charPower = (player === p1) ? characters[selectedCharIdx].power : "fire";
 
-      // Collisions Joueurs <-> Ballon
-      [p1, p2].forEach(p => {
-        let dx = ball.x - p.x;
-        let dy = ball.y - (p.y - p.headSize);
-        let dist = Math.hypot(dx, dy);
-        let minDist = ball.radius + p.size;
-
-        if (dist < minDist) {
-          let angle = Math.atan2(dy, dx);
-          let power = ball.isFire ? 14 : 9;
-          ball.vx = Math.cos(angle) * power + p.vx * 0.5;
-          ball.vy = Math.sin(angle) * power + p.vy * 0.5;
-        }
-      });
-
-      // Tir de pied J1
-      if (keys['Space'] && !p1.isFrozen) {
-        if (Math.hypot(ball.x - p1.x, ball.y - p1.y) < 65) {
-          ball.vx = 12; ball.vy = -6;
+        if(charPower === "fire") {
+          ball.isFire = true;
+          ball.vx = (player === p1) ? 18 : -18;
+          ball.vy = -4;
+        } else if(charPower === "freeze") {
+          opponent.isFrozen = true;
+          setTimeout(() => opponent.isFrozen = false, 2500);
+        } else if(charPower === "speed") {
+          player.vx = (player === p1) ? 15 : -15;
         }
       }
 
-      // Buts
-      if (ball.y > 230 && ball.y <= groundY) {
-        if (ball.x - ball.radius <= 50) { score2++; document.getElementById('score2').textContent = score2; resetPositions(); }
-        if (ball.x + ball.radius >= 750) { score1++; document.getElementById('score1').textContent = score1; resetPositions(); }
+      function update() {
+        if(gameOver) return;
+
+        if(!p1.isFrozen) {
+          if (keys['ArrowLeft']) p1.vx = -5;
+          else if (keys['ArrowRight']) p1.vx = 5;
+          else p1.vx = 0;
+
+          if (keys['ArrowUp'] && p1.isGrounded) { p1.vy = -11; p1.isGrounded = false; }
+          if (keys['KeyK']) triggerPower(p1, p2);
+        } else p1.vx = 0;
+
+        if(!p2.isFrozen) {
+          if (ball.x > 350) {
+            if (ball.x > p2.x + 10) p2.vx = 3.5;
+            else if (ball.x < p2.x - 10) p2.vx = -3.5;
+            else p2.vx = 0;
+
+            if (ball.y < p2.y - 30 && p2.isGrounded && Math.abs(ball.x - p2.x) < 40) {
+              p2.vy = -10; p2.isGrounded = false;
+            }
+          } else {
+            if (p2.x < 620) p2.vx = 3; else p2.vx = 0;
+          }
+          if(p2.powerProgress >= 100 && Math.abs(ball.x - p2.x) < 100) triggerPower(p2, p1);
+        } else p2.vx = 0;
+
+        [p1, p2].forEach(p => {
+          p.vy += gravity; p.x += p.vx; p.y += p.vy;
+          if (p.y + p.size >= groundY) { p.y = groundY - p.size; p.vy = 0; p.isGrounded = true; }
+          if (p.x - p.size < 0) p.x = p.size;
+          if (p.x + p.size > canvas.width) p.x = canvas.width - p.size;
+
+          if(p.powerProgress < 100) p.powerProgress += 0.15;
+        });
+
+        document.getElementById('p1-power').style.width = `${p1.powerProgress}%`;
+        document.getElementById('p2-power').style.width = `${p2.powerProgress}%`;
+
+        ball.vy += gravity * 0.7; ball.x += ball.vx; ball.y += ball.vy;
+        ball.vx *= 0.99;
+
+        if (ball.y + ball.radius >= groundY) { ball.y = groundY - ball.radius; ball.vy = -ball.vy * ball.bounce; }
+        if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width) ball.vx = -ball.vx * ball.bounce;
+
+        [p1, p2].forEach(p => {
+          let dx = ball.x - p.x;
+          let dy = ball.y - (p.y - p.headSize);
+          let dist = Math.hypot(dx, dy);
+          let minDist = ball.radius + p.size;
+
+          if (dist < minDist) {
+            let angle = Math.atan2(dy, dx);
+            let power = ball.isFire ? 14 : 9;
+            ball.vx = Math.cos(angle) * power + p.vx * 0.5;
+            ball.vy = Math.sin(angle) * power + p.vy * 0.5;
+          }
+        });
+
+        if (keys['Space'] && !p1.isFrozen) {
+          if (Math.hypot(ball.x - p1.x, ball.y - p1.y) < 65) {
+            ball.vx = 12; ball.vy = -6;
+          }
+        }
+
+        if (ball.y > 230 && ball.y <= groundY) {
+          if (ball.x - ball.radius <= 50) { score2++; document.getElementById('score2').textContent = score2; resetPositions(); }
+          if (ball.x + ball.radius >= 750) { score1++; document.getElementById('score1').textContent = score1; resetPositions(); }
+        }
       }
-    }
 
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Cages
-      ctx.lineWidth = 4; ctx.strokeStyle = '#00f0ff';
-      ctx.strokeRect(0, 220, 50, 130);
-      ctx.strokeRect(750, 220, 50, 130);
+        ctx.lineWidth = 4; ctx.strokeStyle = '#00f0ff';
+        ctx.strokeRect(0, 220, 50, 130);
+        ctx.strokeRect(750, 220, 50, 130);
 
-      // Joueurs
-      [p1, p2].forEach(p => {
-        ctx.fillStyle = p.isFrozen ? '#93c5fd' : p.color;
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+        [p1, p2].forEach(p => {
+          ctx.fillStyle = p.isFrozen ? '#93c5fd' : p.color;
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
 
-        ctx.fillStyle = p.isFrozen ? '#bfdbfe' : '#ffdbac';
-        ctx.beginPath(); ctx.arc(p.x, p.y - p.headSize, p.headSize, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = p.isFrozen ? '#bfdbfe' : '#ffdbac';
+          ctx.beginPath(); ctx.arc(p.x, p.y - p.headSize, p.headSize, 0, Math.PI * 2); ctx.fill();
 
-        ctx.fillStyle = '#000';
-        let eyeOffset = p === p1 ? 6 : -6;
-        ctx.beginPath(); ctx.arc(p.x + eyeOffset, p.y - p.headSize - 2, 3, 0, Math.PI * 2); ctx.fill();
-      });
+          ctx.fillStyle = '#000';
+          let eyeOffset = p === p1 ? 6 : -6;
+          ctx.beginPath(); ctx.arc(p.x + eyeOffset, p.y - p.headSize - 2, 3, 0, Math.PI * 2); ctx.fill();
+        });
 
-      // Ballon
-      ctx.fillStyle = ball.isFire ? '#ef4444' : '#ffffff';
-      ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = ball.isFire ? '#f59e0b' : '#000'; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = ball.isFire ? '#ef4444' : '#ffffff';
+        ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = ball.isFire ? '#f59e0b' : '#000'; ctx.lineWidth = 2; ctx.stroke();
+      }
 
-      update();
-      requestAnimationFrame(draw);
-    }
-
-    draw();
+      function gameLoop() {
+        update();
+        draw();
+        if(!gameOver) requestAnimationFrame(gameLoop);
+      }
+    });
   </script>
 </body>
 </html>
