@@ -3,69 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Passfoot 🎮 - Cyber Arena PRO</title>
+  <title>Passfoot 🎮 - Cyber Arena PRO Ultimate</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Roboto, sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
 
     body {
-      background: #06111e;
-      color: #ffffff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
+      background: #06111e; color: #ffffff; min-height: 100vh;
+      display: flex; flex-direction: column; overflow-x: hidden;
+    }
+
+    /* Effet Secousse (Screen Shake) */
+    .shake { animation: shakeAnim 0.3s ease-in-out; }
+    @keyframes shakeAnim {
+      0% { transform: translate(0, 0); }
+      20% { transform: translate(-6px, 6px); }
+      40% { transform: translate(6px, -6px); }
+      60% { transform: translate(-4px, -4px); }
+      80% { transform: translate(4px, 4px); }
+      100% { transform: translate(0, 0); }
     }
 
     /* HEADER CYBER */
     header {
-      background: #0a192f;
-      padding: 12px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid #00f0ff;
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      background: #0a192f; padding: 12px 30px; display: flex;
+      justify-content: space-between; align-items: center;
+      border-bottom: 2px solid #00f0ff; box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+      position: sticky; top: 0; z-index: 100;
     }
 
-    .brand { text-align: center; }
-    .brand h1 { font-size: 1.8rem; color: #00f0ff; text-shadow: 0 0 10px #00f0ff; text-transform: uppercase; letter-spacing: 1px; }
-    .brand p { font-size: 0.75rem; color: #94a3b8; letter-spacing: 1px; }
+    .brand h1 { font-size: 1.8rem; color: #00f0ff; text-shadow: 0 0 10px #00f0ff; text-transform: uppercase; }
+    .brand p { font-size: 0.75rem; color: #94a3b8; }
 
     .search-bar {
       background: #0f233d; border: 1px solid #1e40af; border-radius: 20px;
-      padding: 6px 15px; color: #fff; width: 200px; font-size: 0.85rem;
-      outline: none;
+      padding: 6px 15px; color: #fff; width: 200px; outline: none;
     }
-    .search-bar:focus { border-color: #00f0ff; box-shadow: 0 0 8px #00f0ff; }
 
     /* CATEGORIES BAR */
     .cat-bar {
       display: flex; justify-content: center; gap: 10px; padding: 12px;
-      background: #081627; border-bottom: 1px solid rgba(0,240,255,0.1);
-      flex-wrap: wrap;
+      background: #081627; border-bottom: 1px solid rgba(0,240,255,0.1); flex-wrap: wrap;
     }
     .cat-btn {
       background: #0f233d; color: #00f0ff; border: 1px solid #00f0ff;
       padding: 6px 16px; border-radius: 20px; cursor: pointer; font-weight: bold;
-      font-size: 0.85rem; box-shadow: 0 0 8px rgba(0,240,255,0.2);
-      transition: all 0.2s;
+      font-size: 0.85rem; box-shadow: 0 0 8px rgba(0,240,255,0.2); transition: all 0.2s;
     }
     .cat-btn:hover { background: #00f0ff; color: #06111e; box-shadow: 0 0 12px #00f0ff; }
 
     /* LAYOUT AVEC SIDEBARS */
     .app-layout { display: flex; flex: 1; }
 
-    .sidebar-left {
-      width: 110px; padding: 15px; display: flex; flex-direction: column; align-items: center;
-    }
+    .sidebar-left { width: 110px; padding: 15px; display: flex; flex-direction: column; align-items: center; }
     .coin-badge-big {
       background: #0f233d; border: 2px solid #f59e0b; border-radius: 15px;
       padding: 12px 8px; text-align: center; color: #fbbf24; font-weight: bold;
@@ -78,77 +67,47 @@
     .sidebar-right {
       width: 100px; background: #081627; border-left: 2px solid #00f0ff;
       display: flex; flex-direction: column; align-items: center; gap: 25px; padding-top: 25px;
-      box-shadow: -5px 0 15px rgba(0,240,255,0.1);
     }
     .side-item { text-align: center; color: #00f0ff; cursor: pointer; font-size: 0.75rem; font-weight: bold; }
     .side-item div { font-size: 1.8rem; margin-bottom: 4px; }
 
     /* GRILLE ET CARTES CYBER NÉON */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-      gap: 18px;
-    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 18px; }
 
     .cyber-card {
-      background: #0a192f;
-      border: 1.5px solid #00f0ff;
-      box-shadow: 0 0 12px #00f0ff;
-      border-radius: 14px;
-      position: relative;
-      overflow: hidden;
-      height: 150px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 12px;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      background: #0a192f; border: 1.5px solid #00f0ff; box-shadow: 0 0 12px #00f0ff;
+      border-radius: 14px; position: relative; overflow: hidden; height: 150px;
+      display: flex; flex-direction: column; justify-content: space-between; padding: 12px;
+      cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-
-    .cyber-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 0 20px #00f0ff;
-    }
+    .cyber-card:hover { transform: translateY(-4px); box-shadow: 0 0 20px #00f0ff; }
 
     .tag-top-left {
-      position: absolute; top: 10px; left: 10px;
-      background: #081627; border: 1px solid #00f0ff; border-radius: 50%;
-      width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
-      font-size: 0.85rem; z-index: 2;
+      position: absolute; top: 10px; left: 10px; background: #081627;
+      border: 1px solid #00f0ff; border-radius: 50%; width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center; font-size: 0.85rem; z-index: 2;
     }
 
-    /* BADGES NOUVEAU & HOT */
     .badge {
-      position: absolute; top: 10px; right: 10px;
-      font-size: 0.65rem; font-weight: 800; padding: 4px 10px;
-      border-radius: 12px; text-transform: uppercase; color: #ffffff;
-      letter-spacing: 0.5px; z-index: 2;
+      position: absolute; top: 10px; right: 10px; font-size: 0.65rem; font-weight: 800;
+      padding: 4px 10px; border-radius: 12px; text-transform: uppercase; color: #ffffff; z-index: 2;
     }
     .badge.nouveau { background-color: #22c55e; box-shadow: 0 0 8px #22c55e; }
     .badge.hot { background-color: #ef4444; box-shadow: 0 0 8px #ef4444; }
 
-    .card-center-icon {
-      font-size: 3rem; text-align: center; margin-top: 10px;
-      filter: drop-shadow(0 0 8px rgba(0,240,255,0.4));
-    }
+    .card-center-icon { font-size: 3rem; text-align: center; margin-top: 10px; }
 
     .card-footer {
       display: flex; justify-content: space-between; align-items: center;
       background: rgba(8, 22, 39, 0.85); padding: 6px 10px; border-radius: 8px;
     }
 
-    .game-title {
-      font-size: 0.8rem; font-weight: 700; color: #ffffff; text-transform: uppercase;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90px;
-    }
+    .game-title { font-size: 0.8rem; font-weight: 700; color: #ffffff; text-transform: uppercase; }
 
-    /* BOUTON JOUER 🪙 */
     .btn-jouer {
-      background-color: #00f0ff; color: #06111e; border: none;
-      border-radius: 20px; padding: 5px 12px; font-size: 0.75rem;
-      font-weight: 800; cursor: pointer; box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
-      display: flex; align-items: center; gap: 4px; transition: all 0.2s;
+      background-color: #00f0ff; color: #06111e; border: none; border-radius: 20px;
+      padding: 5px 12px; font-size: 0.75rem; font-weight: 800; cursor: pointer;
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.5); transition: all 0.2s;
     }
     .btn-jouer:hover { background-color: #38bdf8; box-shadow: 0 0 15px #00f0ff; }
 
@@ -167,10 +126,9 @@
     }
 
     .close-btn {
-      position: absolute; top: 12px; right: 15px;
-      background: #ef4444; color: white; border: none; width: 32px; height: 32px;
-      border-radius: 50%; font-weight: bold; cursor: pointer; font-size: 1rem;
-      box-shadow: 0 0 8px #ef4444;
+      position: absolute; top: 12px; right: 15px; background: #ef4444; color: white;
+      border: none; width: 32px; height: 32px; border-radius: 50%; font-weight: bold;
+      cursor: pointer; font-size: 1rem; box-shadow: 0 0 8px #ef4444;
     }
 
     .scoreboard {
@@ -193,20 +151,20 @@
 
     .goalkeeper {
       position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-      width: 36px; height: 44px; background: #ef4444; border-radius: 8px 8px 0 0; transition: all 0.2s;
+      width: 38px; height: 44px; background: #ef4444; border-radius: 8px 8px 0 0;
+      transition: all 0.15s ease-out; box-shadow: 0 0 10px #ef4444;
     }
 
     .target {
-      position: absolute; top: 15px; left: 20%; width: 30px; height: 30px;
+      position: absolute; top: 15px; left: 20%; width: 32px; height: 32px;
       background: radial-gradient(circle, #ef4444 30%, #fff 31%, #fff 60%, #ef4444 61%);
-      border-radius: 50%; transition: left 0.5s;
+      border-radius: 50%; transition: left 0.3s; box-shadow: 0 0 10px #ef4444;
     }
 
     .ball {
       position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
-      width: 28px; height: 28px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center; font-size: 1rem;
-      transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 1rem; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
     .skin-classic { background: #fff; box-shadow: 0 0 10px #fff; }
@@ -224,14 +182,14 @@
     .message { margin-top: 10px; font-size: 1rem; font-weight: bold; min-height: 25px; color: #00f0ff; }
   </style>
 </head>
-<body>
+<body id="appBody">
 
   <!-- HEADER -->
   <header>
     <div style="width: 200px;"></div>
     <div class="brand">
       <h1>Passfoot 🎮</h1>
-      <p>Cyber Arena PRO</p>
+      <p>Cyber Arena PRO Ultimate</p>
     </div>
     <input type="text" class="search-bar" placeholder="Rechercher...">
   </header>
@@ -246,17 +204,14 @@
   </div>
 
   <div class="app-layout">
-    <!-- SIDEBAR GAUCHE -->
     <div class="sidebar-left">
       <div class="coin-badge-big">
         🪙<br>COINS<br><span class="coin-amount" id="coins-count">0</span>
       </div>
     </div>
 
-    <!-- GRILLE DE CARTES -->
     <div class="main-grid-area">
       <div class="grid">
-
         <div class="cyber-card" onclick="openGame('penalties')">
           <div class="tag-top-left">⚽</div>
           <span class="badge nouveau">NOUVEAU</span>
@@ -316,11 +271,9 @@
             <button class="btn-jouer">JOUER 🪙</button>
           </div>
         </div>
-
       </div>
     </div>
 
-    <!-- SIDEBAR DROITE -->
     <div class="sidebar-right">
       <div class="side-item"><div>🪙</div>COINS</div>
       <div class="side-item"><div>🏆</div>TROPHÉES</div>
@@ -330,42 +283,52 @@
 
   <!-- MODAL / ÉCRAN DE JEU -->
   <div class="modal-overlay" id="modalOverlay">
-    <div class="modal-content">
+    <div class="modal-content" id="modalContent">
       <button class="close-btn" onclick="closeGame()">✕</button>
 
       <!-- JEU 1: PENALTIES -->
       <div id="game-penalties" class="game-view" style="display:none;">
         <div class="scoreboard">
-          <div>Niveau: <span id="level">1</span></div>
+          <div>Niveau: <span id="penalty-level">1</span></div>
+          <div>Combo: 🔥x<span id="penalty-combo">1</span></div>
           <div>Buts: <span id="goals">0</span></div>
         </div>
         <div class="pitch" id="pitch">
           <div class="goal" id="goal"><div class="goalkeeper" id="keeper"></div></div>
           <div class="ball skin-classic" id="ball">⚽</div>
         </div>
-        <div class="message" id="message">Clique pour tirer !</div>
+        <div class="message" id="message">Clique pour donner un tir brossé !</div>
       </div>
 
       <!-- JEU 2: PRÉCISION -->
       <div id="game-precision" class="game-view" style="display:none;">
-        <div class="scoreboard"><div>Score: <span id="precision-score">0</span></div></div>
+        <div class="scoreboard">
+          <div>Score: <span id="precision-score">0</span></div>
+          <div>Vitesse: <span id="precision-speed">Normal</span></div>
+        </div>
         <div class="pitch" id="precision-pitch">
           <div class="goal"><div class="target" id="target"></div></div>
           <div class="ball skin-classic" id="precision-ball">⚽</div>
         </div>
-        <div class="message" id="precision-msg">Touche la cible rouge !</div>
+        <div class="message" id="precision-msg">Touche la cible mouvante !</div>
       </div>
 
       <!-- JEU 3: CASSE-BRIQUE -->
       <div id="game-breakout" class="game-view" style="display:none;">
-        <div class="scoreboard"><div>Score: <span id="breakout-score">0</span></div></div>
+        <div class="scoreboard">
+          <div>Score: <span id="breakout-score">0</span></div>
+          <div>Vitesse balle: x<span id="breakout-speed">1.0</span></div>
+        </div>
         <canvas id="breakoutCanvas" width="400" height="240"></canvas>
-        <div class="message" id="breakout-msg">Contrôle le plateau avec ta souris !</div>
+        <div class="message" id="breakout-msg">Détruis les briques néon !</div>
       </div>
 
       <!-- JEU 4: QUIZ -->
       <div id="game-quiz" class="game-view" style="display:none;">
-        <div class="scoreboard"><div>Score: <span id="quiz-score">0</span></div></div>
+        <div class="scoreboard">
+          <div>Niveau: <span id="quiz-level">1</span>/5</div>
+          <div>Score: <span id="quiz-score">0</span></div>
+        </div>
         <div style="background:#081627; padding:15px; border-radius:10px; border: 1px solid #00f0ff;">
           <div id="quiz-q" style="font-weight:bold; margin-bottom:10px;">Chargement...</div>
           <div id="quiz-options" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;"></div>
@@ -375,11 +338,14 @@
 
       <!-- JEU 5: JONGLES -->
       <div id="game-juggling" class="game-view" style="display:none;">
-        <div class="scoreboard"><div>Jongles: <span id="juggle-count">0</span></div></div>
-        <div style="height:250px; background:#081627; border-radius:10px; position:relative; border: 1px solid #00f0ff;" id="juggle-area">
+        <div class="scoreboard">
+          <div>Jongles: <span id="juggle-count">0</span></div>
+          <div>Record: <span id="juggle-record">0</span></div>
+        </div>
+        <div style="height:250px; background:#081627; border-radius:10px; position:relative; border: 1px solid #00f0ff; overflow:hidden;" id="juggle-area">
           <div class="ball skin-classic" id="juggle-ball" style="top:50px; cursor:pointer;" onclick="bounceBall()">⚽</div>
         </div>
-        <div class="message" id="juggle-msg">Garde le ballon en l'air !</div>
+        <div class="message" id="juggle-msg">Clique au bon moment pour jongler !</div>
       </div>
 
       <!-- SHOP -->
@@ -417,6 +383,12 @@
     let unlockedSkins = JSON.parse(localStorage.getItem('unlockedSkins')) || ['classic'];
     let currentSkin = localStorage.getItem('currentSkin') || 'classic';
 
+    function triggerShake() {
+      const modal = document.getElementById('modalContent');
+      modal.classList.add('shake');
+      setTimeout(() => modal.classList.remove('shake'), 300);
+    }
+
     function updateCoins(amount) {
       coins += amount;
       localStorage.setItem('passcoins', coins);
@@ -431,7 +403,7 @@
 
       if(gameId === 'precision') startPrecisionTarget();
       if(gameId === 'breakout') initBreakout();
-      if(gameId === 'quiz') loadQuiz();
+      if(gameId === 'quiz') { currentQuizIdx = 0; quizScore = 0; loadQuiz(); }
       if(gameId === 'juggling') resetJuggling();
     }
 
@@ -484,20 +456,27 @@
       });
     }
 
-    /* 1. PENALTIES */
+    /* 1. PENALTIES AMÉLIORÉS (Physique + Combos + Niveaux) */
     const pitch = document.getElementById('pitch');
     const ball = document.getElementById('ball');
     const keeper = document.getElementById('keeper');
-    let goals = 0, isShooting = false;
+    let goals = 0, penaltyLevel = 1, combo = 1, isShooting = false;
 
     pitch.addEventListener('click', (e) => {
       if (isShooting) return;
       const rect = pitch.getBoundingClientRect();
-      const clickX = e.clientX - rect.left, clickY = e.clientY - rect.top;
+      const clickX = e.clientX - rect.left;
+      const clickY = e.clientY - rect.top;
       isShooting = true;
-      ball.style.left = `${clickX}px`; ball.style.top = `${clickY}px`; ball.style.transform = 'scale(0.6)';
 
-      const randomPos = [20, 50, 80][Math.floor(Math.random() * 3)];
+      // Effet de frappe brossée
+      ball.style.left = `${clickX}px`;
+      ball.style.top = `${clickY}px`;
+      ball.style.transform = 'scale(0.55) rotate(360deg)';
+
+      // Gardien réactif selon le niveau
+      const keeperPositions = [15, 35, 50, 65, 85];
+      const randomPos = keeperPositions[Math.floor(Math.random() * keeperPositions.length)];
       keeper.style.left = `${randomPos}%`;
 
       setTimeout(() => {
@@ -505,35 +484,69 @@
         const pitchRect = pitch.getBoundingClientRect();
         const isInside = clickX >= (goalRect.left - pitchRect.left) && clickX <= (goalRect.right - pitchRect.left) && clickY <= (goalRect.bottom - pitchRect.top);
         const keeperX = (goalRect.width * (randomPos / 100)) + (goalRect.left - pitchRect.left);
-        const isSaved = Math.abs(clickX - keeperX) < 40 && isInside;
+        const isSaved = Math.abs(clickX - keeperX) < (45 - penaltyLevel * 2) && isInside;
 
-        if (isSaved) document.getElementById('message').textContent = "🖐️ ARRÊT !";
-        else if (isInside) {
-          goals++; updateCoins(10);
+        if (isSaved) {
+          combo = 1;
+          document.getElementById('penalty-combo').textContent = combo;
+          document.getElementById('message').textContent = "🖐️ ARRÊT DU GARDIEN !";
+        } else if (isInside) {
+          goals++;
+          const earned = 10 * combo;
+          updateCoins(earned);
+          triggerShake();
+          if (goals % 3 === 0) penaltyLevel++;
+          combo++;
+          document.getElementById('penalty-level').textContent = penaltyLevel;
+          document.getElementById('penalty-combo').textContent = combo;
           document.getElementById('goals').textContent = goals;
-          document.getElementById('message').textContent = "⚽ BUT !!! (+10 Coins)";
-        } else document.getElementById('message').textContent = "❌ À CÔTÉ !";
+          document.getElementById('message').textContent = `⚽ BUT MAGNIFIQUE !!! (+${earned} Coins)`;
+        } else {
+          combo = 1;
+          document.getElementById('penalty-combo').textContent = combo;
+          document.getElementById('message').textContent = "❌ TIR HORS CADRE !";
+        }
 
         setTimeout(() => {
-          ball.style.left = '50%'; ball.style.top = ''; ball.style.bottom = '15px';
-          ball.style.transform = 'translateX(-50%) scale(1)'; isShooting = false;
+          ball.style.left = '50%';
+          ball.style.top = '';
+          ball.style.bottom = '15px';
+          ball.style.transform = 'translateX(-50%) scale(1) rotate(0deg)';
+          isShooting = false;
         }, 800);
       }, 350);
     });
 
-    /* 2. PRÉCISION */
-    let targetInterval;
+    /* 2. PRÉCISION AMÉLIORÉE (Vitesse Progressive) */
+    let targetInterval, precisionScore = 0, targetSpeed = 800;
     function startPrecisionTarget() {
       clearInterval(targetInterval);
       targetInterval = setInterval(() => {
         document.getElementById('target').style.left = `${Math.floor(Math.random() * 70) + 15}%`;
-      }, 800);
+      }, targetSpeed);
     }
 
-    /* 3. CASSE-BRIQUE */
+    document.getElementById('precision-pitch').addEventListener('click', (e) => {
+      const target = document.getElementById('target');
+      const tRect = target.getBoundingClientRect();
+      if (e.clientX >= tRect.left && e.clientX <= tRect.right && e.clientY >= tRect.top && e.clientY <= tRect.bottom) {
+        precisionScore += 10;
+        updateCoins(15);
+        triggerShake();
+        document.getElementById('precision-score').textContent = precisionScore;
+        document.getElementById('precision-msg').textContent = "🎯 PLEINE LUCARNE ! (+15 Coins)";
+        if (targetSpeed > 300) {
+          targetSpeed -= 50;
+          document.getElementById('precision-speed').textContent = "Rapide ⚡";
+          startPrecisionTarget();
+        }
+      }
+    });
+
+    /* 3. CASSE-BRIQUE AMÉLIORÉ (Briques Multi-couleurs & Vitesse) */
     const canvas = document.getElementById('breakoutCanvas');
     const ctx = canvas.getContext('2d');
-    let breakoutLoop, bx = 200, by = 200, dx = 2, dy = -2, paddleX = 160;
+    let breakoutLoop, bx = 200, by = 200, dx = 2.5, dy = -2.5, paddleX = 160, breakoutScore = 0, speedMult = 1.0;
 
     document.addEventListener("mousemove", (e) => {
       const rect = canvas.getBoundingClientRect();
@@ -542,29 +555,54 @@
 
     function initBreakout() {
       clearInterval(breakoutLoop);
-      bx = 200; by = 200; dx = 2; dy = -2;
+      bx = 200; by = 200; dx = 2.5; dy = -2.5; breakoutScore = 0; speedMult = 1.0;
       breakoutLoop = setInterval(() => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Balle Néon
         ctx.beginPath(); ctx.arc(bx, by, 7, 0, Math.PI*2); ctx.fillStyle = "#00f0ff"; ctx.fill();
+        ctx.shadowBlur = 10; ctx.shadowColor = "#00f0ff";
+
+        // Raquette
         ctx.fillStyle = "#4ade80"; ctx.fillRect(paddleX, canvas.height - 10, 70, 10);
 
         if (bx + dx > canvas.width || bx + dx < 0) dx = -dx;
         if (by + dy < 0) dy = -dy;
         else if (by + dy > canvas.height - 10) {
-          if (bx > paddleX && bx < paddleX + 70) { dy = -dy; updateCoins(2); }
-          else { clearInterval(breakoutLoop); }
+          if (bx > paddleX && bx < paddleX + 70) {
+            dy = -dy;
+            breakoutScore += 5;
+            speedMult += 0.05;
+            updateCoins(3);
+            document.getElementById('breakout-score').textContent = breakoutScore;
+            document.getElementById('breakout-speed').textContent = speedMult.toFixed(1);
+          } else {
+            clearInterval(breakoutLoop);
+            document.getElementById('breakout-msg').textContent = "💥 PARTIE TERMINÉE !";
+          }
         }
-        bx += dx; by += dy;
+        bx += dx * speedMult; by += dy * speedMult;
       }, 10);
     }
 
-    /* 4. QUIZ */
+    /* 4. QUIZ AMÉLIORÉ (Questions Évolutives) */
     const quizData = [
       { q: "Vainqueur du Mondial 2022 ?", options: ["France", "Brésil", "Argentine", "Allemagne"], answer: 2 },
-      { q: "Plus grand nombre de Ballons d'Or ?", options: ["Ronaldo", "Messi", "Cruyff", "Zidane"], answer: 1 }
+      { q: "Plus grand nombre de Ballons d'Or ?", options: ["Ronaldo", "Messi", "Cruyff", "Zidane"], answer: 1 },
+      { q: "Quel club a gagné la Ligue des Champions 2024 ?", options: ["Real Madrid", "Dortmund", "PSG", "Bayern"], answer: 0 },
+      { q: "Surnom de l'équipe de France ?", options: ["Les Rouges", "Les Bleus", "Les Aigles", "Les Lions"], answer: 1 },
+      { q: "Combien de joueurs par équipe sur le terrain ?", options: ["9", "10", "11", "12"], answer: 2 }
     ];
+    let currentQuizIdx = 0, quizScore = 0;
+
     function loadQuiz() {
-      const q = quizData[0];
+      if (currentQuizIdx >= quizData.length) {
+        document.getElementById('quiz-q').textContent = "🏆 Quiz Terminé ! Bravo !";
+        document.getElementById('quiz-options').innerHTML = '';
+        return;
+      }
+      document.getElementById('quiz-level').textContent = currentQuizIdx + 1;
+      const q = quizData[currentQuizIdx];
       document.getElementById('quiz-q').textContent = q.q;
       const optGrid = document.getElementById('quiz-options'); optGrid.innerHTML = '';
       q.options.forEach((opt, idx) => {
@@ -573,21 +611,42 @@
         btn.style.border = '1px solid #00f0ff'; btn.style.borderRadius = '6px'; btn.style.cursor = 'pointer';
         btn.textContent = opt;
         btn.onclick = () => {
-          if(idx === q.answer) { updateCoins(10); document.getElementById('quiz-msg').textContent = "✅ Correct ! (+10 Coins)"; }
-          else { document.getElementById('quiz-msg').textContent = "❌ Faux !"; }
+          if(idx === q.answer) {
+            quizScore += 20; updateCoins(20); triggerShake();
+            document.getElementById('quiz-score').textContent = quizScore;
+            document.getElementById('quiz-msg').textContent = "✅ EXCELLENT ! (+20 Coins)";
+          } else {
+            document.getElementById('quiz-msg').textContent = "❌ MAUVAISE RÉPONSE !";
+          }
+          currentQuizIdx++;
+          setTimeout(loadQuiz, 1000);
         };
         optGrid.appendChild(btn);
       });
     }
 
-    /* 5. JONGLES */
-    let juggles = 0, ballY = 50, juggleInterval;
-    function bounceBall() { juggles++; updateCoins(2); document.getElementById('juggle-count').textContent = juggles; ballY = 30; }
+    /* 5. JONGLES AMÉLIORÉS (Gravité Dynamique & Record) */
+    let juggles = 0, juggleRecord = 0, ballY = 50, ballSpeedY = 0, juggleInterval;
+
+    function bounceBall() {
+      juggles++;
+      ballSpeedY = -8; // Impulsion vers le haut
+      updateCoins(2);
+      if (juggles > juggleRecord) juggleRecord = juggles;
+      document.getElementById('juggle-count').textContent = juggles;
+      document.getElementById('juggle-record').textContent = juggleRecord;
+    }
+
     function resetJuggling() {
-      clearInterval(juggleInterval); juggles = 0; ballY = 50;
+      clearInterval(juggleInterval); juggles = 0; ballY = 50; ballSpeedY = 2;
+      document.getElementById('juggle-count').textContent = juggles;
       juggleInterval = setInterval(() => {
-        ballY += 3;
-        if(ballY > 200) ballY = 200;
+        ballSpeedY += 0.4; // Gravité
+        ballY += ballSpeedY;
+        if (ballY > 210) {
+          ballY = 210;
+          document.getElementById('juggle-msg').textContent = "💥 BALLON PERDU ! Réessaie !";
+        }
         document.getElementById('juggle-ball').style.top = `${ballY}px`;
       }, 20);
     }
