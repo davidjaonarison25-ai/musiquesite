@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Passfoot - Mini-Jeux</title>
+  <title>Passfoot 🎮 - Arcade</title>
   <style>
     * {
       box-sizing: border-box;
@@ -34,7 +34,33 @@
       letter-spacing: 2px;
     }
 
-    /* Conteneur principal du jeu */
+    /* Navigation des jeux */
+    .game-nav {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      background: #1e293b;
+      padding: 8px;
+      border-radius: 12px;
+    }
+
+    .nav-btn {
+      padding: 10px 20px;
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-btn.active, .nav-btn:hover {
+      background: #38bdf8;
+      color: #0f172a;
+    }
+
+    /* Conteneur principal */
     .game-container {
       background: #1e293b;
       border-radius: 16px;
@@ -45,7 +71,15 @@
       text-align: center;
     }
 
-    /* Tableau des scores */
+    .game-section {
+      display: none;
+    }
+
+    .game-section.active {
+      display: block;
+    }
+
+    /* --- JEU 1: TIR AU BUT --- */
     .scoreboard {
       display: flex;
       justify-content: space-around;
@@ -54,18 +88,14 @@
       border-radius: 8px;
       margin-bottom: 15px;
       font-weight: bold;
-      font-size: 1.1rem;
     }
 
-    .score-item span {
-      color: #38bdf8;
-    }
+    .scoreboard span { color: #38bdf8; }
 
-    /* Terrain et Cage */
     .pitch {
       position: relative;
       width: 100%;
-      height: 350px;
+      height: 320px;
       background: linear-gradient(to bottom, #15803d, #166534);
       border-radius: 12px;
       overflow: hidden;
@@ -73,33 +103,19 @@
       cursor: crosshair;
     }
 
-    /* La cage de but */
     .goal {
       position: absolute;
       top: 20px;
       left: 50%;
       transform: translateX(-50%);
-      width: 280px;
-      height: 110px;
+      width: 260px;
+      height: 100px;
       border: 6px solid #ffffff;
       border-bottom: none;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 10px,
-        rgba(255, 255, 255, 0.15) 10px,
-        rgba(255, 255, 255, 0.15) 11px
-      ),
-      repeating-linear-gradient(
-        90deg,
-        transparent,
-        transparent 10px,
-        rgba(255, 255, 255, 0.15) 10px,
-        rgba(255, 255, 255, 0.15) 11px
-      );
+      background: repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(255, 255, 255, 0.15) 10px, rgba(255, 255, 255, 0.15) 11px),
+                  repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(255, 255, 255, 0.15) 10px, rgba(255, 255, 255, 0.15) 11px);
     }
 
-    /* Le gardien */
     .goalkeeper {
       position: absolute;
       bottom: 0;
@@ -112,7 +128,6 @@
       transition: all 0.25s ease-out;
     }
 
-    /* Le ballon */
     .ball {
       position: absolute;
       bottom: 20px;
@@ -126,15 +141,70 @@
       transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
-    /* Message de résultat */
     .message {
       margin-top: 15px;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       font-weight: bold;
       min-height: 30px;
     }
 
-    .btn-reset {
+    /* --- JEU 2: QUIZ --- */
+    .quiz-box {
+      background: #0f172a;
+      padding: 20px;
+      border-radius: 12px;
+    }
+
+    .question {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .option-btn {
+      padding: 12px;
+      background: #334155;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .option-btn:hover { background: #475569; }
+
+    /* --- JEU 3: JONGLES --- */
+    .juggling-area {
+      height: 320px;
+      background: #0f172a;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .juggling-ball {
+      position: absolute;
+      width: 45px;
+      height: 45px;
+      background: white;
+      border-radius: 50%;
+      left: 50%;
+      top: 100px;
+      transform: translateX(-50%);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      user-select: none;
+    }
+
+    .btn-action {
       margin-top: 15px;
       padding: 10px 20px;
       background-color: #38bdf8;
@@ -143,11 +213,6 @@
       border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .btn-reset:hover {
-      background-color: #7dd3fc;
     }
   </style>
 </head>
@@ -155,128 +220,209 @@
 
   <header>
     <h1>Passfoot 🎮</h1>
-    <p>Mini-Jeu : Tir au But</p>
+    <p>Centre de Mini-Jeux</p>
   </header>
 
+  <!-- Selecteur de jeux -->
+  <div class="game-nav">
+    <button class="nav-btn active" onclick="switchGame('penalties', this)">⚽ Tir au But</button>
+    <button class="nav-btn" onclick="switchGame('quiz', this)">🧠 Quiz Foot</button>
+    <button class="nav-btn" onclick="switchGame('juggling', this)">🤹 Jongles</button>
+  </div>
+
   <div class="game-container">
-    <div class="scoreboard">
-      <div class="score-item">Tirs: <span id="shots">0</span></div>
-      <div class="score-item">Buts: <span id="goals">0</span></div>
-      <div class="score-item">Arrêts: <span id="saves">0</span></div>
-    </div>
 
-    <div class="pitch" id="pitch">
-      <div class="goal" id="goal">
-        <div class="goalkeeper" id="keeper"></div>
+    <!-- JEU 1: TIR AU BUT -->
+    <div id="penalties" class="game-section active">
+      <div class="scoreboard">
+        <div>Tirs: <span id="shots">0</span></div>
+        <div>Buts: <span id="goals">0</span></div>
+        <div>Arrêts: <span id="saves">0</span></div>
       </div>
-      <div class="ball" id="ball"></div>
+      <div class="pitch" id="pitch">
+        <div class="goal" id="goal">
+          <div class="goalkeeper" id="keeper"></div>
+        </div>
+        <div class="ball" id="ball"></div>
+      </div>
+      <div class="message" id="message">Clique sur le terrain pour tirer !</div>
+      <button class="btn-action" onclick="resetPenalties()">Réinitialiser</button>
     </div>
 
-    <div class="message" id="message">Clique sur le terrain pour tirer !</div>
-    <button class="btn-reset" onclick="resetGame()">Réinitialiser le score</button>
+    <!-- JEU 2: QUIZ FOOT -->
+    <div id="quiz" class="game-section">
+      <div class="scoreboard">
+        <div>Score Quiz: <span id="quiz-score">0</span></div>
+      </div>
+      <div class="quiz-box">
+        <div class="question" id="quiz-q">Chargement de la question...</div>
+        <div class="options-grid" id="quiz-options"></div>
+      </div>
+      <div class="message" id="quiz-msg"></div>
+    </div>
+
+    <!-- JEU 3: JONGLES -->
+    <div id="juggling" class="game-section">
+      <div class="scoreboard">
+        <div>Jongles consécutifs: <span id="juggle-count">0</span></div>
+        <div>Record: <span id="juggle-best">0</span></div>
+      </div>
+      <div class="juggling-area" id="juggle-area">
+        <div class="juggling-ball" id="juggle-ball" onclick="bounceBall()">⚽</div>
+      </div>
+      <div class="message" id="juggle-msg">Clique sur le ballon avant qu'il ne touche le sol !</div>
+    </div>
+
   </div>
 
   <script>
+    // System d'onglets
+    function switchGame(gameId, btn) {
+      document.querySelectorAll('.game-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(gameId).classList.add('active');
+      btn.classList.add('active');
+      if(gameId === 'juggling') resetJuggling();
+    }
+
+    /* LOGIQUE 1: TIR AU BUT */
     const pitch = document.getElementById('pitch');
     const ball = document.getElementById('ball');
     const keeper = document.getElementById('keeper');
     const goal = document.getElementById('goal');
-
-    const shotsEl = document.getElementById('shots');
-    const goalsEl = document.getElementById('goals');
-    const savesEl = document.getElementById('saves');
-    const messageEl = document.getElementById('message');
-
-    let shots = 0;
-    let goals = 0;
-    let saves = 0;
-    let isShooting = false;
+    let shots = 0, goals = 0, saves = 0, isShooting = false;
 
     pitch.addEventListener('click', (e) => {
       if (isShooting) return;
-
       const rect = pitch.getBoundingClientRect();
-      const clickX = e.clientX - rect.left;
-      const clickY = e.clientY - rect.top;
-
-      // Déclencher le tir
-      shoot(clickX, clickY);
+      shoot(e.clientX - rect.left, e.clientY - rect.top);
     });
 
     function shoot(targetX, targetY) {
       isShooting = true;
       shots++;
-      shotsEl.textContent = shots;
-
-      // Positionner le ballon à l'endroit cliqué
+      document.getElementById('shots').textContent = shots;
       ball.style.left = `${targetX}px`;
       ball.style.top = `${targetY}px`;
       ball.style.transform = 'scale(0.65)';
 
-      // Déplacement aléatoire du gardien
-      const keeperPositions = [20, 50, 80]; // Gauche, Centre, Droite (en %)
+      const keeperPositions = [20, 50, 80];
       const randomPos = keeperPositions[Math.floor(Math.random() * keeperPositions.length)];
       keeper.style.left = `${randomPos}%`;
 
-      // Vérification des collisions après l'animation
       setTimeout(() => {
-        checkResult(targetX, targetY, randomPos);
+        const goalRect = goal.getBoundingClientRect();
+        const pitchRect = pitch.getBoundingClientRect();
+        const isInside = targetX >= (goalRect.left - pitchRect.left) && targetX <= (goalRect.right - pitchRect.left) && targetY >= (goalRect.top - pitchRect.top) && targetY <= (goalRect.bottom - pitchRect.top);
+        const keeperX = (goalRect.width * (randomPos / 100)) + (goalRect.left - pitchRect.left);
+        const isSaved = Math.abs(targetX - keeperX) < 45 && isInside;
+
+        const msg = document.getElementById('message');
+        if (isSaved) {
+          saves++;
+          document.getElementById('saves').textContent = saves;
+          msg.textContent = "🖐️ Arrêt du gardien !";
+          msg.style.color = "#ef4444";
+        } else if (isInside) {
+          goals++;
+          document.getElementById('goals').textContent = goals;
+          msg.textContent = "⚽ BUT !!! Magnifique frappe !";
+          msg.style.color = "#22c55e";
+        } else {
+          msg.textContent = "❌ À côté !";
+          msg.style.color = "#f59e0b";
+        }
+
+        setTimeout(() => {
+          ball.style.left = '50%';
+          ball.style.top = '';
+          ball.style.bottom = '20px';
+          ball.style.transform = 'translateX(-50%) scale(1)';
+          keeper.style.left = '50%';
+          isShooting = false;
+        }, 1200);
       }, 400);
     }
 
-    function checkResult(targetX, targetY, keeperPosPercent) {
-      const goalRect = goal.getBoundingClientRect();
-      const pitchRect = pitch.getBoundingClientRect();
-
-      // Limites de la cage par rapport au terrain
-      const goalLeft = goalRect.left - pitchRect.left;
-      const goalRight = goalRect.right - pitchRect.left;
-      const goalTop = goalRect.top - pitchRect.top;
-      const goalBottom = goalRect.bottom - pitchRect.top;
-
-      // Le tir est-il cadré ?
-      const isInsideGoal = targetX >= goalLeft && targetX <= goalRight &&
-                           targetY >= goalTop && targetY <= goalBottom;
-
-      // Position du gardien en pixels
-      const keeperX = (goalRect.width * (keeperPosPercent / 100)) + goalLeft;
-      const isSaved = Math.abs(targetX - keeperX) < 45 && isInsideGoal;
-
-      if (isSaved) {
-        saves++;
-        savesEl.textContent = saves;
-        messageEl.textContent = "🖐️ Arrêt du gardien !";
-        messageEl.style.color = "#ef4444";
-      } else if (isInsideGoal) {
-        goals++;
-        goalsEl.textContent = goals;
-        messageEl.textContent = "⚽ BUT !!! Magnifique frappe !";
-        messageEl.style.color = "#22c55e";
-      } else {
-        messageEl.textContent = "❌ À côté ! Ajuste ta frappe.";
-        messageEl.style.color = "#f59e0b";
-      }
-
-      // Réinitialisation du ballon pour le prochain tir
-      setTimeout(() => {
-        ball.style.left = '50%';
-        ball.style.top = '';
-        ball.style.bottom = '20px';
-        ball.style.transform = 'translateX(-50%) scale(1)';
-        keeper.style.left = '50%';
-        isShooting = false;
-      }, 1200);
+    function resetPenalties() {
+      shots = goals = saves = 0;
+      document.getElementById('shots').textContent = 0;
+      document.getElementById('goals').textContent = 0;
+      document.getElementById('saves').textContent = 0;
     }
 
-    function resetGame() {
-      shots = 0;
-      goals = 0;
-      saves = 0;
-      shotsEl.textContent = 0;
-      goalsEl.textContent = 0;
-      savesEl.textContent = 0;
-      messageEl.textContent = "Clique sur le terrain pour tirer !";
-      messageEl.style.color = "#f8fafc";
+    /* LOGIQUE 2: QUIZ FOOT */
+    const quizData = [
+      { q: "Quel pays a remporté la Coupe du Monde 2022 ?", options: ["France", "Brésil", "Argentine", "Allemagne"], answer: 2 },
+      { q: "Quel joueur possède le plus de Ballons d'Or ?", options: ["Ronaldo", "Messi", "Cruyff", "Zidane"], answer: 1 },
+      { q: "Combien de temps dure un match de football réglementaire ?", options: ["80 min", "90 min", "100 min", "120 min"], answer: 1 }
+    ];
+    let currentQ = 0, quizScore = 0;
+
+    function loadQuiz() {
+      const q = quizData[currentQ];
+      document.getElementById('quiz-q').textContent = q.q;
+      const optGrid = document.getElementById('quiz-options');
+      optGrid.innerHTML = '';
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt;
+        btn.onclick = () => checkQuiz(idx);
+        optGrid.appendChild(btn);
+      });
+    }
+
+    function checkQuiz(selected) {
+      const msg = document.getElementById('quiz-msg');
+      if(selected === quizData[currentQ].answer) {
+        quizScore += 10;
+        document.getElementById('quiz-score').textContent = quizScore;
+        msg.textContent = "✅ Bonne réponse !";
+        msg.style.color = "#22c55e";
+      } else {
+        msg.textContent = "❌ Mauvaise réponse !";
+        msg.style.color = "#ef4444";
+      }
+      currentQ = (currentQ + 1) % quizData.length;
+      setTimeout(() => { msg.textContent = ''; loadQuiz(); }, 1000);
+    }
+    loadQuiz();
+
+    /* LOGIQUE 3: JONGLES */
+    let juggles = 0, bestJuggle = 0, ballY = 50, ballSpeed = 2, juggleInterval;
+    const jBall = document.getElementById('juggle-ball');
+
+    function bounceBall() {
+      juggles++;
+      document.getElementById('juggle-count').textContent = juggles;
+      if(juggles > bestJuggle) {
+        bestJuggle = juggles;
+        document.getElementById('juggle-best').textContent = bestJuggle;
+      }
+      ballY = 30; // Remonter le ballon
+      ballSpeed = -4; // Impulsion vers le haut
+    }
+
+    function gameLoopJuggling() {
+      ballSpeed += 0.2; // Gravité
+      ballY += ballSpeed;
+      if(ballY > 260) { // Sol touché
+        document.getElementById('juggle-msg').textContent = "💥 Perdu ! Le ballon a touché le sol.";
+        resetJuggling();
+        return;
+      }
+      jBall.style.top = `${ballY}px`;
+    }
+
+    function resetJuggling() {
+      clearInterval(juggleInterval);
+      juggles = 0;
+      document.getElementById('juggle-count').textContent = 0;
+      ballY = 50;
+      ballSpeed = 0;
+      jBall.style.top = '50px';
+      juggleInterval = setInterval(gameLoopJuggling, 20);
     }
   </script>
 </body>
