@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Passfoot 🎮 - Cyber Arena PRO</title>
+  <title>Passfoot 🎮 - Cyber Arena PRO & Shop</title>
   <style>
     * {
       box-sizing: border-box;
@@ -24,7 +24,7 @@
 
     header {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
 
     header h1 {
@@ -35,9 +35,22 @@
       text-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
     }
 
+    /* Solde de pièces global */
+    .coins-display {
+      background: #1e293b;
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid #f59e0b;
+      color: #fbbf24;
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+    }
+
     .game-nav {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       margin-bottom: 20px;
       background: #161e2e;
       padding: 8px;
@@ -46,7 +59,7 @@
     }
 
     .nav-btn {
-      padding: 12px 24px;
+      padding: 10px 18px;
       border: none;
       background: transparent;
       color: #94a3b8;
@@ -91,14 +104,13 @@
     .scoreboard span {
       color: #38bdf8;
       font-size: 1.2rem;
-      text-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
     }
 
     /* Terrain de Foot */
     .pitch {
       position: relative;
       width: 100%;
-      height: 360px;
+      height: 340px;
       background: repeating-linear-gradient(0deg, #15803d, #15803d 40px, #166534 40px, #166534 80px);
       border-radius: 16px;
       overflow: hidden;
@@ -110,29 +122,8 @@
     .penalty-area {
       position: absolute;
       top: 0; left: 50%; transform: translateX(-50%);
-      width: 360px; height: 170px;
+      width: 360px; height: 160px;
       border: 2px solid rgba(255, 255, 255, 0.85); border-top: none;
-    }
-
-    .goal-area {
-      position: absolute;
-      top: 0; left: 50%; transform: translateX(-50%);
-      width: 190px; height: 65px;
-      border: 2px solid rgba(255, 255, 255, 0.85); border-top: none;
-    }
-
-    .penalty-arc {
-      position: absolute;
-      top: 170px; left: 50%; transform: translateX(-50%);
-      width: 110px; height: 50px;
-      border: 2px solid rgba(255, 255, 255, 0.85);
-      border-radius: 0 0 110px 110px; border-top: none;
-    }
-
-    .penalty-spot {
-      position: absolute;
-      top: 120px; left: 50%; transform: translateX(-50%);
-      width: 8px; height: 8px; background: #fff; border-radius: 50%;
     }
 
     .goal {
@@ -150,17 +141,64 @@
       width: 42px; height: 52px;
       background: linear-gradient(to bottom, #ef4444, #991b1b);
       border: 2px solid #fca5a5; border-radius: 10px 10px 0 0;
-      box-shadow: 0 0 12px rgba(239, 68, 68, 0.8);
       transition: all 0.2s ease-out;
     }
 
+    /* Ballons Personnalisés */
     .ball {
       position: absolute;
       bottom: 25px; left: 50%; transform: translateX(-50%);
-      width: 32px; height: 32px; background: #ffffff;
-      border-radius: 50%; box-shadow: 0 0 12px #ffffff;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
       transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
     }
+
+    .skin-classic { background: #ffffff; box-shadow: 0 0 10px #ffffff; }
+    .skin-neon { background: #00f0ff; box-shadow: 0 0 15px #00f0ff; }
+    .skin-champions { background: #3b82f6; box-shadow: 0 0 15px #3b82f6; color: white; }
+    .skin-gold { background: linear-gradient(45deg, #f59e0b, #fbbf24); box-shadow: 0 0 20px #fbbf24; }
+
+    /* Boutique */
+    .shop-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .shop-item {
+      background: #0b0f19;
+      padding: 15px;
+      border-radius: 12px;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .shop-preview {
+      width: 45px; height: 45px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .btn-buy {
+      padding: 8px 16px;
+      background: #22c55e;
+      color: #0b0f19;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .btn-buy.equipped { background: #38bdf8; cursor: default; }
+    .btn-buy:disabled { background: #475569; cursor: not-allowed; color: #94a3b8; }
 
     /* Quiz Timer */
     .timer-bar-container {
@@ -168,67 +206,32 @@
       border-radius: 4px; margin-bottom: 15px; overflow: hidden;
     }
 
-    .timer-bar {
-      height: 100%; width: 100%; background: #38bdf8;
-      transition: width 0.1s linear;
-    }
+    .timer-bar { height: 100%; width: 100%; background: #38bdf8; transition: width 0.1s linear; }
 
-    .quiz-box {
-      background: #0b0f19; padding: 20px;
-      border-radius: 14px; border: 1px solid rgba(56, 189, 248, 0.2);
-    }
-
-    .options-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-    }
-
+    .quiz-box { background: #0b0f19; padding: 20px; border-radius: 14px; }
+    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .option-btn {
       padding: 12px; background: #1e293b; color: white;
       border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px;
-      cursor: pointer; font-weight: bold; transition: all 0.2s;
+      cursor: pointer; font-weight: bold;
     }
 
-    .option-btn:hover { background: #334155; border-color: #38bdf8; }
-
-    /* Jongles */
     .juggling-area {
-      height: 320px; background: #0b0f19; border-radius: 16px;
-      position: relative; overflow: hidden; border: 1px solid rgba(56, 189, 248, 0.2);
+      height: 300px; background: #0b0f19; border-radius: 16px;
+      position: relative; overflow: hidden;
     }
 
     .juggling-ball {
-      position: absolute; width: 48px; height: 48px; background: white;
+      position: absolute; width: 48px; height: 48px;
       border-radius: 50%; left: 50%; top: 60px; transform: translateX(-50%);
       cursor: pointer; display: flex; align-items: center; justify-content: center;
-      font-size: 1.6rem; user-select: none; box-shadow: 0 0 15px #ffffff;
+      font-size: 1.5rem; user-select: none;
     }
 
-    /* Trophées */
-    .trophies-container {
-      margin-top: 20px; background: #0b0f19; padding: 15px;
-      border-radius: 14px; border: 1px solid rgba(56, 189, 248, 0.2);
-    }
-
-    .trophies-grid {
-      display: flex; justify-content: space-around; margin-top: 10px;
-    }
-
-    .trophy {
-      font-size: 1.8rem; filter: grayscale(100%); opacity: 0.3; transition: all 0.3s;
-    }
-
-    .trophy.unlocked {
-      filter: grayscale(0%); opacity: 1; transform: scale(1.15);
-    }
-
-    .message {
-      margin-top: 15px; font-size: 1.2rem; font-weight: bold; min-height: 35px;
-    }
-
+    .message { margin-top: 15px; font-size: 1.2rem; font-weight: bold; min-height: 35px; }
     .btn-action {
       margin-top: 15px; padding: 10px 24px; background: #38bdf8;
-      color: #0b0f19; border: none; border-radius: 10px; font-weight: bold;
-      cursor: pointer; box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+      color: #0b0f19; border: none; border-radius: 10px; font-weight: bold; cursor: pointer;
     }
   </style>
 </head>
@@ -236,13 +239,15 @@
 
   <header>
     <h1>Passfoot 🎮</h1>
-    <p>Cyber Arena PRO</p>
   </header>
+
+  <div class="coins-display">🪙 <span id="coins-count">0</span> PassCoins</div>
 
   <div class="game-nav">
     <button class="nav-btn active" onclick="switchGame('penalties', this)">⚽ Tir au But</button>
-    <button class="nav-btn" onclick="switchGame('quiz', this)">🧠 Quiz (Chrono)</button>
+    <button class="nav-btn" onclick="switchGame('quiz', this)">🧠 Quiz</button>
     <button class="nav-btn" onclick="switchGame('juggling', this)">🤹 Jongles</button>
+    <button class="nav-btn" onclick="switchGame('shop', this)">🛒 Boutique</button>
   </div>
 
   <div class="game-container">
@@ -252,31 +257,24 @@
       <div class="scoreboard">
         <div>Niveau: <span id="level">1</span></div>
         <div>Buts: <span id="goals">0</span></div>
-        <div>Record: <span id="best-goals">0</span></div>
       </div>
       <div class="pitch" id="pitch">
         <div class="penalty-area"></div>
-        <div class="goal-area"></div>
-        <div class="penalty-arc"></div>
-        <div class="penalty-spot"></div>
         <div class="goal" id="goal">
           <div class="goalkeeper" id="keeper"></div>
         </div>
-        <div class="ball" id="ball"></div>
+        <div class="ball skin-classic" id="ball">⚽</div>
       </div>
-      <div class="message" id="message">Clique pour tirer !</div>
+      <div class="message" id="message">Clique sur le terrain pour tirer !</div>
       <button class="btn-action" onclick="resetPenalties()">Réinitialiser</button>
     </div>
 
-    <!-- JEU 2: QUIZ CHRONO -->
+    <!-- JEU 2: QUIZ -->
     <div id="quiz" class="game-section">
       <div class="scoreboard">
         <div>Score: <span id="quiz-score">0</span></div>
-        <div>Meilleur: <span id="quiz-best">0</span></div>
       </div>
-      <div class="timer-bar-container">
-        <div class="timer-bar" id="timer-bar"></div>
-      </div>
+      <div class="timer-bar-container"><div class="timer-bar" id="timer-bar"></div></div>
       <div class="quiz-box">
         <div class="question" id="quiz-q">Chargement...</div>
         <div class="options-grid" id="quiz-options"></div>
@@ -288,28 +286,121 @@
     <div id="juggling" class="game-section">
       <div class="scoreboard">
         <div>Jongles: <span id="juggle-count">0</span></div>
-        <div>Record: <span id="juggle-best">0</span></div>
       </div>
       <div class="juggling-area" id="juggle-area">
-        <div class="juggling-ball" id="juggle-ball" onclick="bounceBall()">⚽</div>
+        <div class="juggling-ball skin-classic" id="juggle-ball" onclick="bounceBall()">⚽</div>
       </div>
       <div class="message" id="juggle-msg">Garde le ballon en l'air !</div>
     </div>
 
-    <!-- Trophées -->
-    <div class="trophies-container">
-      <div style="font-size:0.9rem; color:#94a3b8;">Trophées Débloqués</div>
-      <div class="trophies-grid">
-        <div class="trophy" id="t-first-goal" title="Marquer 1 but">⚽</div>
-        <div class="trophy" id="t-sniper" title="Marquer 5 buts">🎯</div>
-        <div class="trophy" id="t-quiz-master" title="Avoir 50 points au Quiz">🧠</div>
-        <div class="trophy" id="t-juggler" title="Faire 15 jongles">🤹</div>
+    <!-- JEU 4: BOUTIQUE DE SKINS -->
+    <div id="shop" class="game-section">
+      <h2 style="margin-bottom: 15px; color: #38bdf8;">Magasin de Skins</h2>
+      <div class="shop-grid">
+        
+        <div class="shop-item">
+          <div class="shop-preview skin-classic">⚽</div>
+          <div><strong>Classique</strong></div>
+          <div style="color: #cbd5e1; font-size: 0.85rem;">Gratuit</div>
+          <button class="btn-buy equipped" id="btn-skin-classic" onclick="equipSkin('classic')">Équipé</button>
+        </div>
+
+        <div class="shop-item">
+          <div class="shop-preview skin-neon">⚡</div>
+          <div><strong>Néon Cyber</strong></div>
+          <div style="color: #fbbf24; font-size: 0.85rem;">🪙 50 Coins</div>
+          <button class="btn-buy" id="btn-skin-neon" onclick="buyOrEquip('neon', 50)">Acheter</button>
+        </div>
+
+        <div class="shop-item">
+          <div class="shop-preview skin-champions">⭐</div>
+          <div><strong>Star League</strong></div>
+          <div style="color: #fbbf24; font-size: 0.85rem;">🪙 100 Coins</div>
+          <button class="btn-buy" id="btn-skin-champions" onclick="buyOrEquip('champions', 100)">Acheter</button>
+        </div>
+
+        <div class="shop-item">
+          <div class="shop-preview skin-gold">🏆</div>
+          <div><strong>Ballon d'Or</strong></div>
+          <div style="color: #fbbf24; font-size: 0.85rem;">🪙 200 Coins</div>
+          <button class="btn-buy" id="btn-skin-gold" onclick="buyOrEquip('gold', 200)">Acheter</button>
+        </div>
+
       </div>
     </div>
 
   </div>
 
   <script>
+    // Économie & Sauvegarde
+    let coins = parseInt(localStorage.getItem('passcoins')) || 0;
+    let unlockedSkins = JSON.parse(localStorage.getItem('unlockedSkins')) || ['classic'];
+    let currentSkin = localStorage.getItem('currentSkin') || 'classic';
+
+    function updateCoins(amount) {
+      coins += amount;
+      localStorage.setItem('passcoins', coins);
+      document.getElementById('coins-count').textContent = coins;
+      updateShopUI();
+    }
+
+    function applySkin(skinName) {
+      const skins = ['classic', 'neon', 'champions', 'gold'];
+      const symbols = { classic: '⚽', neon: '⚡', champions: '⭐', gold: '🏆' };
+
+      [document.getElementById('ball'), document.getElementById('juggle-ball')].forEach(b => {
+        skins.forEach(s => b.classList.remove(`skin-${s}`));
+        b.classList.add(`skin-${skinName}`);
+        b.textContent = symbols[skinName];
+      });
+    }
+
+    function equipSkin(skinName) {
+      currentSkin = skinName;
+      localStorage.setItem('currentSkin', skinName);
+      applySkin(skinName);
+      updateShopUI();
+    }
+
+    function buyOrEquip(skinName, price) {
+      if (unlockedSkins.includes(skinName)) {
+        equipSkin(skinName);
+      } else if (coins >= price) {
+        coins -= price;
+        localStorage.setItem('passcoins', coins);
+        document.getElementById('coins-count').textContent = coins;
+        unlockedSkins.push(skinName);
+        localStorage.setItem('unlockedSkins', JSON.stringify(unlockedSkins));
+        equipSkin(skinName);
+      }
+    }
+
+    function updateShopUI() {
+      const skins = [
+        { id: 'classic', price: 0 },
+        { id: 'neon', price: 50 },
+        { id: 'champions', price: 100 },
+        { id: 'gold', price: 200 }
+      ];
+
+      skins.forEach(s => {
+        const btn = document.getElementById(`btn-skin-${s.id}`);
+        if (currentSkin === s.id) {
+          btn.textContent = 'Équipé';
+          btn.className = 'btn-buy equipped';
+          btn.disabled = false;
+        } else if (unlockedSkins.includes(s.id)) {
+          btn.textContent = 'Équiper';
+          btn.className = 'btn-buy';
+          btn.disabled = false;
+        } else {
+          btn.textContent = 'Acheter';
+          btn.className = 'btn-buy';
+          btn.disabled = coins < s.price;
+        }
+      });
+    }
+
     // Navigation
     function switchGame(gameId, btn) {
       document.querySelectorAll('.game-section').forEach(s => s.classList.remove('active'));
@@ -321,22 +412,7 @@
       if(gameId === 'juggling') resetJuggling();
     }
 
-    // Trophées & Storage
-    function unlockTrophy(id) {
-      document.getElementById(id).classList.add('unlocked');
-      localStorage.setItem(id, 'unlocked');
-    }
-
-    function loadTrophies() {
-      ['t-first-goal', 't-sniper', 't-quiz-master', 't-juggler'].forEach(id => {
-        if(localStorage.getItem(id) === 'unlocked') document.getElementById(id).classList.add('unlocked');
-      });
-      document.getElementById('best-goals').textContent = localStorage.getItem('best-goals') || 0;
-      document.getElementById('quiz-best').textContent = localStorage.getItem('quiz-best') || 0;
-      document.getElementById('juggle-best').textContent = localStorage.getItem('juggle-best') || 0;
-    }
-
-    /* LOGIQUE 1: TIR AU BUT */
+    /* TIR AU BUT */
     const pitch = document.getElementById('pitch');
     const ball = document.getElementById('ball');
     const keeper = document.getElementById('keeper');
@@ -355,10 +431,8 @@
       ball.style.top = `${targetY}px`;
       ball.style.transform = 'scale(0.65)';
 
-      // Gardien plus rapide selon le niveau
       keeper.style.transition = `all ${Math.max(0.12, 0.28 - level * 0.02)}s ease-out`;
-      const keeperPositions = [20, 50, 80];
-      const randomPos = keeperPositions[Math.floor(Math.random() * keeperPositions.length)];
+      const randomPos = [20, 50, 80][Math.floor(Math.random() * 3)];
       keeper.style.left = `${randomPos}%`;
 
       setTimeout(() => {
@@ -376,16 +450,8 @@
           document.getElementById('goals').textContent = goals;
           level = Math.floor(goals / 3) + 1;
           document.getElementById('level').textContent = level;
-          msg.textContent = "⚽ BUT !!!"; msg.style.color = "#4ade80";
-
-          unlockTrophy('t-first-goal');
-          if(goals >= 5) unlockTrophy('t-sniper');
-
-          const bestG = localStorage.getItem('best-goals') || 0;
-          if(goals > bestG) {
-            localStorage.setItem('best-goals', goals);
-            document.getElementById('best-goals').textContent = goals;
-          }
+          msg.textContent = "⚽ BUT !!! (+10 Coins 🪙)"; msg.style.color = "#4ade80";
+          updateCoins(10);
         } else {
           msg.textContent = "❌ À CÔTÉ !"; msg.style.color = "#f59e0b";
         }
@@ -404,13 +470,11 @@
       document.getElementById('level').textContent = 1;
     }
 
-    /* LOGIQUE 2: QUIZ CHRONO */
+    /* QUIZ */
     const quizData = [
       { q: "Quel pays a remporté la Coupe du Monde 2022 ?", options: ["France", "Brésil", "Argentine", "Allemagne"], answer: 2 },
       { q: "Quel joueur possède le plus de Ballons d'Or ?", options: ["Ronaldo", "Messi", "Cruyff", "Zidane"], answer: 1 },
-      { q: "Combien de temps dure un match réglementaire ?", options: ["80 min", "90 min", "100 min", "120 min"], answer: 1 },
-      { q: "Vainqueur du premier Mondial en 1930 ?", options: ["Brésil", "Uruguay", "Italie", "Argentine"], answer: 1 },
-      { q: "Club avec le plus de Ligues des Champions ?", options: ["AC Milan", "FC Barcelone", "Real Madrid", "Bayern"], answer: 2 }
+      { q: "Combien de temps dure un match réglementaire ?", options: ["80 min", "90 min", "100 min", "120 min"], answer: 1 }
     ];
     let currentQ = 0, quizScore = 0, quizTimer, timeLeft = 10;
 
@@ -436,10 +500,7 @@
       quizTimer = setInterval(() => {
         timeLeft -= 0.1;
         timerBar.style.width = `${(timeLeft / 10) * 100}%`;
-        if(timeLeft <= 0) {
-          clearInterval(quizTimer);
-          checkQuiz(-1);
-        }
+        if(timeLeft <= 0) { clearInterval(quizTimer); checkQuiz(-1); }
       }, 100);
     }
 
@@ -449,14 +510,8 @@
       if(selected === quizData[currentQ].answer) {
         quizScore += 10;
         document.getElementById('quiz-score').textContent = quizScore;
-        msg.textContent = "✅ Correct ! (+10 pts)"; msg.style.color = "#4ade80";
-        if(quizScore >= 50) unlockTrophy('t-quiz-master');
-
-        const bestQ = localStorage.getItem('quiz-best') || 0;
-        if(quizScore > bestQ) {
-          localStorage.setItem('quiz-best', quizScore);
-          document.getElementById('quiz-best').textContent = quizScore;
-        }
+        msg.textContent = "✅ Correct ! (+10 Coins 🪙)"; msg.style.color = "#4ade80";
+        updateCoins(10);
       } else {
         msg.textContent = selected === -1 ? "⏱️ Temps écoulé !" : "❌ Incorrect !";
         msg.style.color = "#ef4444";
@@ -465,26 +520,20 @@
       setTimeout(() => { msg.textContent = ''; loadQuiz(); }, 1200);
     }
 
-    /* LOGIQUE 3: JONGLES */
+    /* JONGLES */
     let juggles = 0, ballY = 60, ballSpeed = 2, juggleInterval;
     const jBall = document.getElementById('juggle-ball');
 
     function bounceBall() {
       juggles++;
       document.getElementById('juggle-count').textContent = juggles;
-      if(juggles >= 15) unlockTrophy('t-juggler');
-
-      const bestJ = localStorage.getItem('juggle-best') || 0;
-      if(juggles > bestJ) {
-        localStorage.setItem('juggle-best', juggles);
-        document.getElementById('juggle-best').textContent = juggles;
-      }
+      if (juggles % 5 === 0) updateCoins(10); // 10 coins tous les 5 jongles
       ballY = 40; ballSpeed = -4.5;
     }
 
     function gameLoopJuggling() {
       ballSpeed += 0.22; ballY += ballSpeed;
-      if(ballY > 260) {
+      if(ballY > 240) {
         document.getElementById('juggle-msg').textContent = "💥 Perdu ! Le ballon a touché le sol.";
         resetJuggling(); return;
       }
@@ -498,8 +547,10 @@
       juggleInterval = setInterval(gameLoopJuggling, 20);
     }
 
-    // Lancement
-    loadTrophies();
+    // Init
+    document.getElementById('coins-count').textContent = coins;
+    applySkin(currentSkin);
+    updateShopUI();
     loadQuiz();
   </script>
 </body>
