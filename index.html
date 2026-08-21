@@ -3,404 +3,128 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Passfoot 🎮 - Cyber Arena 3D Ultra Pro</title>
-  <!-- Three.js Library -->
+  <title>Passfoot 🎮 - Penalty 3D Pro Master</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+    body { background: #040d1a; color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
 
-    body {
-      background: #040d1a; color: #ffffff; min-height: 100vh;
-      display: flex; flex-direction: column; overflow-x: hidden;
-    }
-
-    /* HEADER CYBER */
     header {
       background: #0a192f; padding: 12px 30px; display: flex;
       justify-content: space-between; align-items: center;
       border-bottom: 2px solid #00f0ff; box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
-      position: sticky; top: 0; z-index: 100;
     }
-
     .brand h1 { font-size: 1.8rem; color: #00f0ff; text-shadow: 0 0 12px #00f0ff; text-transform: uppercase; }
     .brand p { font-size: 0.75rem; color: #94a3b8; }
 
-    .search-bar {
-      background: #0f233d; border: 1px solid #1e40af; border-radius: 20px;
-      padding: 6px 15px; color: #fff; width: 200px; outline: none;
-    }
-
-    /* CATEGORIES BAR */
-    .cat-bar {
-      display: flex; justify-content: center; gap: 10px; padding: 12px;
-      background: #081627; border-bottom: 1px solid rgba(0,240,255,0.1); flex-wrap: wrap;
-    }
-    .cat-btn {
-      background: #0f233d; color: #00f0ff; border: 1px solid #00f0ff;
-      padding: 6px 16px; border-radius: 20px; cursor: pointer; font-weight: bold;
-      font-size: 0.85rem; box-shadow: 0 0 8px rgba(0,240,255,0.2); transition: all 0.2s;
-    }
-    .cat-btn:hover { background: #00f0ff; color: #06111e; box-shadow: 0 0 15px #00f0ff; }
-
-    /* LAYOUT & GRID */
-    .app-layout { display: flex; flex: 1; }
-    .sidebar-left { width: 140px; padding: 15px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+    .app-layout { display: flex; flex: 1; padding: 20px; gap: 20px; }
+    .sidebar { width: 160px; display: flex; flex-direction: column; gap: 15px; }
     
-    .coin-badge-big {
-      background: #0f233d; border: 2px solid #f59e0b; border-radius: 15px;
-      padding: 12px 8px; text-align: center; color: #fbbf24; font-weight: bold;
-      box-shadow: 0 0 12px rgba(245, 158, 11, 0.5); font-size: 0.75rem; width: 100%;
+    .stat-card {
+      background: #0f233d; border: 2px solid #00f0ff; border-radius: 12px;
+      padding: 12px; text-align: center; color: #00f0ff; font-weight: bold; font-size: 0.8rem;
     }
-    .coin-amount { font-size: 1.2rem; color: #fff; display: block; margin-top: 4px; }
+    .stat-value { font-size: 1.4rem; color: #fff; display: block; margin-top: 4px; }
 
-    .main-grid-area { flex: 1; padding: 20px; }
-    .sidebar-right { width: 120px; background: #081627; border-left: 2px solid #00f0ff; display: flex; flex-direction: column; align-items: center; gap: 25px; padding-top: 25px; }
-    .side-item { text-align: center; color: #00f0ff; cursor: pointer; font-size: 0.75rem; font-weight: bold; }
-    .side-item div { font-size: 1.8rem; margin-bottom: 4px; }
-
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 18px; }
-
-    .cyber-card {
-      background: #0a192f; border: 1.5px solid #00f0ff; box-shadow: 0 0 12px #00f0ff;
-      border-radius: 14px; position: relative; overflow: hidden; height: 150px;
-      display: flex; flex-direction: column; justify-content: space-between; padding: 12px;
-      cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .cyber-card:hover { transform: translateY(-4px); box-shadow: 0 0 22px #00f0ff; }
-
-    .tag-top-left {
-      position: absolute; top: 10px; left: 10px; background: #081627;
-      border: 1px solid #00f0ff; border-radius: 50%; width: 28px; height: 28px;
-      display: flex; align-items: center; justify-content: center; font-size: 0.85rem; z-index: 2;
-    }
-
-    .badge {
-      position: absolute; top: 10px; right: 10px; font-size: 0.65rem; font-weight: 800;
-      padding: 4px 10px; border-radius: 12px; text-transform: uppercase; color: #ffffff; z-index: 2;
-    }
-    .badge.nouveau { background-color: #22c55e; box-shadow: 0 0 8px #22c55e; }
-    .badge.hot { background-color: #ef4444; box-shadow: 0 0 8px #ef4444; }
-
-    .card-center-icon { font-size: 3rem; text-align: center; margin-top: 10px; }
-    .card-footer { display: flex; justify-content: space-between; align-items: center; background: rgba(8, 22, 39, 0.85); padding: 6px 10px; border-radius: 8px; }
-    .game-title { font-size: 0.8rem; font-weight: 700; color: #ffffff; text-transform: uppercase; }
-
-    .btn-jouer {
-      background-color: #00f0ff; color: #06111e; border: none; border-radius: 20px;
-      padding: 5px 12px; font-size: 0.75rem; font-weight: 800; cursor: pointer;
-      box-shadow: 0 0 10px rgba(0, 240, 255, 0.5); transition: all 0.2s;
-    }
-    .btn-jouer:hover { background-color: #38bdf8; box-shadow: 0 0 15px #00f0ff; }
-
-    /* MODAL */
-    .modal-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(4, 13, 26, 0.95); backdrop-filter: blur(10px);
-      display: none; justify-content: center; align-items: center; z-index: 1000;
-    }
-    .modal-overlay.active { display: flex; }
-
-    .modal-content {
-      background: #0a192f; border-radius: 20px; border: 2px solid #00f0ff;
-      width: 90%; max-width: 750px; padding: 20px; position: relative;
-      box-shadow: 0 0 35px rgba(0, 240, 255, 0.5); text-align: center;
-    }
-
-    .close-btn {
-      position: absolute; top: 12px; right: 15px; background: #ef4444; color: white;
-      border: none; width: 32px; height: 32px; border-radius: 50%; font-weight: bold;
-      cursor: pointer; font-size: 1rem; box-shadow: 0 0 10px #ef4444; z-index: 10;
-    }
+    .main-area { flex: 1; display: flex; flex-direction: column; gap: 15px; }
 
     .scoreboard {
       display: flex; justify-content: space-around; background: #081627;
-      padding: 10px; border-radius: 10px; margin-bottom: 12px; font-weight: bold;
+      padding: 12px; border-radius: 10px; font-weight: bold;
       color: #00f0ff; border: 1px solid rgba(0,240,255,0.3);
     }
 
-    /* 3D CANVAS CONTAINER */
     #container3D {
-      width: 100%; height: 350px; border-radius: 12px;
-      border: 2px solid #00f0ff; box-shadow: inset 0 0 25px rgba(0, 240, 255, 0.3);
+      width: 100%; height: 500px; border-radius: 14px;
+      border: 2px solid #00f0ff; box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
       overflow: hidden; position: relative; cursor: crosshair;
     }
 
-    #breakoutCanvas { background: #050e1a; border-radius: 10px; border: 1px solid #00f0ff; }
-
-    .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .shop-item { background: #081627; padding: 12px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; border: 1px solid #00f0ff; }
-    .btn-buy { padding: 6px 12px; background: #22c55e; color: #06111e; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; }
-    .btn-buy.equipped { background: #00f0ff; }
-
-    /* LEADERBOARD TABLE */
-    .leaderboard-table {
-      width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left;
-    }
-    .leaderboard-table th, .leaderboard-table td {
-      padding: 10px; border-bottom: 1px solid rgba(0,240,255,0.2); font-size: 0.9rem;
-    }
-    .leaderboard-table th { color: #00f0ff; text-transform: uppercase; }
-
-    /* PLAYER CARD */
-    .card-preview {
-      background: linear-gradient(135deg, #0f233d, #081627);
-      border: 2px solid #f59e0b; border-radius: 15px; padding: 20px;
-      box-shadow: 0 0 20px rgba(245, 158, 11, 0.4); text-align: center; margin-top: 10px;
+    .message {
+      text-align: center; font-size: 1.2rem; font-weight: bold;
+      min-height: 30px; color: #00f0ff; text-shadow: 0 0 10px #00f0ff;
     }
 
-    .message { margin-top: 10px; font-size: 1rem; font-weight: bold; min-height: 25px; color: #00f0ff; text-shadow: 0 0 8px #00f0ff; }
+    .controls-hint {
+      text-align: center; color: #94a3b8; font-size: 0.85rem; margin-top: 5px;
+    }
   </style>
 </head>
 <body>
 
-  <!-- HEADER -->
   <header>
-    <div style="width: 200px;"></div>
     <div class="brand">
-      <h1>Passfoot 🎮</h1>
-      <p>Cyber Arena 3D Ultra Pro</p>
+      <h1>Passfoot ⚽</h1>
+      <p>Mode Penalty 3D Pro</p>
     </div>
-    <input type="text" class="search-bar" placeholder="Rechercher...">
   </header>
 
-  <!-- CATEGORIES -->
-  <div class="cat-bar">
-    <button class="cat-btn" onclick="openGame('penalties')">⚽ Tir 3D</button>
-    <button class="cat-btn" onclick="openGame('precision')">🎯 Précision 3D</button>
-    <button class="cat-btn" onclick="openGame('leaderboard')">🏆 Classement</button>
-    <button class="cat-btn" onclick="openGame('playercard')">🎴 Ma Carte</button>
-    <button class="cat-btn" onclick="openGame('shop')">🛒 Boutique</button>
-  </div>
-
   <div class="app-layout">
-    <div class="sidebar-left">
-      <div class="coin-badge-big">
-        🪙<br>COINS<br><span class="coin-amount" id="coins-count">0</span>
+    <div class="sidebar">
+      <div class="stat-card" style="border-color: #f59e0b; color: #fbbf24;">
+        🪙 COINS<span class="stat-value" id="coins-count">500</span>
       </div>
-      <div class="coin-badge-big" style="border-color:#00f0ff; color:#00f0ff;">
-        🔥<br>MEILLEUR<br><span class="coin-amount" id="high-score">0</span>
-      </div>
-    </div>
-
-    <div class="main-grid-area">
-      <div class="grid">
-        <div class="cyber-card" onclick="openGame('penalties')">
-          <div class="tag-top-left">⚽</div>
-          <span class="badge nouveau">3D LIVE</span>
-          <div class="card-center-icon">🥅</div>
-          <div class="card-footer">
-            <span class="game-title">Penalty 3D</span>
-            <button class="btn-jouer">JOUER 🪙</button>
-          </div>
-        </div>
-
-        <div class="cyber-card" onclick="openGame('precision')">
-          <div class="tag-top-left">🎯</div>
-          <span class="badge nouveau">3D LIVE</span>
-          <div class="card-center-icon">🎯</div>
-          <div class="card-footer">
-            <span class="game-title">Précision 3D</span>
-            <button class="btn-jouer">JOUER 🪙</button>
-          </div>
-        </div>
-
-        <div class="cyber-card" onclick="openGame('leaderboard')">
-          <div class="tag-top-left">🏆</div>
-          <span class="badge hot">TOP</span>
-          <div class="card-center-icon">🥇</div>
-          <div class="card-footer">
-            <span class="game-title">Classement</span>
-            <button class="btn-jouer">VOIR 🏆</button>
-          </div>
-        </div>
-
-        <div class="cyber-card" onclick="openGame('playercard')">
-          <div class="tag-top-left">🎴</div>
-          <span class="badge nouveau">CARD</span>
-          <div class="card-center-icon">🎴</div>
-          <div class="card-footer">
-            <span class="game-title">Ma Carte Stat</span>
-            <button class="btn-jouer">VOIR 🎴</button>
-          </div>
-        </div>
-
-        <div class="cyber-card" onclick="openGame('juggling')">
-          <div class="tag-top-left">🤹</div>
-          <span class="badge hot">HOT</span>
-          <div class="card-center-icon">🏃</div>
-          <div class="card-footer">
-            <span class="game-title">Juggle Master</span>
-            <button class="btn-jouer">JOUER 🪙</button>
-          </div>
-        </div>
-
-        <div class="cyber-card" onclick="openGame('shop')">
-          <div class="tag-top-left">🛒</div>
-          <span class="badge hot">HOT</span>
-          <div class="card-center-icon">👕</div>
-          <div class="card-footer">
-            <span class="game-title">Skins Shop</span>
-            <button class="btn-jouer">JOUER 🪙</button>
-          </div>
-        </div>
+      <div class="stat-card">
+        🔥 BEST SCORE<span class="stat-value" id="high-score">0</span>
       </div>
     </div>
 
-    <div class="sidebar-right">
-      <div class="side-item" onclick="openGame('leaderboard')"><div>🏆</div>CLASSEMENT</div>
-      <div class="side-item" onclick="openGame('playercard')"><div>🎴</div>CARD</div>
-      <div class="side-item" onclick="openGame('shop')"><div>🛒</div>SHOP</div>
-    </div>
-  </div>
-
-  <!-- MODAL / ÉCRAN DE JEU -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal-content" id="modalContent">
-      <button class="close-btn" onclick="closeGame()">✕</button>
-
-      <!-- JEU 3D ARENA (PENALTIES ET PRÉCISION) -->
-      <div id="game-3d" class="game-view" style="display:none;">
-        <div class="scoreboard">
-          <div>Mode: <span id="mode-title-3d">3D Arena</span></div>
-          <div>Score: <span id="score-3d">0</span></div>
-          <div>Combo: 🔥x<span id="combo-3d">1</span></div>
-        </div>
-        <div id="container3D"></div>
-        <div class="message" id="msg-3d">Clique dans la cage pour frapper !</div>
+    <div class="main-area">
+      <div class="scoreboard">
+        <div>Mode: <span style="color:#fff;">Penalty 3D Master</span></div>
+        <div>Score: <span id="score-3d" style="color:#fff;">0</span></div>
+        <div>Combo: 🔥x<span id="combo-3d" style="color:#fff;">1</span></div>
       </div>
 
-      <!-- LEADERBOARD -->
-      <div id="game-leaderboard" class="game-view" style="display:none;">
-        <h2 style="color:#00f0ff; margin-bottom:12px; text-shadow: 0 0 8px #00f0ff;">🏆 Classement Cyber Arena</h2>
-        <table class="leaderboard-table">
-          <thead>
-            <tr>
-              <th>Rang</th>
-              <th>Joueur</th>
-              <th>Score</th>
-              <th>Skin</th>
-            </tr>
-          </thead>
-          <tbody id="leaderboard-body">
-            <!-- Dynamique -->
-          </tbody>
-        </table>
-      </div>
-
-      <!-- CARTE STATS -->
-      <div id="game-playercard" class="game-view" style="display:none;">
-        <h2 style="color:#f59e0b; margin-bottom:12px; text-shadow: 0 0 8px #f59e0b;">🎴 Ta Carte Passfoot Stats</h2>
-        <div class="card-preview">
-          <div style="font-size: 3rem;">⚡</div>
-          <h3 style="color:#00f0ff; font-size: 1.5rem; margin: 8px 0;" id="card-username">Buteur Pro</h3>
-          <p style="color:#94a3b8; font-weight:bold;">Titre: <span style="color:#22c55e;">Légende du Tir</span></p>
-          <hr style="border-color:rgba(0,240,255,0.2); margin: 12px 0;">
-          <div style="display:flex; justify-content:space-around; font-weight:bold;">
-            <div>🪙 Coins: <span id="card-coins" style="color:#fbbf24">0</span></div>
-            <div>🔥 Top Score: <span id="card-score" style="color:#00f0ff">0</span></div>
-          </div>
-        </div>
-        <p style="margin-top:15px; font-size:0.85rem; color:#94a3b8;">Fais une capture d'écran pour la partager sur tes réseaux ! 🚀</p>
-      </div>
-
-      <!-- JEU 5: JONGLES -->
-      <div id="game-juggling" class="game-view" style="display:none;">
-        <div class="scoreboard">
-          <div>Jongles: <span id="juggle-count">0</span></div>
-          <div>Record: <span id="juggle-record">0</span></div>
-        </div>
-        <div style="height:250px; background:#050e1a; border-radius:10px; position:relative; border: 1px solid #00f0ff; overflow:hidden;" id="juggle-area">
-          <div class="ball" id="juggle-ball" style="position:absolute; left:50%; top:50px; font-size:2rem; cursor:pointer; transform:translateX(-50%);" onclick="bounceBall()">⚽</div>
-        </div>
-        <div class="message" id="juggle-msg">Garde la balle en l'air !</div>
-      </div>
-
-      <!-- SHOP -->
-      <div id="game-shop" class="game-view" style="display:none;">
-        <h2 style="color:#00f0ff; margin-bottom:12px; text-shadow: 0 0 8px #00f0ff;">Magasin de Skins</h2>
-        <div class="shop-grid">
-          <div class="shop-item">
-            <div style="font-size:1.5rem">⚽</div>
-            <div>Classique</div>
-            <button class="btn-buy equipped" id="btn-skin-classic" onclick="equipSkin('classic')">Équipé</button>
-          </div>
-          <div class="shop-item">
-            <div style="font-size:1.5rem">⚡</div>
-            <div>Néon Cyan (🪙 50)</div>
-            <button class="btn-buy" id="btn-skin-neon" onclick="buyOrEquip('neon', 50)">Acheter</button>
-          </div>
-          <div class="shop-item">
-            <div style="font-size:1.5rem">⭐</div>
-            <div>Champions (🪙 100)</div>
-            <button class="btn-buy" id="btn-skin-champions" onclick="buyOrEquip('champions', 100)">Acheter</button>
-          </div>
-          <div class="shop-item">
-            <div style="font-size:1.5rem">🏆</div>
-            <div>Or Pur (🪙 200)</div>
-            <button class="btn-buy" id="btn-skin-gold" onclick="buyOrEquip('gold', 200)">Acheter</button>
-          </div>
-        </div>
-      </div>
-
+      <div id="container3D"></div>
+      <div class="message" id="msg-3d">Clique dans la cage pour ajuster ta frappe !</div>
+      <div class="controls-hint">💡 Astuce : Clique dans un angle pour brosser ton ballon et tromper le gardien !</div>
     </div>
   </div>
 
   <script>
     let coins = parseInt(localStorage.getItem('passcoins')) || 500;
     let highScore = parseInt(localStorage.getItem('passHighScore')) || 0;
-    let unlockedSkins = JSON.parse(localStorage.getItem('unlockedSkins')) || ['classic'];
-    let currentSkin = localStorage.getItem('currentSkin') || 'classic';
+    let score3D = 0, combo3D = 1;
+    let isShooting = false;
 
-    /* AUDIO SYNTHESIZER (Web Audio API) */
+    /* AUDIO SYNTHESIZER */
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     
-    function playKickSound() {
+    function playSound(type) {
       if (audioCtx.state === 'suspended') audioCtx.resume();
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(120, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.15);
-      gain.gain.setValueAtTime(1, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-      osc.connect(gain); gain.connect(audioCtx.destination);
-      osc.start(); osc.stop(audioCtx.currentTime + 0.15);
-    }
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
 
-    function playGoalSound() {
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(440, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.3);
-      gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-      osc.connect(gain); gain.connect(audioCtx.destination);
-      osc.start(); osc.stop(audioCtx.currentTime + 0.4);
-    }
-
-    function updateCoins(amount) {
-      coins += amount;
-      localStorage.setItem('passcoins', coins);
-      document.getElementById('coins-count').textContent = coins;
-      updateShopUI();
-    }
-
-    function updateHighScore(score) {
-      if (score > highScore) {
-        highScore = score;
-        localStorage.setItem('passHighScore', highScore);
-        document.getElementById('high-score').textContent = highScore;
+      if (type === 'kick') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(130, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.15);
+        gain.gain.setValueAtTime(1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.15);
+      } else if (type === 'goal') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.6, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+      } else if (type === 'save') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+        osc.frequency.linearRampToValueAtTime(60, audioCtx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.2);
       }
     }
 
-    /* MOTEUR THREE.JS 3D */
+    /* MOTEUR THREE.JS */
     let scene, camera, renderer;
-    let ball3D, keeper3D, target3D, goal3D;
-    let currentMode3D = 'penalties';
-    let isShooting3D = false;
-    let score3D = 0, combo3D = 1;
+    let ball, keeper, goal;
     let raycaster = new THREE.Raycaster();
     let mouse = new THREE.Vector2();
 
@@ -412,285 +136,191 @@
       scene.background = new THREE.Color(0x040d1a);
 
       camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
-      camera.position.set(0, 1.6, 9);
+      camera.position.set(0, 1.7, 9);
 
       renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(container.clientWidth, container.clientHeight);
       renderer.shadowMap.enabled = true;
       container.appendChild(renderer.domElement);
 
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+      // Lumières
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
       scene.add(ambientLight);
 
-      const dirLight = new THREE.DirectionalLight(0x00f0ff, 0.8);
-      dirLight.position.set(5, 10, 7);
-      dirLight.castShadow = true;
-      scene.add(dirLight);
+      const spotLight = new THREE.SpotLight(0x00f0ff, 1.2);
+      spotLight.position.set(0, 12, 6);
+      spotLight.castShadow = true;
+      scene.add(spotLight);
 
-      const pitchGeo = new THREE.PlaneGeometry(16, 20);
-      const pitchMat = new THREE.MeshStandardMaterial({ color: 0x071e3d, roughness: 0.8 });
+      // Terrain & Lignes de Penalty
+      const pitchGeo = new THREE.PlaneGeometry(20, 24);
+      const pitchMat = new THREE.MeshStandardMaterial({ color: 0x061a33, roughness: 0.8 });
       const pitch = new THREE.Mesh(pitchGeo, pitchMat);
       pitch.rotation.x = -Math.PI / 2;
       pitch.receiveShadow = true;
       scene.add(pitch);
 
-      const grid = new THREE.GridHelper(20, 20, 0x00f0ff, 0x00f0ff);
-      grid.position.y = 0.01;
-      scene.add(grid);
+      const lineMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
+      const penaltyBox = new THREE.Mesh(new THREE.BoxGeometry(10, 0.02, 6), lineMat);
+      penaltyBox.position.set(0, 0.01, -2);
+      scene.add(penaltyBox);
 
-      goal3D = new THREE.Group();
-      const postMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.5 });
-      
-      const leftPost = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 2.5), postMat);
-      leftPost.position.set(-2.5, 1.25, -5);
-      
-      const rightPost = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 2.5), postMat);
-      rightPost.position.set(2.5, 1.25, -5);
+      const penaltySpot = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.03, 32), lineMat);
+      penaltySpot.position.set(0, 0.02, 5.5);
+      scene.add(penaltySpot);
 
-      const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 5.18), postMat);
+      // Cage & Filets
+      goal = new THREE.Group();
+      const postMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.8, roughness: 0.2 });
+      
+      const leftPost = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 2.6), postMat);
+      leftPost.position.set(-2.6, 1.3, -5);
+      
+      const rightPost = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 2.6), postMat);
+      rightPost.position.set(2.6, 1.3, -5);
+
+      const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 5.36), postMat);
       bar.rotation.z = Math.PI / 2;
-      bar.position.set(0, 2.5, -5);
+      bar.position.set(0, 2.6, -5);
 
-      goal3D.add(leftPost, rightPost, bar);
-      scene.add(goal3D);
+      // Filet arrière
+      const netMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true, opacity: 0.25, transparent: true });
+      const net = new THREE.Mesh(new THREE.BoxGeometry(5.2, 2.6, 1.5), netMat);
+      net.position.set(0, 1.3, -5.75);
 
+      goal.add(leftPost, rightPost, bar, net);
+      scene.add(goal);
+
+      // Ballon 3D
       const ballGeo = new THREE.SphereGeometry(0.22, 32, 32);
-      let ballMat = getSkinMaterial(currentSkin);
-      ball3D = new THREE.Mesh(ballGeo, ballMat);
-      ball3D.position.set(0, 0.22, 6);
-      ball3D.castShadow = true;
-      scene.add(ball3D);
+      const ballMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3 });
+      ball = new THREE.Mesh(ballGeo, ballMat);
+      ball.position.set(0, 0.22, 5.5);
+      ball.castShadow = true;
+      scene.add(ball);
 
-      const keeperGeo = new THREE.BoxGeometry(0.7, 1.6, 0.4);
-      const keeperMat = new THREE.MeshStandardMaterial({ color: 0xff0055, emissive: 0x330011 });
-      keeper3D = new THREE.Mesh(keeperGeo, keeperMat);
-      keeper3D.position.set(0, 0.8, -4.8);
-      keeper3D.castShadow = true;
-      scene.add(keeper3D);
+      // Gardien 3D Amélioré
+      const keeperGroup = new THREE.Group();
+      const bodyGeo = new THREE.BoxGeometry(0.75, 1.6, 0.4);
+      const bodyMat = new THREE.MeshStandardMaterial({ color: 0xef4444, emissive: 0x550000 });
+      const body = new THREE.Mesh(bodyGeo, bodyMat);
+      body.position.y = 0.8;
 
-      const targetGeo = new THREE.TorusGeometry(0.4, 0.08, 16, 100);
-      const targetMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
-      target3D = new THREE.Mesh(targetGeo, targetMat);
-      target3D.position.set(0, 1.5, -4.9);
-      scene.add(target3D);
+      const headGeo = new THREE.SphereGeometry(0.25, 16, 16);
+      const headMat = new THREE.MeshStandardMaterial({ color: 0xffcc99 });
+      const head = new THREE.Mesh(headGeo, headMat);
+      head.position.y = 1.8;
 
-      container.addEventListener('click', on3DClick);
-      animate3D();
+      keeperGroup.add(body, head);
+      keeper = keeperGroup;
+      keeper.position.set(0, 0, -4.8);
+      scene.add(keeper);
+
+      container.addEventListener('click', onPenaltyClick);
+      animate();
     }
 
-    function getSkinMaterial(skin) {
-      if (skin === 'neon') return new THREE.MeshStandardMaterial({ color: 0x00f0ff, emissive: 0x0088aa });
-      if (skin === 'champions') return new THREE.MeshStandardMaterial({ color: 0x3b82f6, metalness: 0.6 });
-      if (skin === 'gold') return new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.9, roughness: 0.2 });
-      return new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.4 });
-    }
-
-    let targetDirection = 1;
-    function animate3D() {
-      requestAnimationFrame(animate3D);
-      if (currentMode3D === 'precision' && target3D) {
-        target3D.position.x += 0.03 * targetDirection;
-        if (target3D.position.x > 2 || target3D.position.x < -2) targetDirection *= -1;
-      }
+    function animate() {
+      requestAnimationFrame(animate);
       renderer.render(scene, camera);
     }
 
-    function on3DClick(event) {
-      if (isShooting3D) return;
+    function onPenaltyClick(event) {
+      if (isShooting) return;
 
       const rect = renderer.domElement.getBoundingClientRect();
       mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
-      raycaster.setFromCamera(mouse, camera);
-      
+      const targetX = mouse.x * 3.6;
+      const targetY = Math.max(0.3, (mouse.y + 0.6) * 2.3);
       const targetZ = -5;
-      const targetX = mouse.x * 3.5;
-      const targetY = Math.max(0.3, (mouse.y + 0.5) * 2.2);
 
-      playKickSound();
-      shootBall3D(targetX, targetY, targetZ);
+      playSound('kick');
+      shootPenalty(targetX, targetY, targetZ);
     }
 
-    function shootBall3D(tx, ty, tz) {
-      isShooting3D = true;
-      const startX = ball3D.position.x;
-      const startY = ball3D.position.y;
-      const startZ = ball3D.position.z;
+    function shootPenalty(tx, ty, tz) {
+      isShooting = true;
+      const startX = ball.position.x;
+      const startY = ball.position.y;
+      const startZ = ball.position.z;
 
-      let keeperTx = (Math.random() - 0.5) * 4;
-      if (currentMode3D === 'precision') keeper3D.position.y = -10;
-      else keeper3D.position.y = 0.8;
+      // Déplacement anticipé du gardien
+      const keeperTargetX = (Math.random() - 0.5) * 4.8;
+      const keeperJumpY = Math.random() > 0.5 ? 0.6 : 0;
 
       let progress = 0;
       const interval = setInterval(() => {
-        progress += 0.04;
-        ball3D.position.x = startX + (tx - startX) * progress;
-        ball3D.position.y = startY + (ty - startY) * progress + Math.sin(progress * Math.PI) * 0.8;
-        ball3D.position.z = startZ + (tz - startZ) * progress;
-        ball3D.rotation.x += 0.2;
+        progress += 0.035;
 
-        if (currentMode3D === 'penalties') {
-          keeper3D.position.x += (keeperTx - keeper3D.position.x) * 0.1;
-        }
+        // Brossé / Effet courbe
+        const curveEffect = Math.sin(progress * Math.PI) * (tx * 0.4);
+        ball.position.x = startX + (tx - startX) * progress + curveEffect;
+        ball.position.y = startY + (ty - startY) * progress + Math.sin(progress * Math.PI) * 1.2;
+        ball.position.z = startZ + (tz - startZ) * progress;
+
+        // Rotation du ballon
+        ball.rotation.x += 0.25;
+        ball.rotation.y += 0.15;
+
+        // Plongeon du gardien
+        keeper.position.x += (keeperTargetX - keeper.position.x) * 0.12;
+        keeper.position.y = keeperJumpY * Math.sin(progress * Math.PI);
+        keeper.rotation.z = -keeperTargetX * 0.15;
 
         if (progress >= 1) {
           clearInterval(interval);
-          check3DHit(tx, ty, keeperTx);
+          checkGoal(tx, ty, keeperTargetX, keeperJumpY);
         }
       }, 16);
     }
 
-    function check3DHit(tx, ty, keeperX) {
+    function checkGoal(tx, ty, keeperX, keeperY) {
       const msg = document.getElementById('msg-3d');
-      const isInsideGoal = Math.abs(tx) <= 2.5 && ty <= 2.5 && ty >= 0.2;
+      const isInside = Math.abs(tx) <= 2.6 && ty <= 2.6 && ty >= 0.2;
+      const keeperSaved = Math.abs(tx - keeperX) < 0.85 && Math.abs(ty - (1.0 + keeperY)) < 0.95;
 
-      if (currentMode3D === 'penalties') {
-        const saved = Math.abs(tx - keeperX) < 0.7 && isInsideGoal;
-        if (saved) {
-          combo3D = 1;
-          msg.textContent = "🖐️ ARRÊT DU GARDIEN !";
-        } else if (isInsideGoal) {
-          playGoalSound();
-          score3D += 10 * combo3D;
-          updateCoins(10 * combo3D);
-          updateHighScore(score3D);
-          combo3D++;
-          msg.textContent = `⚽ BUT MAGNIFIQUE 3D ! (+${10 * combo3D} Coins)`;
-        } else {
-          combo3D = 1;
-          msg.textContent = "❌ TIR HORS CADRE !";
-        }
-      } else if (currentMode3D === 'precision') {
-        const hitTarget = Math.abs(tx - target3D.position.x) < 0.6 && Math.abs(ty - target3D.position.y) < 0.6;
-        if (hitTarget) {
-          playGoalSound();
-          score3D += 25;
-          updateCoins(25);
-          updateHighScore(score3D);
-          msg.textContent = "🎯 PLEINE LUCARNE 3D ! (+25 Coins)";
-        } else {
-          msg.textContent = "❌ CIBLE MANQUÉE !";
-        }
+      if (isInside && !keeperSaved) {
+        playSound('goal');
+        const earnedCoins = 15 * combo3D;
+        score3D += 10 * combo3D;
+        coins += earnedCoins;
+        combo3D++;
+
+        if (score3D > highScore) highScore = score3D;
+
+        msg.textContent = `⚽ GOAAL ! Tir Parfait ! (+${earnedCoins} Coins)`;
+      } else if (keeperSaved) {
+        playSound('save');
+        combo3D = 1;
+        msg.textContent = "🖐️ SUPERBE ARRÊT DU GARDIEN !";
+      } else {
+        combo3D = 1;
+        msg.textContent = "❌ TIR HORS CADRE !";
       }
 
+      // Mise à jour de l'UI et sauvegarde
+      localStorage.setItem('passcoins', coins);
+      localStorage.setItem('passHighScore', highScore);
+      document.getElementById('coins-count').textContent = coins;
+      document.getElementById('high-score').textContent = highScore;
       document.getElementById('score-3d').textContent = score3D;
       document.getElementById('combo-3d').textContent = combo3D;
 
+      // Réinitialisation du tir
       setTimeout(() => {
-        ball3D.position.set(0, 0.22, 6);
-        isShooting3D = false;
-      }, 1000);
+        ball.position.set(0, 0.22, 5.5);
+        keeper.position.set(0, 0, -4.8);
+        keeper.rotation.z = 0;
+        isShooting = false;
+      }, 1200);
     }
 
-    /* LEADERBOARD GENERATOR */
-    function renderLeaderboard() {
-      const players = [
-        { rank: "🥇 1", name: "CyberStriker", score: 450, skin: " Or Pur" },
-        { rank: "🥈 2", name: "NeoSniper", score: 380, skin: "⭐ Champions" },
-        { rank: "🥉 3", name: "PassfootPro", score: 290, skin: "⚡ Néon Cyan" },
-        { rank: "4", name: "Toi (You)", score: highScore, skin: currentSkin.toUpperCase() }
-      ];
-
-      const body = document.getElementById('leaderboard-body');
-      body.innerHTML = '';
-      players.sort((a,b) => b.score - a.score).forEach((p, idx) => {
-        const row = `<tr>
-          <td>${p.rank || idx + 1}</td>
-          <td style="font-weight:bold; color:${p.name.includes('Toi') ? '#00f0ff' : '#fff'}">${p.name}</td>
-          <td style="color:#22c55e; font-weight:bold">${p.score} pts</td>
-          <td>${p.skin}</td>
-        </tr>`;
-        body.innerHTML += row;
-      });
-    }
-
-    /* PLAYER CARD REFRESH */
-    function renderPlayerCard() {
-      document.getElementById('card-coins').textContent = coins;
-      document.getElementById('card-score').textContent = highScore;
-    }
-
-    /* MODALS & NAVIGATION */
-    function openGame(gameId) {
-      document.querySelectorAll('.game-view').forEach(v => v.style.display = 'none');
-      document.getElementById('modalOverlay').classList.add('active');
-
-      if (gameId === 'penalties' || gameId === 'precision') {
-        currentMode3D = gameId;
-        document.getElementById('game-3d').style.display = 'block';
-        document.getElementById('mode-title-3d').textContent = gameId === 'penalties' ? 'Penalty 3D' : 'Précision 3D';
-        setTimeout(init3D, 100);
-      } else {
-        document.getElementById(`game-${gameId}`).style.display = 'block';
-        if(gameId === 'leaderboard') renderLeaderboard();
-        if(gameId === 'playercard') renderPlayerCard();
-        if(gameId === 'juggling') resetJuggling();
-      }
-    }
-
-    function closeGame() {
-      document.getElementById('modalOverlay').classList.remove('active');
-      clearInterval(juggleInterval);
-    }
-
-    /* SKINS LOGIC */
-    function equipSkin(skinName) {
-      currentSkin = skinName;
-      localStorage.setItem('currentSkin', skinName);
-      if (ball3D) ball3D.material = getSkinMaterial(skinName);
-      updateShopUI();
-    }
-
-    function buyOrEquip(skinName, price) {
-      if (unlockedSkins.includes(skinName)) equipSkin(skinName);
-      else if (coins >= price) {
-        coins -= price;
-        localStorage.setItem('passcoins', coins);
-        document.getElementById('coins-count').textContent = coins;
-        unlockedSkins.push(skinName);
-        localStorage.setItem('unlockedSkins', JSON.stringify(unlockedSkins));
-        equipSkin(skinName);
-      }
-    }
-
-    function updateShopUI() {
-      ['classic', 'neon', 'champions', 'gold'].forEach(id => {
-        const btn = document.getElementById(`btn-skin-${id}`);
-        if (!btn) return;
-        if (currentSkin === id) { btn.textContent = 'Équipé'; btn.className = 'btn-buy equipped'; }
-        else if (unlockedSkins.includes(id)) { btn.textContent = 'Équiper'; btn.className = 'btn-buy'; }
-        else { btn.textContent = 'Acheter'; btn.className = 'btn-buy'; }
-      });
-    }
-
-    /* JONGLES */
-    let juggles = 0, juggleRecord = 0, ballY = 50, ballSpeedY = 0, juggleInterval;
-    function bounceBall() {
-      playKickSound();
-      juggles++; ballSpeedY = -8; updateCoins(2);
-      if (juggles > juggleRecord) juggleRecord = juggles;
-      document.getElementById('juggle-count').textContent = juggles;
-      document.getElementById('juggle-record').textContent = juggleRecord;
-    }
-
-    function resetJuggling() {
-      clearInterval(juggleInterval); juggles = 0; ballY = 50; ballSpeedY = 2;
-      document.getElementById('juggle-count').textContent = juggles;
-      juggleInterval = setInterval(() => {
-        ballSpeedY += 0.4; ballY += ballSpeedY;
-        if (ballY > 210) {
-          ballY = 210;
-          document.getElementById('juggle-msg').textContent = "💥 BALLON PERDU ! Réessaie !";
-        }
-        document.getElementById('juggle-ball').style.top = `${ballY}px`;
-      }, 20);
-    }
-
-    // Init
+    // Lancement au chargement
     document.getElementById('coins-count').textContent = coins;
     document.getElementById('high-score').textContent = highScore;
-    updateShopUI();
+    init3D();
   </script>
 </body>
 </html>
