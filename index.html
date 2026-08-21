@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Passfoot 🎮 - Arcade Cyber Stadium</title>
+  <title>Passfoot 🎮 - Cyber Arena PRO</title>
   <style>
     * {
       box-sizing: border-box;
@@ -24,7 +24,7 @@
 
     header {
       text-align: center;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
 
     header h1 {
@@ -32,24 +32,16 @@
       color: #38bdf8;
       text-transform: uppercase;
       letter-spacing: 3px;
-      text-shadow: 0 0 15px rgba(56, 189, 248, 0.6), 0 0 30px rgba(56, 189, 248, 0.3);
+      text-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
     }
 
-    header p {
-      color: #94a3b8;
-      font-size: 1.1rem;
-      letter-spacing: 1px;
-    }
-
-    /* Navigation des jeux Néon */
     .game-nav {
       display: flex;
       gap: 12px;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
       background: #161e2e;
       padding: 8px;
       border-radius: 14px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(56, 189, 248, 0.1);
       border: 1px solid rgba(56, 189, 248, 0.2);
     }
 
@@ -59,7 +51,6 @@
       background: transparent;
       color: #94a3b8;
       font-weight: bold;
-      font-size: 0.95rem;
       border-radius: 10px;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -71,271 +62,173 @@
       box-shadow: 0 0 15px rgba(56, 189, 248, 0.8);
     }
 
-    /* Conteneur principal */
     .game-container {
       background: #161e2e;
       border-radius: 20px;
       padding: 25px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.15);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
       border: 1px solid rgba(56, 189, 248, 0.2);
       max-width: 680px;
       width: 100%;
       text-align: center;
     }
 
-    .game-section {
-      display: none;
-    }
+    .game-section { display: none; }
+    .game-section.active { display: block; }
 
-    .game-section.active {
-      display: block;
-    }
-
-    /* --- TABLEAU DES SCORES NÉON --- */
+    /* Scoreboard */
     .scoreboard {
       display: flex;
       justify-content: space-around;
       background: #0b0f19;
-      padding: 14px;
+      padding: 12px;
       border-radius: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       font-weight: bold;
       border: 1px solid rgba(56, 189, 248, 0.3);
-      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
-    }
-
-    .scoreboard div {
-      font-size: 1.05rem;
-      color: #cbd5e1;
     }
 
     .scoreboard span {
       color: #38bdf8;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       text-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
     }
 
-    /* --- TERRAIN DE FOOTBAL REALISTE & NEON --- */
+    /* Terrain de Foot */
     .pitch {
       position: relative;
       width: 100%;
-      height: 380px;
-      background: repeating-linear-gradient(
-        0deg,
-        #15803d,
-        #15803d 40px,
-        #166534 40px,
-        #166534 80px
-      );
+      height: 360px;
+      background: repeating-linear-gradient(0deg, #15803d, #15803d 40px, #166534 40px, #166534 80px);
       border-radius: 16px;
       overflow: hidden;
       border: 3px solid #4ade80;
-      box-shadow: 0 0 20px rgba(74, 222, 128, 0.4), inset 0 0 40px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 20px rgba(74, 222, 128, 0.4);
       cursor: crosshair;
     }
 
-    /* Ligne de fond de court */
-    .pitch-line-goal {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      background: rgba(255, 255, 255, 0.8);
-    }
-
-    /* Grande Surface de Réparation */
     .penalty-area {
       position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 380px;
-      height: 180px;
-      border: 2px solid rgba(255, 255, 255, 0.85);
-      border-top: none;
+      top: 0; left: 50%; transform: translateX(-50%);
+      width: 360px; height: 170px;
+      border: 2px solid rgba(255, 255, 255, 0.85); border-top: none;
     }
 
-    /* Surface de But (6 mètres) */
     .goal-area {
       position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 200px;
-      height: 70px;
-      border: 2px solid rgba(255, 255, 255, 0.85);
-      border-top: none;
+      top: 0; left: 50%; transform: translateX(-50%);
+      width: 190px; height: 65px;
+      border: 2px solid rgba(255, 255, 255, 0.85); border-top: none;
     }
 
-    /* Arc de cercle de la surface */
     .penalty-arc {
       position: absolute;
-      top: 180px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 120px;
-      height: 60px;
+      top: 170px; left: 50%; transform: translateX(-50%);
+      width: 110px; height: 50px;
       border: 2px solid rgba(255, 255, 255, 0.85);
-      border-radius: 0 0 120px 120px;
-      border-top: none;
+      border-radius: 0 0 110px 110px; border-top: none;
     }
 
-    /* Point de Penalty */
     .penalty-spot {
       position: absolute;
-      top: 130px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 8px;
-      height: 8px;
-      background-color: #ffffff;
-      border-radius: 50%;
-      box-shadow: 0 0 8px #ffffff;
+      top: 120px; left: 50%; transform: translateX(-50%);
+      width: 8px; height: 8px; background: #fff; border-radius: 50%;
     }
 
-    /* Cage de But Réaliste avec Filet */
     .goal {
       position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 260px;
-      height: 90px;
-      border: 5px solid #ffffff;
-      border-bottom: none;
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+      top: 10px; left: 50%; transform: translateX(-50%);
+      width: 250px; height: 85px;
+      border: 5px solid #ffffff; border-bottom: none;
       background: repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(255, 255, 255, 0.25) 8px, rgba(255, 255, 255, 0.25) 9px),
                   repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255, 255, 255, 0.25) 8px, rgba(255, 255, 255, 0.25) 9px);
-      z-index: 2;
     }
 
-    /* Gardien */
     .goalkeeper {
       position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 42px;
-      height: 52px;
+      bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 42px; height: 52px;
       background: linear-gradient(to bottom, #ef4444, #991b1b);
-      border: 2px solid #fca5a5;
-      border-radius: 10px 10px 0 0;
+      border: 2px solid #fca5a5; border-radius: 10px 10px 0 0;
       box-shadow: 0 0 12px rgba(239, 68, 68, 0.8);
-      transition: all 0.25s ease-out;
-      z-index: 3;
+      transition: all 0.2s ease-out;
     }
 
-    /* Ballon avec effet Néon */
     .ball {
       position: absolute;
-      bottom: 25px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 32px;
-      height: 32px;
-      background-color: #ffffff;
-      border-radius: 50%;
-      box-shadow: 0 0 12px #ffffff, inset -4px -4px 0 #94a3b8;
+      bottom: 25px; left: 50%; transform: translateX(-50%);
+      width: 32px; height: 32px; background: #ffffff;
+      border-radius: 50%; box-shadow: 0 0 12px #ffffff;
       transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-      z-index: 4;
     }
 
-    /* Message de Résultat Néon */
-    .message {
-      margin-top: 18px;
-      font-size: 1.25rem;
-      font-weight: bold;
-      min-height: 35px;
-      text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    /* Quiz Timer */
+    .timer-bar-container {
+      width: 100%; height: 8px; background: #1e293b;
+      border-radius: 4px; margin-bottom: 15px; overflow: hidden;
     }
 
-    /* --- BOUTONS D'ACTION NÉON --- */
-    .btn-action {
-      margin-top: 15px;
-      padding: 12px 28px;
-      background: #38bdf8;
-      color: #0b0f19;
-      border: none;
-      border-radius: 10px;
-      font-weight: bold;
-      font-size: 1rem;
-      cursor: pointer;
-      box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
-      transition: all 0.2s ease;
+    .timer-bar {
+      height: 100%; width: 100%; background: #38bdf8;
+      transition: width 0.1s linear;
     }
 
-    .btn-action:hover {
-      background: #7dd3fc;
-      box-shadow: 0 0 25px rgba(56, 189, 248, 0.9);
-      transform: translateY(-2px);
-    }
-
-    /* --- QUIZ FOOT NÉON --- */
     .quiz-box {
-      background: #0b0f19;
-      padding: 22px;
-      border-radius: 14px;
-      border: 1px solid rgba(56, 189, 248, 0.2);
-    }
-
-    .question {
-      font-size: 1.25rem;
-      margin-bottom: 22px;
-      color: #f1f5f9;
+      background: #0b0f19; padding: 20px;
+      border-radius: 14px; border: 1px solid rgba(56, 189, 248, 0.2);
     }
 
     .options-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
     }
 
     .option-btn {
-      padding: 14px;
-      background: #1e293b;
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 0.95rem;
-      transition: all 0.2s;
+      padding: 12px; background: #1e293b; color: white;
+      border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px;
+      cursor: pointer; font-weight: bold; transition: all 0.2s;
     }
 
-    .option-btn:hover {
-      background: #334155;
-      border-color: #38bdf8;
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
-    }
+    .option-btn:hover { background: #334155; border-color: #38bdf8; }
 
-    /* --- JONGLES NÉON --- */
+    /* Jongles */
     .juggling-area {
-      height: 340px;
-      background: #0b0f19;
-      border-radius: 16px;
-      position: relative;
-      overflow: hidden;
-      border: 1px solid rgba(56, 189, 248, 0.2);
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+      height: 320px; background: #0b0f19; border-radius: 16px;
+      position: relative; overflow: hidden; border: 1px solid rgba(56, 189, 248, 0.2);
     }
 
     .juggling-ball {
-      position: absolute;
-      width: 48px;
-      height: 48px;
-      background: white;
-      border-radius: 50%;
-      left: 50%;
-      top: 60px;
-      transform: translateX(-50%);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-      user-select: none;
-      box-shadow: 0 0 15px #ffffff;
+      position: absolute; width: 48px; height: 48px; background: white;
+      border-radius: 50%; left: 50%; top: 60px; transform: translateX(-50%);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; user-select: none; box-shadow: 0 0 15px #ffffff;
+    }
+
+    /* Trophées */
+    .trophies-container {
+      margin-top: 20px; background: #0b0f19; padding: 15px;
+      border-radius: 14px; border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    .trophies-grid {
+      display: flex; justify-content: space-around; margin-top: 10px;
+    }
+
+    .trophy {
+      font-size: 1.8rem; filter: grayscale(100%); opacity: 0.3; transition: all 0.3s;
+    }
+
+    .trophy.unlocked {
+      filter: grayscale(0%); opacity: 1; transform: scale(1.15);
+    }
+
+    .message {
+      margin-top: 15px; font-size: 1.2rem; font-weight: bold; min-height: 35px;
+    }
+
+    .btn-action {
+      margin-top: 15px; padding: 10px 24px; background: #38bdf8;
+      color: #0b0f19; border: none; border-radius: 10px; font-weight: bold;
+      cursor: pointer; box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
     }
   </style>
 </head>
@@ -343,52 +236,49 @@
 
   <header>
     <h1>Passfoot 🎮</h1>
-    <p>Cyber Arena</p>
+    <p>Cyber Arena PRO</p>
   </header>
 
-  <!-- Sélecteur de jeux -->
   <div class="game-nav">
     <button class="nav-btn active" onclick="switchGame('penalties', this)">⚽ Tir au But</button>
-    <button class="nav-btn" onclick="switchGame('quiz', this)">🧠 Quiz Foot</button>
+    <button class="nav-btn" onclick="switchGame('quiz', this)">🧠 Quiz (Chrono)</button>
     <button class="nav-btn" onclick="switchGame('juggling', this)">🤹 Jongles</button>
   </div>
 
   <div class="game-container">
 
-    <!-- JEU 1: TIR AU BUT AMÉLIORÉ -->
+    <!-- JEU 1: TIR AU BUT -->
     <div id="penalties" class="game-section active">
       <div class="scoreboard">
-        <div>Tirs: <span id="shots">0</span></div>
+        <div>Niveau: <span id="level">1</span></div>
         <div>Buts: <span id="goals">0</span></div>
-        <div>Arrêts: <span id="saves">0</span></div>
+        <div>Record: <span id="best-goals">0</span></div>
       </div>
-
       <div class="pitch" id="pitch">
-        <!-- Lignes du Terrain -->
-        <div class="pitch-line-goal"></div>
         <div class="penalty-area"></div>
         <div class="goal-area"></div>
         <div class="penalty-arc"></div>
         <div class="penalty-spot"></div>
-
-        <!-- Cage et Acteurs -->
         <div class="goal" id="goal">
           <div class="goalkeeper" id="keeper"></div>
         </div>
         <div class="ball" id="ball"></div>
       </div>
-
-      <div class="message" id="message">Clique sur le terrain pour ajuster ton tir !</div>
+      <div class="message" id="message">Clique pour tirer !</div>
       <button class="btn-action" onclick="resetPenalties()">Réinitialiser</button>
     </div>
 
-    <!-- JEU 2: QUIZ FOOT -->
+    <!-- JEU 2: QUIZ CHRONO -->
     <div id="quiz" class="game-section">
       <div class="scoreboard">
-        <div>Score Quiz: <span id="quiz-score">0</span></div>
+        <div>Score: <span id="quiz-score">0</span></div>
+        <div>Meilleur: <span id="quiz-best">0</span></div>
+      </div>
+      <div class="timer-bar-container">
+        <div class="timer-bar" id="timer-bar"></div>
       </div>
       <div class="quiz-box">
-        <div class="question" id="quiz-q">Chargement de la question...</div>
+        <div class="question" id="quiz-q">Chargement...</div>
         <div class="options-grid" id="quiz-options"></div>
       </div>
       <div class="message" id="quiz-msg"></div>
@@ -397,25 +287,53 @@
     <!-- JEU 3: JONGLES -->
     <div id="juggling" class="game-section">
       <div class="scoreboard">
-        <div>Jongles consécutifs: <span id="juggle-count">0</span></div>
+        <div>Jongles: <span id="juggle-count">0</span></div>
         <div>Record: <span id="juggle-best">0</span></div>
       </div>
       <div class="juggling-area" id="juggle-area">
         <div class="juggling-ball" id="juggle-ball" onclick="bounceBall()">⚽</div>
       </div>
-      <div class="message" id="juggle-msg">Clique sur le ballon avant qu'il ne touche le sol !</div>
+      <div class="message" id="juggle-msg">Garde le ballon en l'air !</div>
+    </div>
+
+    <!-- Trophées -->
+    <div class="trophies-container">
+      <div style="font-size:0.9rem; color:#94a3b8;">Trophées Débloqués</div>
+      <div class="trophies-grid">
+        <div class="trophy" id="t-first-goal" title="Marquer 1 but">⚽</div>
+        <div class="trophy" id="t-sniper" title="Marquer 5 buts">🎯</div>
+        <div class="trophy" id="t-quiz-master" title="Avoir 50 points au Quiz">🧠</div>
+        <div class="trophy" id="t-juggler" title="Faire 15 jongles">🤹</div>
+      </div>
     </div>
 
   </div>
 
   <script>
-    // Système d'onglets
+    // Navigation
     function switchGame(gameId, btn) {
       document.querySelectorAll('.game-section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       document.getElementById(gameId).classList.add('active');
       btn.classList.add('active');
+      clearInterval(quizTimer);
+      if(gameId === 'quiz') startQuizTimer();
       if(gameId === 'juggling') resetJuggling();
+    }
+
+    // Trophées & Storage
+    function unlockTrophy(id) {
+      document.getElementById(id).classList.add('unlocked');
+      localStorage.setItem(id, 'unlocked');
+    }
+
+    function loadTrophies() {
+      ['t-first-goal', 't-sniper', 't-quiz-master', 't-juggler'].forEach(id => {
+        if(localStorage.getItem(id) === 'unlocked') document.getElementById(id).classList.add('unlocked');
+      });
+      document.getElementById('best-goals').textContent = localStorage.getItem('best-goals') || 0;
+      document.getElementById('quiz-best').textContent = localStorage.getItem('quiz-best') || 0;
+      document.getElementById('juggle-best').textContent = localStorage.getItem('juggle-best') || 0;
     }
 
     /* LOGIQUE 1: TIR AU BUT */
@@ -423,7 +341,7 @@
     const ball = document.getElementById('ball');
     const keeper = document.getElementById('keeper');
     const goal = document.getElementById('goal');
-    let shots = 0, goals = 0, saves = 0, isShooting = false;
+    let goals = 0, level = 1, isShooting = false;
 
     pitch.addEventListener('click', (e) => {
       if (isShooting) return;
@@ -433,12 +351,12 @@
 
     function shoot(targetX, targetY) {
       isShooting = true;
-      shots++;
-      document.getElementById('shots').textContent = shots;
       ball.style.left = `${targetX}px`;
       ball.style.top = `${targetY}px`;
       ball.style.transform = 'scale(0.65)';
 
+      // Gardien plus rapide selon le niveau
+      keeper.style.transition = `all ${Math.max(0.12, 0.28 - level * 0.02)}s ease-out`;
       const keeperPositions = [20, 50, 80];
       const randomPos = keeperPositions[Math.floor(Math.random() * keeperPositions.length)];
       keeper.style.left = `${randomPos}%`;
@@ -452,55 +370,49 @@
 
         const msg = document.getElementById('message');
         if (isSaved) {
-          saves++;
-          document.getElementById('saves').textContent = saves;
-          msg.textContent = "🖐️ ARRÊT DU GARDIEN !";
-          msg.style.color = "#ef4444";
-          msg.style.textShadow = "0 0 10px rgba(239, 68, 68, 0.8)";
+          msg.textContent = "🖐️ ARRÊT !"; msg.style.color = "#ef4444";
         } else if (isInside) {
           goals++;
           document.getElementById('goals').textContent = goals;
-          msg.textContent = "⚽ GOOOAL !!! EN PLEINE LUCARNE !";
-          msg.style.color = "#4ade80";
-          msg.style.textShadow = "0 0 10px rgba(74, 222, 128, 0.8)";
+          level = Math.floor(goals / 3) + 1;
+          document.getElementById('level').textContent = level;
+          msg.textContent = "⚽ BUT !!!"; msg.style.color = "#4ade80";
+
+          unlockTrophy('t-first-goal');
+          if(goals >= 5) unlockTrophy('t-sniper');
+
+          const bestG = localStorage.getItem('best-goals') || 0;
+          if(goals > bestG) {
+            localStorage.setItem('best-goals', goals);
+            document.getElementById('best-goals').textContent = goals;
+          }
         } else {
-          msg.textContent = "❌ À CÔTÉ !";
-          msg.style.color = "#f59e0b";
-          msg.style.textShadow = "0 0 10px rgba(245, 158, 11, 0.8)";
+          msg.textContent = "❌ À CÔTÉ !"; msg.style.color = "#f59e0b";
         }
 
         setTimeout(() => {
-          ball.style.left = '50%';
-          ball.style.top = '';
-          ball.style.bottom = '25px';
-          ball.style.transform = 'translateX(-50%) scale(1)';
-          keeper.style.left = '50%';
+          ball.style.left = '50%'; ball.style.top = ''; ball.style.bottom = '25px';
+          ball.style.transform = 'translateX(-50%) scale(1)'; keeper.style.left = '50%';
           isShooting = false;
-        }, 1200);
-      }, 400);
+        }, 1000);
+      }, 350);
     }
 
     function resetPenalties() {
-      shots = goals = saves = 0;
-      document.getElementById('shots').textContent = 0;
+      goals = 0; level = 1;
       document.getElementById('goals').textContent = 0;
-      document.getElementById('saves').textContent = 0;
-      document.getElementById('message').textContent = "Clique sur le terrain pour ajuster ton tir !";
-      document.getElementById('message').style.color = "#f8fafc";
+      document.getElementById('level').textContent = 1;
     }
 
-    /* LOGIQUE 2: QUIZ FOOT (8 QUESTIONS) */
+    /* LOGIQUE 2: QUIZ CHRONO */
     const quizData = [
       { q: "Quel pays a remporté la Coupe du Monde 2022 ?", options: ["France", "Brésil", "Argentine", "Allemagne"], answer: 2 },
       { q: "Quel joueur possède le plus de Ballons d'Or ?", options: ["Ronaldo", "Messi", "Cruyff", "Zidane"], answer: 1 },
-      { q: "Combien de temps dure un match de football réglementaire ?", options: ["80 min", "90 min", "100 min", "120 min"], answer: 1 },
-      { q: "Quel pays a remporté la toute première Coupe du Monde en 1930 ?", options: ["Brésil", "Uruguay", "Italie", "Argentine"], answer: 1 },
-      { q: "Quel club détient le record du plus grand nombre de Ligues des Champions ?", options: ["AC Milan", "FC Barcelone", "Real Madrid", "Bayern Munich"], answer: 2 },
-      { q: "Qui détient le record du but le plus rapide de l'histoire de la Coupe du Monde (11 secondes) ?", options: ["Hakan Şükür", "Pelé", "Kylian Mbappé", "Ronaldo Nazário"], answer: 0 },
-      { q: "En quelle année le premier Ballon d'Or a-t-il été attribué ?", options: ["1950", "1956", "1962", "1970"], answer: 1 },
-      { q: "Quel joueur est le seul à avoir remporté 3 Coupes du Monde en tant que joueur ?", options: ["Maradona", "Zinedine Zidane", "Pelé", "Manoel Garrincha"], answer: 2 }
+      { q: "Combien de temps dure un match réglementaire ?", options: ["80 min", "90 min", "100 min", "120 min"], answer: 1 },
+      { q: "Vainqueur du premier Mondial en 1930 ?", options: ["Brésil", "Uruguay", "Italie", "Argentine"], answer: 1 },
+      { q: "Club avec le plus de Ligues des Champions ?", options: ["AC Milan", "FC Barcelone", "Real Madrid", "Bayern"], answer: 2 }
     ];
-    let currentQ = 0, quizScore = 0;
+    let currentQ = 0, quizScore = 0, quizTimer, timeLeft = 10;
 
     function loadQuiz() {
       const q = quizData[currentQ];
@@ -509,64 +421,86 @@
       optGrid.innerHTML = '';
       q.options.forEach((opt, idx) => {
         const btn = document.createElement('button');
-        btn.className = 'option-btn';
-        btn.textContent = opt;
+        btn.className = 'option-btn'; btn.textContent = opt;
         btn.onclick = () => checkQuiz(idx);
         optGrid.appendChild(btn);
       });
+      startQuizTimer();
+    }
+
+    function startQuizTimer() {
+      clearInterval(quizTimer);
+      timeLeft = 10;
+      const timerBar = document.getElementById('timer-bar');
+      timerBar.style.width = '100%';
+      quizTimer = setInterval(() => {
+        timeLeft -= 0.1;
+        timerBar.style.width = `${(timeLeft / 10) * 100}%`;
+        if(timeLeft <= 0) {
+          clearInterval(quizTimer);
+          checkQuiz(-1);
+        }
+      }, 100);
     }
 
     function checkQuiz(selected) {
+      clearInterval(quizTimer);
       const msg = document.getElementById('quiz-msg');
       if(selected === quizData[currentQ].answer) {
         quizScore += 10;
         document.getElementById('quiz-score').textContent = quizScore;
-        msg.textContent = "✅ Bonne réponse !";
-        msg.style.color = "#4ade80";
+        msg.textContent = "✅ Correct ! (+10 pts)"; msg.style.color = "#4ade80";
+        if(quizScore >= 50) unlockTrophy('t-quiz-master');
+
+        const bestQ = localStorage.getItem('quiz-best') || 0;
+        if(quizScore > bestQ) {
+          localStorage.setItem('quiz-best', quizScore);
+          document.getElementById('quiz-best').textContent = quizScore;
+        }
       } else {
-        msg.textContent = "❌ Mauvaise réponse !";
+        msg.textContent = selected === -1 ? "⏱️ Temps écoulé !" : "❌ Incorrect !";
         msg.style.color = "#ef4444";
       }
       currentQ = (currentQ + 1) % quizData.length;
-      setTimeout(() => { msg.textContent = ''; loadQuiz(); }, 1000);
+      setTimeout(() => { msg.textContent = ''; loadQuiz(); }, 1200);
     }
-    loadQuiz();
 
     /* LOGIQUE 3: JONGLES */
-    let juggles = 0, bestJuggle = 0, ballY = 60, ballSpeed = 2, juggleInterval;
+    let juggles = 0, ballY = 60, ballSpeed = 2, juggleInterval;
     const jBall = document.getElementById('juggle-ball');
 
     function bounceBall() {
       juggles++;
       document.getElementById('juggle-count').textContent = juggles;
-      if(juggles > bestJuggle) {
-        bestJuggle = juggles;
-        document.getElementById('juggle-best').textContent = bestJuggle;
+      if(juggles >= 15) unlockTrophy('t-juggler');
+
+      const bestJ = localStorage.getItem('juggle-best') || 0;
+      if(juggles > bestJ) {
+        localStorage.setItem('juggle-best', juggles);
+        document.getElementById('juggle-best').textContent = juggles;
       }
-      ballY = 40;
-      ballSpeed = -4;
+      ballY = 40; ballSpeed = -4.5;
     }
 
     function gameLoopJuggling() {
-      ballSpeed += 0.2;
-      ballY += ballSpeed;
-      if(ballY > 280) {
+      ballSpeed += 0.22; ballY += ballSpeed;
+      if(ballY > 260) {
         document.getElementById('juggle-msg').textContent = "💥 Perdu ! Le ballon a touché le sol.";
-        resetJuggling();
-        return;
+        resetJuggling(); return;
       }
       jBall.style.top = `${ballY}px`;
     }
 
     function resetJuggling() {
       clearInterval(juggleInterval);
-      juggles = 0;
-      document.getElementById('juggle-count').textContent = 0;
-      ballY = 60;
-      ballSpeed = 0;
-      jBall.style.top = '60px';
+      juggles = 0; document.getElementById('juggle-count').textContent = 0;
+      ballY = 60; ballSpeed = 0; jBall.style.top = '60px';
       juggleInterval = setInterval(gameLoopJuggling, 20);
     }
+
+    // Lancement
+    loadTrophies();
+    loadQuiz();
   </script>
 </body>
 </html>
