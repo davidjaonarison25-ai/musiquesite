@@ -3,328 +3,384 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Passfoot 🎮 - Mega Arcade PRO</title>
+  <title>Passfoot 🎮 - Crazy Arcade</title>
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-family: 'Segoe UI', Roboto, sans-serif;
     }
 
     body {
-      background-color: #0b0f19;
-      color: #f8fafc;
+      background-color: #0d131d;
+      color: #ffffff;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
     }
 
-    header h1 {
-      font-size: 2.8rem;
+    /* Barre Supérieure style Poki */
+    header {
+      background: #162032;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #22324d;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 900;
       color: #38bdf8;
       text-transform: uppercase;
-      letter-spacing: 3px;
-      text-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
-      margin-bottom: 5px;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
     }
 
-    .coins-display {
-      background: #1e293b;
-      padding: 8px 18px;
+    .user-coins {
+      background: #0f172a;
+      padding: 8px 16px;
       border-radius: 20px;
       border: 1px solid #f59e0b;
       color: #fbbf24;
       font-weight: bold;
-      font-size: 1.1rem;
-      margin-bottom: 15px;
-      box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
     }
 
-    .game-nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 20px;
-      background: #161e2e;
-      padding: 8px;
-      border-radius: 14px;
-      border: 1px solid rgba(56, 189, 248, 0.2);
-    }
-
-    .nav-btn {
-      padding: 10px 14px;
-      border: none;
-      background: transparent;
-      color: #94a3b8;
-      font-weight: bold;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .nav-btn.active, .nav-btn:hover {
-      background: #38bdf8;
-      color: #0b0f19;
-      box-shadow: 0 0 15px rgba(56, 189, 248, 0.8);
-    }
-
-    .game-container {
-      background: #161e2e;
-      border-radius: 20px;
+    /* Layout Grille Style Poki / CrazyGames */
+    main {
       padding: 25px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
-      border: 1px solid rgba(56, 189, 248, 0.2);
-      max-width: 680px;
+      max-width: 1300px;
+      margin: 0 auto;
       width: 100%;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 18px;
+    }
+
+    /* Carte de Jeu */
+    .game-card {
+      background: #162032;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid #22324d;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      aspect-ratio: 4/3;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 12px;
+    }
+
+    .game-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: #38bdf8;
+      box-shadow: 0 10px 25px rgba(56, 189, 248, 0.3);
+    }
+
+    /* Miniature & Tags */
+    .game-card .bg-icon {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3.5rem;
+      transition: transform 0.3s ease;
+    }
+
+    .game-card:hover .bg-icon {
+      transform: translate(-50%, -55%) scale(1.15);
+    }
+
+    .badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #ef4444;
+      color: white;
+      font-size: 0.7rem;
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 10px;
+      text-transform: uppercase;
+    }
+
+    .badge.hot { background: #f97316; }
+    .badge.shop { background: #eab308; }
+
+    .game-info {
+      position: relative;
+      z-index: 2;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(4px);
+      padding: 8px;
+      border-radius: 10px;
       text-align: center;
     }
 
-    .game-section { display: none; }
-    .game-section.active { display: block; }
-
-    .scoreboard {
-      display: flex;
-      justify-content: space-around;
-      background: #0b0f19;
-      padding: 12px;
-      border-radius: 12px;
-      margin-bottom: 15px;
+    .game-title {
+      font-size: 0.95rem;
       font-weight: bold;
-      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: #f8fafc;
     }
 
-    .scoreboard span { color: #38bdf8; font-size: 1.2rem; }
+    /* Fenêtre Modale d'écran de Jeu */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(11, 15, 25, 0.9);
+      backdrop-filter: blur(8px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
 
-    /* Terrain de Foot */
-    .pitch {
+    .modal-overlay.active { display: flex; }
+
+    .modal-content {
+      background: #161e2e;
+      border-radius: 20px;
+      border: 2px solid #38bdf8;
+      width: 90%;
+      max-width: 650px;
+      padding: 20px;
       position: relative;
-      width: 100%;
-      height: 320px;
-      background: repeating-linear-gradient(0deg, #15803d, #15803d 40px, #166534 40px, #166534 80px);
-      border-radius: 16px;
-      overflow: hidden;
-      border: 3px solid #4ade80;
-      box-shadow: 0 0 20px rgba(74, 222, 128, 0.4);
-      cursor: crosshair;
+      box-shadow: 0 0 30px rgba(56, 189, 248, 0.4);
+      text-align: center;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 12px; right: 15px;
+      background: #ef4444; color: white;
+      border: none; width: 32px; height: 32px;
+      border-radius: 50%; font-weight: bold;
+      cursor: pointer; font-size: 1rem;
+    }
+
+    /* Style Interne des Mini-jeux */
+    .scoreboard {
+      display: flex; justify-content: space-around;
+      background: #0b0f19; padding: 10px; border-radius: 10px;
+      margin-bottom: 12px; font-weight: bold; color: #38bdf8;
+    }
+
+    .pitch {
+      position: relative; width: 100%; height: 280px;
+      background: repeating-linear-gradient(0deg, #15803d, #15803d 30px, #166534 30px, #166534 60px);
+      border-radius: 12px; overflow: hidden; border: 2px solid #4ade80; cursor: crosshair;
     }
 
     .goal {
-      position: absolute;
-      top: 10px; left: 50%; transform: translateX(-50%);
-      width: 260px; height: 90px;
-      border: 5px solid #ffffff; border-bottom: none;
-      background: repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(255, 255, 255, 0.25) 8px, rgba(255, 255, 255, 0.25) 9px),
-                  repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255, 255, 255, 0.25) 8px, rgba(255, 255, 255, 0.25) 9px);
+      position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+      width: 220px; height: 75px; border: 4px solid #fff; border-bottom: none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 6px, rgba(255, 255, 255, 0.2) 6px, rgba(255, 255, 255, 0.2) 7px);
     }
 
     .goalkeeper {
-      position: absolute;
-      bottom: 0; left: 50%; transform: translateX(-50%);
-      width: 42px; height: 52px;
-      background: linear-gradient(to bottom, #ef4444, #991b1b);
-      border: 2px solid #fca5a5; border-radius: 10px 10px 0 0;
-      transition: all 0.2s ease-out;
+      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 36px; height: 44px; background: #ef4444; border-radius: 8px 8px 0 0; transition: all 0.2s;
     }
 
-    /* Target pour Tir de Précision */
     .target {
-      position: absolute;
-      top: 20px; left: 20%;
-      width: 35px; height: 35px;
-      background: radial-gradient(circle, #ef4444 30%, #ffffff 31%, #ffffff 60%, #ef4444 61%);
-      border-radius: 50%;
-      box-shadow: 0 0 10px #ef4444;
-      transition: left 0.5s ease-in-out;
+      position: absolute; top: 15px; left: 20%; width: 30px; height: 30px;
+      background: radial-gradient(circle, #ef4444 30%, #fff 31%, #fff 60%, #ef4444 61%);
+      border-radius: 50%; transition: left 0.5s;
     }
 
     .ball {
-      position: absolute;
-      bottom: 25px; left: 50%; transform: translateX(-50%);
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem;
+      position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 1rem;
       transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
-    .skin-classic { background: #ffffff; box-shadow: 0 0 10px #ffffff; }
-    .skin-neon { background: #00f0ff; box-shadow: 0 0 15px #00f0ff; }
-    .skin-champions { background: #3b82f6; box-shadow: 0 0 15px #3b82f6; color: white; }
-    .skin-gold { background: linear-gradient(45deg, #f59e0b, #fbbf24); box-shadow: 0 0 20px #fbbf24; }
+    .skin-classic { background: #fff; box-shadow: 0 0 10px #fff; }
+    .skin-neon { background: #00f0ff; box-shadow: 0 0 12px #00f0ff; }
+    .skin-champions { background: #3b82f6; box-shadow: 0 0 12px #3b82f6; color: white; }
+    .skin-gold { background: linear-gradient(45deg, #f59e0b, #fbbf24); box-shadow: 0 0 15px #fbbf24; }
 
-    /* Casse Brique Canvas */
-    #breakoutCanvas {
-      background: #0b0f19;
-      border-radius: 12px;
-      border: 2px solid #38bdf8;
-      display: block;
-      margin: 0 auto;
-    }
+    #breakoutCanvas { background: #0b0f19; border-radius: 10px; border: 1px solid #38bdf8; }
 
-    /* Boutique */
-    .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-    .shop-item {
-      background: #0b0f19; padding: 15px; border-radius: 12px;
-      border: 1px solid rgba(56, 189, 248, 0.2);
-      display: flex; flex-direction: column; align-items: center; gap: 8px;
-    }
-    .shop-preview {
-      width: 45px; height: 45px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
-    }
-    .btn-buy {
-      padding: 8px 16px; background: #22c55e; color: #0b0f19;
-      border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%;
-    }
-    .btn-buy.equipped { background: #38bdf8; cursor: default; }
-    .btn-buy:disabled { background: #475569; cursor: not-allowed; color: #94a3b8; }
+    .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .shop-item { background: #0b0f19; padding: 12px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .btn-buy { padding: 6px 12px; background: #22c55e; color: #0b0f19; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; }
+    .btn-buy.equipped { background: #38bdf8; }
 
-    /* Quiz Timer & Options */
-    .timer-bar-container { width: 100%; height: 8px; background: #1e293b; border-radius: 4px; margin-bottom: 15px; overflow: hidden; }
-    .timer-bar { height: 100%; width: 100%; background: #38bdf8; transition: width 0.1s linear; }
-    .quiz-box { background: #0b0f19; padding: 20px; border-radius: 14px; }
-    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .option-btn {
-      padding: 12px; background: #1e293b; color: white;
-      border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; cursor: pointer; font-weight: bold;
-    }
-
-    .juggling-area { height: 300px; background: #0b0f19; border-radius: 16px; position: relative; overflow: hidden; }
-    .juggling-ball {
-      position: absolute; width: 48px; height: 48px; border-radius: 50%;
-      left: 50%; top: 60px; transform: translateX(-50%); cursor: pointer;
-      display: flex; align-items: center; justify-content: center; font-size: 1.5rem; user-select: none;
-    }
-
-    .message { margin-top: 15px; font-size: 1.2rem; font-weight: bold; min-height: 35px; }
-    .btn-action {
-      margin-top: 15px; padding: 10px 24px; background: #38bdf8;
-      color: #0b0f19; border: none; border-radius: 10px; font-weight: bold; cursor: pointer;
-    }
+    .message { margin-top: 10px; font-size: 1rem; font-weight: bold; min-height: 25px; }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>Passfoot 🎮</h1>
+    <div class="logo">Passfoot 🎮</div>
+    <div class="user-coins">🪙 <span id="coins-count">0</span> PassCoins</div>
   </header>
 
-  <div class="coins-display">🪙 <span id="coins-count">0</span> PassCoins</div>
+  <main>
+    <div class="section-title">🔥 Jeux Populaires</div>
+    
+    <div class="games-grid">
 
-  <div class="game-nav">
-    <button class="nav-btn active" onclick="switchGame('penalties', this)">⚽ Tir au But</button>
-    <button class="nav-btn" onclick="switchGame('precision', this)">🎯 Précision</button>
-    <button class="nav-btn" onclick="switchGame('breakout', this)">🧱 Casse-Brique</button>
-    <button class="nav-btn" onclick="switchGame('quiz', this)">🧠 Quiz</button>
-    <button class="nav-btn" onclick="switchGame('juggling', this)">🤹 Jongles</button>
-    <button class="nav-btn" onclick="switchGame('shop', this)">🛒 Boutique</button>
-  </div>
-
-  <div class="game-container">
-
-    <!-- JEU 1: TIR AU BUT -->
-    <div id="penalties" class="game-section active">
-      <div class="scoreboard">
-        <div>Niveau: <span id="level">1</span></div>
-        <div>Buts: <span id="goals">0</span></div>
-      </div>
-      <div class="pitch" id="pitch">
-        <div class="goal" id="goal">
-          <div class="goalkeeper" id="keeper"></div>
-        </div>
-        <div class="ball skin-classic" id="ball">⚽</div>
-      </div>
-      <div class="message" id="message">Clique pour tirer !</div>
-      <button class="btn-action" onclick="resetPenalties()">Réinitialiser</button>
-    </div>
-
-    <!-- JEU 2: TIR DE PRÉCISION -->
-    <div id="precision" class="game-section">
-      <div class="scoreboard">
-        <div>Score: <span id="precision-score">0</span></div>
-      </div>
-      <div class="pitch" id="precision-pitch">
-        <div class="goal">
-          <div class="target" id="target"></div>
-        </div>
-        <div class="ball skin-classic" id="precision-ball">⚽</div>
-      </div>
-      <div class="message" id="precision-msg">Touche la cible rouge pour marquer !</div>
-    </div>
-
-    <!-- JEU 3: CASSE-BRIQUE FOOT -->
-    <div id="breakout" class="game-section">
-      <div class="scoreboard">
-        <div>Score: <span id="breakout-score">0</span></div>
-      </div>
-      <canvas id="breakoutCanvas" width="480" height="280"></canvas>
-      <div class="message" id="breakout-msg">Bouge ta souris/doigt pour contrôler le plateau !</div>
-      <button class="btn-action" onclick="initBreakout()">Recommencer</button>
-    </div>
-
-    <!-- JEU 4: QUIZ -->
-    <div id="quiz" class="game-section">
-      <div class="scoreboard">
-        <div>Score: <span id="quiz-score">0</span></div>
-      </div>
-      <div class="timer-bar-container"><div class="timer-bar" id="timer-bar"></div></div>
-      <div class="quiz-box">
-        <div class="question" id="quiz-q">Chargement...</div>
-        <div class="options-grid" id="quiz-options"></div>
-      </div>
-      <div class="message" id="quiz-msg"></div>
-    </div>
-
-    <!-- JEU 5: JONGLES -->
-    <div id="juggling" class="game-section">
-      <div class="scoreboard">
-        <div>Jongles: <span id="juggle-count">0</span></div>
-      </div>
-      <div class="juggling-area" id="juggle-area">
-        <div class="juggling-ball skin-classic" id="juggle-ball" onclick="bounceBall()">⚽</div>
-      </div>
-      <div class="message" id="juggle-msg">Garde le ballon en l'air !</div>
-    </div>
-
-    <!-- BOUTIQUE -->
-    <div id="shop" class="game-section">
-      <h2 style="margin-bottom: 15px; color: #38bdf8;">Magasin de Skins</h2>
-      <div class="shop-grid">
-        <div class="shop-item">
-          <div class="shop-preview skin-classic">⚽</div>
-          <div><strong>Classique</strong></div>
-          <div style="color: #cbd5e1; font-size: 0.85rem;">Gratuit</div>
-          <button class="btn-buy equipped" id="btn-skin-classic" onclick="equipSkin('classic')">Équipé</button>
-        </div>
-        <div class="shop-item">
-          <div class="shop-preview skin-neon">⚡</div>
-          <div><strong>Néon Cyber</strong></div>
-          <div style="color: #fbbf24; font-size: 0.85rem;">🪙 50 Coins</div>
-          <button class="btn-buy" id="btn-skin-neon" onclick="buyOrEquip('neon', 50)">Acheter</button>
-        </div>
-        <div class="shop-item">
-          <div class="shop-preview skin-champions">⭐</div>
-          <div><strong>Star League</strong></div>
-          <div style="color: #fbbf24; font-size: 0.85rem;">🪙 100 Coins</div>
-          <button class="btn-buy" id="btn-skin-champions" onclick="buyOrEquip('champions', 100)">Acheter</button>
-        </div>
-        <div class="shop-item">
-          <div class="shop-preview skin-gold">🏆</div>
-          <div><strong>Ballon d'Or</strong></div>
-          <div style="color: #fbbf24; font-size: 0.85rem;">🪙 200 Coins</div>
-          <button class="btn-buy" id="btn-skin-gold" onclick="buyOrEquip('gold', 200)">Acheter</button>
+      <!-- CARTE 1 -->
+      <div class="game-card" onclick="openGame('penalties')">
+        <span class="badge">Nouveau</span>
+        <div class="bg-icon">⚽</div>
+        <div class="game-info">
+          <div class="game-title">Tir au But</div>
         </div>
       </div>
-    </div>
 
+      <!-- CARTE 2 -->
+      <div class="game-card" onclick="openGame('precision')">
+        <span class="badge hot">HOT</span>
+        <div class="bg-icon">🎯</div>
+        <div class="game-info">
+          <div class="game-title">Tir de Précision</div>
+        </div>
+      </div>
+
+      <!-- CARTE 3 -->
+      <div class="game-card" onclick="openGame('breakout')">
+        <span class="badge">Nouveau</span>
+        <div class="bg-icon">🧱</div>
+        <div class="game-info">
+          <div class="game-title">Casse-Brique Foot</div>
+        </div>
+      </div>
+
+      <!-- CARTE 4 -->
+      <div class="game-card" onclick="openGame('quiz')">
+        <div class="bg-icon">🧠</div>
+        <div class="game-info">
+          <div class="game-title">Foot Quiz</div>
+        </div>
+      </div>
+
+      <!-- CARTE 5 -->
+      <div class="game-card" onclick="openGame('juggling')">
+        <div class="bg-icon">🤹</div>
+        <div class="game-info">
+          <div class="game-title">Jongle Master</div>
+        </div>
+      </div>
+
+      <!-- CARTE 6 (BOUTIQUE) -->
+      <div class="game-card" onclick="openGame('shop')">
+        <span class="badge shop">Shop</span>
+        <div class="bg-icon">🛒</div>
+        <div class="game-info">
+          <div class="game-title">Boutique Skins</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FENÊTRE ÉCRAN DE JEU (POPUP / MODAL) -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeGame()">✕</button>
+
+      <!-- JEU 1: TIR AU BUT -->
+      <div id="game-penalties" class="game-view" style="display:none;">
+        <div class="scoreboard">
+          <div>Niveau: <span id="level">1</span></div>
+          <div>Buts: <span id="goals">0</span></div>
+        </div>
+        <div class="pitch" id="pitch">
+          <div class="goal" id="goal"><div class="goalkeeper" id="keeper"></div></div>
+          <div class="ball skin-classic" id="ball">⚽</div>
+        </div>
+        <div class="message" id="message">Clique pour tirer !</div>
+      </div>
+
+      <!-- JEU 2: PRÉCISION -->
+      <div id="game-precision" class="game-view" style="display:none;">
+        <div class="scoreboard"><div>Score: <span id="precision-score">0</span></div></div>
+        <div class="pitch" id="precision-pitch">
+          <div class="goal"><div class="target" id="target"></div></div>
+          <div class="ball skin-classic" id="precision-ball">⚽</div>
+        </div>
+        <div class="message" id="precision-msg">Touche la cible rouge !</div>
+      </div>
+
+      <!-- JEU 3: CASSE-BRIQUE -->
+      <div id="game-breakout" class="game-view" style="display:none;">
+        <div class="scoreboard"><div>Score: <span id="breakout-score">0</span></div></div>
+        <canvas id="breakoutCanvas" width="400" height="240"></canvas>
+        <div class="message" id="breakout-msg">Contrôle le plateau avec ta souris !</div>
+      </div>
+
+      <!-- JEU 4: QUIZ -->
+      <div id="game-quiz" class="game-view" style="display:none;">
+        <div class="scoreboard"><div>Score: <span id="quiz-score">0</span></div></div>
+        <div style="background:#0b0f19; padding:15px; border-radius:10px;">
+          <div id="quiz-q" style="font-weight:bold; margin-bottom:10px;">Chargement...</div>
+          <div id="quiz-options" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;"></div>
+        </div>
+        <div class="message" id="quiz-msg"></div>
+      </div>
+
+      <!-- JEU 5: JONGLES -->
+      <div id="game-juggling" class="game-view" style="display:none;">
+        <div class="scoreboard"><div>Jongles: <span id="juggle-count">0</span></div></div>
+        <div style="height:250px; background:#0b0f19; border-radius:10px; position:relative;" id="juggle-area">
+          <div class="ball skin-classic" id="juggle-ball" style="top:50px; cursor:pointer;" onclick="bounceBall()">⚽</div>
+        </div>
+        <div class="message" id="juggle-msg">Garde le ballon en l'air !</div>
+      </div>
+
+      <!-- BOUTIQUE -->
+      <div id="game-shop" class="game-view" style="display:none;">
+        <h2 style="color:#38bdf8; margin-bottom:12px;">Magasin de Skins</h2>
+        <div class="shop-grid">
+          <div class="shop-item">
+            <div style="font-size:1.5rem">⚽</div>
+            <div>Classique</div>
+            <button class="btn-buy equipped" id="btn-skin-classic" onclick="equipSkin('classic')">Équipé</button>
+          </div>
+          <div class="shop-item">
+            <div style="font-size:1.5rem">⚡</div>
+            <div>Néon (🪙 50)</div>
+            <button class="btn-buy" id="btn-skin-neon" onclick="buyOrEquip('neon', 50)">Acheter</button>
+          </div>
+          <div class="shop-item">
+            <div style="font-size:1.5rem">⭐</div>
+            <div>Star (🪙 100)</div>
+            <button class="btn-buy" id="btn-skin-champions" onclick="buyOrEquip('champions', 100)">Acheter</button>
+          </div>
+          <div class="shop-item">
+            <div style="font-size:1.5rem">🏆</div>
+            <div>Or (🪙 200)</div>
+            <button class="btn-buy" id="btn-skin-gold" onclick="buyOrEquip('gold', 200)">Acheter</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 
   <script>
-    // Économie & Sauvegarde
     let coins = parseInt(localStorage.getItem('passcoins')) || 0;
     let unlockedSkins = JSON.parse(localStorage.getItem('unlockedSkins')) || ['classic'];
     let currentSkin = localStorage.getItem('currentSkin') || 'classic';
@@ -336,6 +392,25 @@
       updateShopUI();
     }
 
+    function openGame(gameId) {
+      document.querySelectorAll('.game-view').forEach(v => v.style.display = 'none');
+      document.getElementById('modalOverlay').classList.add('active');
+      document.getElementById(`game-${gameId}`).style.display = 'block';
+
+      if(gameId === 'precision') startPrecisionTarget();
+      if(gameId === 'breakout') initBreakout();
+      if(gameId === 'quiz') loadQuiz();
+      if(gameId === 'juggling') resetJuggling();
+    }
+
+    function closeGame() {
+      document.getElementById('modalOverlay').classList.remove('active');
+      clearInterval(targetInterval);
+      clearInterval(breakoutLoop);
+      clearInterval(juggleInterval);
+    }
+
+    /* SKIN LOGIC */
     function applySkin(skinName) {
       const skins = ['classic', 'neon', 'champions', 'gold'];
       const symbols = { classic: '⚽', neon: '⚡', champions: '⭐', gold: '🏆' };
@@ -355,9 +430,8 @@
     }
 
     function buyOrEquip(skinName, price) {
-      if (unlockedSkins.includes(skinName)) {
-        equipSkin(skinName);
-      } else if (coins >= price) {
+      if (unlockedSkins.includes(skinName)) equipSkin(skinName);
+      else if (coins >= price) {
         coins -= price;
         localStorage.setItem('passcoins', coins);
         document.getElementById('coins-count').textContent = coins;
@@ -368,297 +442,124 @@
     }
 
     function updateShopUI() {
-      const skins = [
-        { id: 'classic', price: 0 },
-        { id: 'neon', price: 50 },
-        { id: 'champions', price: 100 },
-        { id: 'gold', price: 200 }
-      ];
-
-      skins.forEach(s => {
-        const btn = document.getElementById(`btn-skin-${s.id}`);
-        if (currentSkin === s.id) {
-          btn.textContent = 'Équipé';
-          btn.className = 'btn-buy equipped';
-          btn.disabled = false;
-        } else if (unlockedSkins.includes(s.id)) {
-          btn.textContent = 'Équiper';
-          btn.className = 'btn-buy';
-          btn.disabled = false;
-        } else {
-          btn.textContent = 'Acheter';
-          btn.className = 'btn-buy';
-          btn.disabled = coins < s.price;
-        }
+      ['classic', 'neon', 'champions', 'gold'].forEach(id => {
+        const btn = document.getElementById(`btn-skin-${id}`);
+        if (currentSkin === id) { btn.textContent = 'Équipé'; btn.className = 'btn-buy equipped'; }
+        else if (unlockedSkins.includes(id)) { btn.textContent = 'Équiper'; btn.className = 'btn-buy'; }
+        else { btn.textContent = 'Acheter'; btn.className = 'btn-buy'; }
       });
     }
 
-    // Navigation
-    function switchGame(gameId, btn) {
-      document.querySelectorAll('.game-section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById(gameId).classList.add('active');
-      btn.classList.add('active');
-      clearInterval(quizTimer);
-      clearInterval(breakoutLoop);
-      if(gameId === 'quiz') startQuizTimer();
-      if(gameId === 'juggling') resetJuggling();
-      if(gameId === 'precision') startPrecisionTarget();
-      if(gameId === 'breakout') initBreakout();
-    }
-
-    /* 1. TIR AU BUT */
+    /* 1. PENALTIES */
     const pitch = document.getElementById('pitch');
     const ball = document.getElementById('ball');
     const keeper = document.getElementById('keeper');
-    const goal = document.getElementById('goal');
     let goals = 0, level = 1, isShooting = false;
 
     pitch.addEventListener('click', (e) => {
       if (isShooting) return;
       const rect = pitch.getBoundingClientRect();
-      shootPenalty(e.clientX - rect.left, e.clientY - rect.top);
-    });
-
-    function shootPenalty(targetX, targetY) {
+      const clickX = e.clientX - rect.left, clickY = e.clientY - rect.top;
       isShooting = true;
-      ball.style.left = `${targetX}px`; ball.style.top = `${targetY}px`; ball.style.transform = 'scale(0.65)';
-      keeper.style.transition = `all ${Math.max(0.12, 0.28 - level * 0.02)}s ease-out`;
+      ball.style.left = `${clickX}px`; ball.style.top = `${clickY}px`; ball.style.transform = 'scale(0.6)';
+
       const randomPos = [20, 50, 80][Math.floor(Math.random() * 3)];
       keeper.style.left = `${randomPos}%`;
 
       setTimeout(() => {
-        const goalRect = goal.getBoundingClientRect();
+        const goalRect = document.getElementById('goal').getBoundingClientRect();
         const pitchRect = pitch.getBoundingClientRect();
-        const isInside = targetX >= (goalRect.left - pitchRect.left) && targetX <= (goalRect.right - pitchRect.left) && targetY >= (goalRect.top - pitchRect.top) && targetY <= (goalRect.bottom - pitchRect.top);
+        const isInside = clickX >= (goalRect.left - pitchRect.left) && clickX <= (goalRect.right - pitchRect.left) && clickY <= (goalRect.bottom - pitchRect.top);
         const keeperX = (goalRect.width * (randomPos / 100)) + (goalRect.left - pitchRect.left);
-        const isSaved = Math.abs(targetX - keeperX) < 45 && isInside;
-        const msg = document.getElementById('message');
+        const isSaved = Math.abs(clickX - keeperX) < 40 && isInside;
 
-        if (isSaved) { msg.textContent = "🖐️ ARRÊT !"; msg.style.color = "#ef4444"; }
+        if (isSaved) document.getElementById('message').textContent = "🖐️ ARRÊT !";
         else if (isInside) {
-          goals++;
+          goals++; updateCoins(10);
           document.getElementById('goals').textContent = goals;
-          level = Math.floor(goals / 3) + 1;
-          document.getElementById('level').textContent = level;
-          msg.textContent = "⚽ BUT !!! (+10 Coins 🪙)"; msg.style.color = "#4ade80";
-          updateCoins(10);
-        } else { msg.textContent = "❌ À CÔTÉ !"; msg.style.color = "#f59e0b"; }
+          document.getElementById('message').textContent = "⚽ BUT !!! (+10 Coins)";
+        } else document.getElementById('message').textContent = "❌ À CÔTÉ !";
 
         setTimeout(() => {
-          ball.style.left = '50%'; ball.style.top = ''; ball.style.bottom = '25px';
-          ball.style.transform = 'translateX(-50%) scale(1)'; keeper.style.left = '50%';
-          isShooting = false;
-        }, 1000);
-      }, 350);
-    }
-
-    function resetPenalties() {
-      goals = 0; level = 1;
-      document.getElementById('goals').textContent = 0;
-      document.getElementById('level').textContent = 1;
-    }
-
-    /* 2. TIR DE PRÉCISION */
-    const precisionPitch = document.getElementById('precision-pitch');
-    const pBall = document.getElementById('precision-ball');
-    const target = document.getElementById('target');
-    let precisionScore = 0, isPPrecisionShooting = false, targetInterval;
-
-    function startPrecisionTarget() {
-      clearInterval(targetInterval);
-      targetInterval = setInterval(() => {
-        const randomX = Math.floor(Math.random() * 70) + 15;
-        target.style.left = `${randomX}%`;
-      }, 800);
-    }
-
-    precisionPitch.addEventListener('click', (e) => {
-      if (isPPrecisionShooting) return;
-      const rect = precisionPitch.getBoundingClientRect();
-      const clickX = e.clientX - rect.left;
-      const clickY = e.clientY - rect.top;
-
-      isPPrecisionShooting = true;
-      pBall.style.left = `${clickX}px`; pBall.style.top = `${clickY}px`; pBall.style.transform = 'scale(0.65)';
-
-      setTimeout(() => {
-        const targetRect = target.getBoundingClientRect();
-        const hitX = clickX >= (targetRect.left - rect.left) && clickX <= (targetRect.right - rect.left);
-        const hitY = clickY >= (targetRect.top - rect.top) && clickY <= (targetRect.bottom - rect.top);
-        const msg = document.getElementById('precision-msg');
-
-        if (hitX && hitY) {
-          precisionScore += 15;
-          document.getElementById('precision-score').textContent = precisionScore;
-          msg.textContent = "🎯 DANS LE MILLE ! (+15 Coins 🪙)"; msg.style.color = "#4ade80";
-          updateCoins(15);
-        } else {
-          msg.textContent = "❌ CIBLE RATÉE !"; msg.style.color = "#ef4444";
-        }
-
-        setTimeout(() => {
-          pBall.style.left = '50%'; pBall.style.top = ''; pBall.style.bottom = '25px';
-          pBall.style.transform = 'translateX(-50%) scale(1)';
-          isPPrecisionShooting = false;
-        }, 1000);
+          ball.style.left = '50%'; ball.style.top = ''; ball.style.bottom = '15px';
+          ball.style.transform = 'translateX(-50%) scale(1)'; isShooting = false;
+        }, 800);
       }, 350);
     });
 
-    /* 3. CASSE-BRIQUE FOOT */
+    /* 2. PRÉCISION */
+    let targetInterval, precisionScore = 0;
+    function startPrecisionTarget() {
+      clearInterval(targetInterval);
+      targetInterval = setInterval(() => {
+        document.getElementById('target').style.left = `${Math.floor(Math.random() * 70) + 15}%`;
+      }, 800);
+    }
+
+    /* 3. CASSE-BRIQUE */
     const canvas = document.getElementById('breakoutCanvas');
     const ctx = canvas.getContext('2d');
-    let breakoutScore = 0, breakoutLoop;
-    let paddleHeight = 10, paddleWidth = 75, paddleX = (canvas.width - paddleWidth) / 2;
-    let bx = canvas.width / 2, by = canvas.height - 30, dx = 2, dy = -2, ballRadius = 8;
-    let brickRowCount = 3, brickColumnCount = 5, brickWidth = 75, brickHeight = 18, brickPadding = 10, brickOffsetTop = 30, brickOffsetLeft = 30;
-    let bricks = [];
+    let breakoutLoop, bx = 200, by = 200, dx = 2, dy = -2, paddleX = 160;
 
     document.addEventListener("mousemove", (e) => {
-      const relativeX = e.clientX - canvas.getBoundingClientRect().left;
-      if (relativeX > 0 && relativeX < canvas.width) paddleX = relativeX - paddleWidth / 2;
+      const rect = canvas.getBoundingClientRect();
+      paddleX = e.clientX - rect.left - 35;
     });
 
     function initBreakout() {
       clearInterval(breakoutLoop);
-      breakoutScore = 0; document.getElementById('breakout-score').textContent = 0;
-      dx = 2; dy = -2; bx = canvas.width / 2; by = canvas.height - 30;
-      bricks = [];
-      for (let c = 0; c < brickColumnCount; c++) {
-        bricks[c] = [];
-        for (let r = 0; r < brickRowCount; r++) {
-          bricks[c][r] = { x: 0, y: 0, status: 1 };
-        }
-      }
-      breakoutLoop = setInterval(drawBreakout, 10);
-    }
+      bx = 200; by = 200; dx = 2; dy = -2;
+      breakoutLoop = setInterval(() => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath(); ctx.arc(bx, by, 7, 0, Math.PI*2); ctx.fillStyle = "#fff"; ctx.fill();
+        ctx.fillStyle = "#4ade80"; ctx.fillRect(paddleX, canvas.height - 10, 70, 10);
 
-    function drawBreakout() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      // Bricks
-      for (let c = 0; c < brickColumnCount; c++) {
-        for (let r = 0; r < brickRowCount; r++) {
-          if (bricks[c][r].status === 1) {
-            let brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
-            let brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
-            bricks[c][r].x = brickX; bricks[c][r].y = brickY;
-            ctx.fillStyle = "#38bdf8"; ctx.fillRect(brickX, brickY, brickWidth, brickHeight);
-          }
+        if (bx + dx > canvas.width || bx + dx < 0) dx = -dx;
+        if (by + dy < 0) dy = -dy;
+        else if (by + dy > canvas.height - 10) {
+          if (bx > paddleX && bx < paddleX + 70) { dy = -dy; updateCoins(2); }
+          else { clearInterval(breakoutLoop); }
         }
-      }
-      // Ball
-      ctx.beginPath(); ctx.arc(bx, by, ballRadius, 0, Math.PI * 2); ctx.fillStyle = "#ffffff"; ctx.fill(); ctx.closePath();
-      // Paddle
-      ctx.fillStyle = "#4ade80"; ctx.fillRect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-
-      // Collision Bricks
-      for (let c = 0; c < brickColumnCount; c++) {
-        for (let r = 0; r < brickRowCount; r++) {
-          let b = bricks[c][r];
-          if (b.status === 1) {
-            if (bx > b.x && bx < b.x + brickWidth && by > b.y && by < b.y + brickHeight) {
-              dy = -dy; b.status = 0; breakoutScore += 10;
-              document.getElementById('breakout-score').textContent = breakoutScore;
-              updateCoins(5);
-            }
-          }
-        }
-      }
-
-      if (bx + dx > canvas.width - ballRadius || bx + dx < ballRadius) dx = -dx;
-      if (by + dy < ballRadius) dy = -dy;
-      else if (by + dy > canvas.height - ballRadius) {
-        if (bx > paddleX && bx < paddleX + paddleWidth) dy = -dy;
-        else {
-          document.getElementById('breakout-msg').textContent = "💥 Perdu ! Recommence une partie.";
-          clearInterval(breakoutLoop); return;
-        }
-      }
-      bx += dx; by += dy;
+        bx += dx; by += dy;
+      }, 10);
     }
 
     /* 4. QUIZ */
     const quizData = [
-      { q: "Quel pays a remporté la Coupe du Monde 2022 ?", options: ["France", "Brésil", "Argentine", "Allemagne"], answer: 2 },
-      { q: "Quel joueur possède le plus de Ballons d'Or ?", options: ["Ronaldo", "Messi", "Cruyff", "Zidane"], answer: 1 },
-      { q: "Combien de temps dure un match réglementaire ?", options: ["80 min", "90 min", "100 min", "120 min"], answer: 1 }
+      { q: "Vainqueur du Mondial 2022 ?", options: ["France", "Brésil", "Argentine", "Allemagne"], answer: 2 },
+      { q: "Plus grand nombre de Ballons d'Or ?", options: ["Ronaldo", "Messi", "Cruyff", "Zidane"], answer: 1 }
     ];
-    let currentQ = 0, quizScore = 0, quizTimer, timeLeft = 10;
-
     function loadQuiz() {
-      const q = quizData[currentQ];
+      const q = quizData[0];
       document.getElementById('quiz-q').textContent = q.q;
-      const optGrid = document.getElementById('quiz-options');
-      optGrid.innerHTML = '';
+      const optGrid = document.getElementById('quiz-options'); optGrid.innerHTML = '';
       q.options.forEach((opt, idx) => {
         const btn = document.createElement('button');
-        btn.className = 'option-btn'; btn.textContent = opt;
-        btn.onclick = () => checkQuiz(idx);
+        btn.style.padding = '8px'; btn.textContent = opt;
+        btn.onclick = () => {
+          if(idx === q.answer) { updateCoins(10); document.getElementById('quiz-msg').textContent = "✅ Correct !"; }
+          else { document.getElementById('quiz-msg').textContent = "❌ Faux !"; }
+        };
         optGrid.appendChild(btn);
       });
-      startQuizTimer();
-    }
-
-    function startQuizTimer() {
-      clearInterval(quizTimer);
-      timeLeft = 10;
-      const timerBar = document.getElementById('timer-bar');
-      timerBar.style.width = '100%';
-      quizTimer = setInterval(() => {
-        timeLeft -= 0.1;
-        timerBar.style.width = `${(timeLeft / 10) * 100}%`;
-        if(timeLeft <= 0) { clearInterval(quizTimer); checkQuiz(-1); }
-      }, 100);
-    }
-
-    function checkQuiz(selected) {
-      clearInterval(quizTimer);
-      const msg = document.getElementById('quiz-msg');
-      if(selected === quizData[currentQ].answer) {
-        quizScore += 10;
-        document.getElementById('quiz-score').textContent = quizScore;
-        msg.textContent = "✅ Correct ! (+10 Coins 🪙)"; msg.style.color = "#4ade80";
-        updateCoins(10);
-      } else {
-        msg.textContent = selected === -1 ? "⏱️ Temps écoulé !" : "❌ Incorrect !";
-        msg.style.color = "#ef4444";
-      }
-      currentQ = (currentQ + 1) % quizData.length;
-      setTimeout(() => { msg.textContent = ''; loadQuiz(); }, 1200);
     }
 
     /* 5. JONGLES */
-    let juggles = 0, ballY = 60, ballSpeed = 2, juggleInterval;
-    const jBall = document.getElementById('juggle-ball');
-
-    function bounceBall() {
-      juggles++;
-      document.getElementById('juggle-count').textContent = juggles;
-      if (juggles % 5 === 0) updateCoins(10);
-      ballY = 40; ballSpeed = -4.5;
-    }
-
-    function gameLoopJuggling() {
-      ballSpeed += 0.22; ballY += ballSpeed;
-      if(ballY > 240) {
-        document.getElementById('juggle-msg').textContent = "💥 Perdu ! Le ballon a touché le sol.";
-        resetJuggling(); return;
-      }
-      jBall.style.top = `${ballY}px`;
-    }
-
+    let juggles = 0, ballY = 50, juggleInterval;
+    function bounceBall() { juggles++; updateCoins(2); document.getElementById('juggle-count').textContent = juggles; ballY = 30; }
     function resetJuggling() {
-      clearInterval(juggleInterval);
-      juggles = 0; document.getElementById('juggle-count').textContent = 0;
-      ballY = 60; ballSpeed = 0; jBall.style.top = '60px';
-      juggleInterval = setInterval(gameLoopJuggling, 20);
+      clearInterval(juggleInterval); juggles = 0; ballY = 50;
+      juggleInterval = setInterval(() => {
+        ballY += 3;
+        if(ballY > 200) ballY = 200;
+        document.getElementById('juggle-ball').style.top = `${ballY}px`;
+      }, 20);
     }
 
     // Init
     document.getElementById('coins-count').textContent = coins;
     applySkin(currentSkin);
     updateShopUI();
-    loadQuiz();
   </script>
 </body>
 </html>
