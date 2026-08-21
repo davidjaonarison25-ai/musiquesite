@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Passfoot 🎮 - Cyber Arena PRO & Shop</title>
+  <title>Passfoot 🎮 - Mega Arcade PRO</title>
   <style>
     * {
       box-sizing: border-box;
@@ -22,23 +22,18 @@
       padding: 20px;
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 15px;
-    }
-
     header h1 {
       font-size: 2.8rem;
       color: #38bdf8;
       text-transform: uppercase;
       letter-spacing: 3px;
       text-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
+      margin-bottom: 5px;
     }
 
-    /* Solde de pièces global */
     .coins-display {
       background: #1e293b;
-      padding: 8px 16px;
+      padding: 8px 18px;
       border-radius: 20px;
       border: 1px solid #f59e0b;
       color: #fbbf24;
@@ -50,7 +45,9 @@
 
     .game-nav {
       display: flex;
-      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
       margin-bottom: 20px;
       background: #161e2e;
       padding: 8px;
@@ -59,7 +56,7 @@
     }
 
     .nav-btn {
-      padding: 10px 18px;
+      padding: 10px 14px;
       border: none;
       background: transparent;
       color: #94a3b8;
@@ -89,7 +86,6 @@
     .game-section { display: none; }
     .game-section.active { display: block; }
 
-    /* Scoreboard */
     .scoreboard {
       display: flex;
       justify-content: space-around;
@@ -101,16 +97,13 @@
       border: 1px solid rgba(56, 189, 248, 0.3);
     }
 
-    .scoreboard span {
-      color: #38bdf8;
-      font-size: 1.2rem;
-    }
+    .scoreboard span { color: #38bdf8; font-size: 1.2rem; }
 
     /* Terrain de Foot */
     .pitch {
       position: relative;
       width: 100%;
-      height: 340px;
+      height: 320px;
       background: repeating-linear-gradient(0deg, #15803d, #15803d 40px, #166534 40px, #166534 80px);
       border-radius: 16px;
       overflow: hidden;
@@ -119,17 +112,10 @@
       cursor: crosshair;
     }
 
-    .penalty-area {
-      position: absolute;
-      top: 0; left: 50%; transform: translateX(-50%);
-      width: 360px; height: 160px;
-      border: 2px solid rgba(255, 255, 255, 0.85); border-top: none;
-    }
-
     .goal {
       position: absolute;
       top: 10px; left: 50%; transform: translateX(-50%);
-      width: 250px; height: 85px;
+      width: 260px; height: 90px;
       border: 5px solid #ffffff; border-bottom: none;
       background: repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(255, 255, 255, 0.25) 8px, rgba(255, 255, 255, 0.25) 9px),
                   repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255, 255, 255, 0.25) 8px, rgba(255, 255, 255, 0.25) 9px);
@@ -144,7 +130,17 @@
       transition: all 0.2s ease-out;
     }
 
-    /* Ballons Personnalisés */
+    /* Target pour Tir de Précision */
+    .target {
+      position: absolute;
+      top: 20px; left: 20%;
+      width: 35px; height: 35px;
+      background: radial-gradient(circle, #ef4444 30%, #ffffff 31%, #ffffff 60%, #ef4444 61%);
+      border-radius: 50%;
+      box-shadow: 0 0 10px #ef4444;
+      transition: left 0.5s ease-in-out;
+    }
+
     .ball {
       position: absolute;
       bottom: 25px; left: 50%; transform: translateX(-50%);
@@ -160,72 +156,48 @@
     .skin-champions { background: #3b82f6; box-shadow: 0 0 15px #3b82f6; color: white; }
     .skin-gold { background: linear-gradient(45deg, #f59e0b, #fbbf24); box-shadow: 0 0 20px #fbbf24; }
 
-    /* Boutique */
-    .shop-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      margin-top: 10px;
-    }
-
-    .shop-item {
+    /* Casse Brique Canvas */
+    #breakoutCanvas {
       background: #0b0f19;
-      padding: 15px;
       border-radius: 12px;
+      border: 2px solid #38bdf8;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Boutique */
+    .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .shop-item {
+      background: #0b0f19; padding: 15px; border-radius: 12px;
       border: 1px solid rgba(56, 189, 248, 0.2);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
     }
-
     .shop-preview {
-      width: 45px; height: 45px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.5rem;
+      width: 45px; height: 45px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
     }
-
     .btn-buy {
-      padding: 8px 16px;
-      background: #22c55e;
-      color: #0b0f19;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      width: 100%;
+      padding: 8px 16px; background: #22c55e; color: #0b0f19;
+      border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%;
     }
-
     .btn-buy.equipped { background: #38bdf8; cursor: default; }
     .btn-buy:disabled { background: #475569; cursor: not-allowed; color: #94a3b8; }
 
-    /* Quiz Timer */
-    .timer-bar-container {
-      width: 100%; height: 8px; background: #1e293b;
-      border-radius: 4px; margin-bottom: 15px; overflow: hidden;
-    }
-
+    /* Quiz Timer & Options */
+    .timer-bar-container { width: 100%; height: 8px; background: #1e293b; border-radius: 4px; margin-bottom: 15px; overflow: hidden; }
     .timer-bar { height: 100%; width: 100%; background: #38bdf8; transition: width 0.1s linear; }
-
     .quiz-box { background: #0b0f19; padding: 20px; border-radius: 14px; }
     .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .option-btn {
       padding: 12px; background: #1e293b; color: white;
-      border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px;
-      cursor: pointer; font-weight: bold;
+      border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; cursor: pointer; font-weight: bold;
     }
 
-    .juggling-area {
-      height: 300px; background: #0b0f19; border-radius: 16px;
-      position: relative; overflow: hidden;
-    }
-
+    .juggling-area { height: 300px; background: #0b0f19; border-radius: 16px; position: relative; overflow: hidden; }
     .juggling-ball {
-      position: absolute; width: 48px; height: 48px;
-      border-radius: 50%; left: 50%; top: 60px; transform: translateX(-50%);
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      font-size: 1.5rem; user-select: none;
+      position: absolute; width: 48px; height: 48px; border-radius: 50%;
+      left: 50%; top: 60px; transform: translateX(-50%); cursor: pointer;
+      display: flex; align-items: center; justify-content: center; font-size: 1.5rem; user-select: none;
     }
 
     .message { margin-top: 15px; font-size: 1.2rem; font-weight: bold; min-height: 35px; }
@@ -245,6 +217,8 @@
 
   <div class="game-nav">
     <button class="nav-btn active" onclick="switchGame('penalties', this)">⚽ Tir au But</button>
+    <button class="nav-btn" onclick="switchGame('precision', this)">🎯 Précision</button>
+    <button class="nav-btn" onclick="switchGame('breakout', this)">🧱 Casse-Brique</button>
     <button class="nav-btn" onclick="switchGame('quiz', this)">🧠 Quiz</button>
     <button class="nav-btn" onclick="switchGame('juggling', this)">🤹 Jongles</button>
     <button class="nav-btn" onclick="switchGame('shop', this)">🛒 Boutique</button>
@@ -259,17 +233,40 @@
         <div>Buts: <span id="goals">0</span></div>
       </div>
       <div class="pitch" id="pitch">
-        <div class="penalty-area"></div>
         <div class="goal" id="goal">
           <div class="goalkeeper" id="keeper"></div>
         </div>
         <div class="ball skin-classic" id="ball">⚽</div>
       </div>
-      <div class="message" id="message">Clique sur le terrain pour tirer !</div>
+      <div class="message" id="message">Clique pour tirer !</div>
       <button class="btn-action" onclick="resetPenalties()">Réinitialiser</button>
     </div>
 
-    <!-- JEU 2: QUIZ -->
+    <!-- JEU 2: TIR DE PRÉCISION -->
+    <div id="precision" class="game-section">
+      <div class="scoreboard">
+        <div>Score: <span id="precision-score">0</span></div>
+      </div>
+      <div class="pitch" id="precision-pitch">
+        <div class="goal">
+          <div class="target" id="target"></div>
+        </div>
+        <div class="ball skin-classic" id="precision-ball">⚽</div>
+      </div>
+      <div class="message" id="precision-msg">Touche la cible rouge pour marquer !</div>
+    </div>
+
+    <!-- JEU 3: CASSE-BRIQUE FOOT -->
+    <div id="breakout" class="game-section">
+      <div class="scoreboard">
+        <div>Score: <span id="breakout-score">0</span></div>
+      </div>
+      <canvas id="breakoutCanvas" width="480" height="280"></canvas>
+      <div class="message" id="breakout-msg">Bouge ta souris/doigt pour contrôler le plateau !</div>
+      <button class="btn-action" onclick="initBreakout()">Recommencer</button>
+    </div>
+
+    <!-- JEU 4: QUIZ -->
     <div id="quiz" class="game-section">
       <div class="scoreboard">
         <div>Score: <span id="quiz-score">0</span></div>
@@ -282,7 +279,7 @@
       <div class="message" id="quiz-msg"></div>
     </div>
 
-    <!-- JEU 3: JONGLES -->
+    <!-- JEU 5: JONGLES -->
     <div id="juggling" class="game-section">
       <div class="scoreboard">
         <div>Jongles: <span id="juggle-count">0</span></div>
@@ -293,39 +290,34 @@
       <div class="message" id="juggle-msg">Garde le ballon en l'air !</div>
     </div>
 
-    <!-- JEU 4: BOUTIQUE DE SKINS -->
+    <!-- BOUTIQUE -->
     <div id="shop" class="game-section">
       <h2 style="margin-bottom: 15px; color: #38bdf8;">Magasin de Skins</h2>
       <div class="shop-grid">
-        
         <div class="shop-item">
           <div class="shop-preview skin-classic">⚽</div>
           <div><strong>Classique</strong></div>
           <div style="color: #cbd5e1; font-size: 0.85rem;">Gratuit</div>
           <button class="btn-buy equipped" id="btn-skin-classic" onclick="equipSkin('classic')">Équipé</button>
         </div>
-
         <div class="shop-item">
           <div class="shop-preview skin-neon">⚡</div>
           <div><strong>Néon Cyber</strong></div>
           <div style="color: #fbbf24; font-size: 0.85rem;">🪙 50 Coins</div>
           <button class="btn-buy" id="btn-skin-neon" onclick="buyOrEquip('neon', 50)">Acheter</button>
         </div>
-
         <div class="shop-item">
           <div class="shop-preview skin-champions">⭐</div>
           <div><strong>Star League</strong></div>
           <div style="color: #fbbf24; font-size: 0.85rem;">🪙 100 Coins</div>
           <button class="btn-buy" id="btn-skin-champions" onclick="buyOrEquip('champions', 100)">Acheter</button>
         </div>
-
         <div class="shop-item">
           <div class="shop-preview skin-gold">🏆</div>
           <div><strong>Ballon d'Or</strong></div>
           <div style="color: #fbbf24; font-size: 0.85rem;">🪙 200 Coins</div>
           <button class="btn-buy" id="btn-skin-gold" onclick="buyOrEquip('gold', 200)">Acheter</button>
         </div>
-
       </div>
     </div>
 
@@ -348,7 +340,7 @@
       const skins = ['classic', 'neon', 'champions', 'gold'];
       const symbols = { classic: '⚽', neon: '⚡', champions: '⭐', gold: '🏆' };
 
-      [document.getElementById('ball'), document.getElementById('juggle-ball')].forEach(b => {
+      [document.getElementById('ball'), document.getElementById('precision-ball'), document.getElementById('juggle-ball')].forEach(b => {
         skins.forEach(s => b.classList.remove(`skin-${s}`));
         b.classList.add(`skin-${skinName}`);
         b.textContent = symbols[skinName];
@@ -408,11 +400,14 @@
       document.getElementById(gameId).classList.add('active');
       btn.classList.add('active');
       clearInterval(quizTimer);
+      clearInterval(breakoutLoop);
       if(gameId === 'quiz') startQuizTimer();
       if(gameId === 'juggling') resetJuggling();
+      if(gameId === 'precision') startPrecisionTarget();
+      if(gameId === 'breakout') initBreakout();
     }
 
-    /* TIR AU BUT */
+    /* 1. TIR AU BUT */
     const pitch = document.getElementById('pitch');
     const ball = document.getElementById('ball');
     const keeper = document.getElementById('keeper');
@@ -422,15 +417,12 @@
     pitch.addEventListener('click', (e) => {
       if (isShooting) return;
       const rect = pitch.getBoundingClientRect();
-      shoot(e.clientX - rect.left, e.clientY - rect.top);
+      shootPenalty(e.clientX - rect.left, e.clientY - rect.top);
     });
 
-    function shoot(targetX, targetY) {
+    function shootPenalty(targetX, targetY) {
       isShooting = true;
-      ball.style.left = `${targetX}px`;
-      ball.style.top = `${targetY}px`;
-      ball.style.transform = 'scale(0.65)';
-
+      ball.style.left = `${targetX}px`; ball.style.top = `${targetY}px`; ball.style.transform = 'scale(0.65)';
       keeper.style.transition = `all ${Math.max(0.12, 0.28 - level * 0.02)}s ease-out`;
       const randomPos = [20, 50, 80][Math.floor(Math.random() * 3)];
       keeper.style.left = `${randomPos}%`;
@@ -441,20 +433,17 @@
         const isInside = targetX >= (goalRect.left - pitchRect.left) && targetX <= (goalRect.right - pitchRect.left) && targetY >= (goalRect.top - pitchRect.top) && targetY <= (goalRect.bottom - pitchRect.top);
         const keeperX = (goalRect.width * (randomPos / 100)) + (goalRect.left - pitchRect.left);
         const isSaved = Math.abs(targetX - keeperX) < 45 && isInside;
-
         const msg = document.getElementById('message');
-        if (isSaved) {
-          msg.textContent = "🖐️ ARRÊT !"; msg.style.color = "#ef4444";
-        } else if (isInside) {
+
+        if (isSaved) { msg.textContent = "🖐️ ARRÊT !"; msg.style.color = "#ef4444"; }
+        else if (isInside) {
           goals++;
           document.getElementById('goals').textContent = goals;
           level = Math.floor(goals / 3) + 1;
           document.getElementById('level').textContent = level;
           msg.textContent = "⚽ BUT !!! (+10 Coins 🪙)"; msg.style.color = "#4ade80";
           updateCoins(10);
-        } else {
-          msg.textContent = "❌ À CÔTÉ !"; msg.style.color = "#f59e0b";
-        }
+        } else { msg.textContent = "❌ À CÔTÉ !"; msg.style.color = "#f59e0b"; }
 
         setTimeout(() => {
           ball.style.left = '50%'; ball.style.top = ''; ball.style.bottom = '25px';
@@ -470,7 +459,125 @@
       document.getElementById('level').textContent = 1;
     }
 
-    /* QUIZ */
+    /* 2. TIR DE PRÉCISION */
+    const precisionPitch = document.getElementById('precision-pitch');
+    const pBall = document.getElementById('precision-ball');
+    const target = document.getElementById('target');
+    let precisionScore = 0, isPPrecisionShooting = false, targetInterval;
+
+    function startPrecisionTarget() {
+      clearInterval(targetInterval);
+      targetInterval = setInterval(() => {
+        const randomX = Math.floor(Math.random() * 70) + 15;
+        target.style.left = `${randomX}%`;
+      }, 800);
+    }
+
+    precisionPitch.addEventListener('click', (e) => {
+      if (isPPrecisionShooting) return;
+      const rect = precisionPitch.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const clickY = e.clientY - rect.top;
+
+      isPPrecisionShooting = true;
+      pBall.style.left = `${clickX}px`; pBall.style.top = `${clickY}px`; pBall.style.transform = 'scale(0.65)';
+
+      setTimeout(() => {
+        const targetRect = target.getBoundingClientRect();
+        const hitX = clickX >= (targetRect.left - rect.left) && clickX <= (targetRect.right - rect.left);
+        const hitY = clickY >= (targetRect.top - rect.top) && clickY <= (targetRect.bottom - rect.top);
+        const msg = document.getElementById('precision-msg');
+
+        if (hitX && hitY) {
+          precisionScore += 15;
+          document.getElementById('precision-score').textContent = precisionScore;
+          msg.textContent = "🎯 DANS LE MILLE ! (+15 Coins 🪙)"; msg.style.color = "#4ade80";
+          updateCoins(15);
+        } else {
+          msg.textContent = "❌ CIBLE RATÉE !"; msg.style.color = "#ef4444";
+        }
+
+        setTimeout(() => {
+          pBall.style.left = '50%'; pBall.style.top = ''; pBall.style.bottom = '25px';
+          pBall.style.transform = 'translateX(-50%) scale(1)';
+          isPPrecisionShooting = false;
+        }, 1000);
+      }, 350);
+    });
+
+    /* 3. CASSE-BRIQUE FOOT */
+    const canvas = document.getElementById('breakoutCanvas');
+    const ctx = canvas.getContext('2d');
+    let breakoutScore = 0, breakoutLoop;
+    let paddleHeight = 10, paddleWidth = 75, paddleX = (canvas.width - paddleWidth) / 2;
+    let bx = canvas.width / 2, by = canvas.height - 30, dx = 2, dy = -2, ballRadius = 8;
+    let brickRowCount = 3, brickColumnCount = 5, brickWidth = 75, brickHeight = 18, brickPadding = 10, brickOffsetTop = 30, brickOffsetLeft = 30;
+    let bricks = [];
+
+    document.addEventListener("mousemove", (e) => {
+      const relativeX = e.clientX - canvas.getBoundingClientRect().left;
+      if (relativeX > 0 && relativeX < canvas.width) paddleX = relativeX - paddleWidth / 2;
+    });
+
+    function initBreakout() {
+      clearInterval(breakoutLoop);
+      breakoutScore = 0; document.getElementById('breakout-score').textContent = 0;
+      dx = 2; dy = -2; bx = canvas.width / 2; by = canvas.height - 30;
+      bricks = [];
+      for (let c = 0; c < brickColumnCount; c++) {
+        bricks[c] = [];
+        for (let r = 0; r < brickRowCount; r++) {
+          bricks[c][r] = { x: 0, y: 0, status: 1 };
+        }
+      }
+      breakoutLoop = setInterval(drawBreakout, 10);
+    }
+
+    function drawBreakout() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // Bricks
+      for (let c = 0; c < brickColumnCount; c++) {
+        for (let r = 0; r < brickRowCount; r++) {
+          if (bricks[c][r].status === 1) {
+            let brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+            let brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+            bricks[c][r].x = brickX; bricks[c][r].y = brickY;
+            ctx.fillStyle = "#38bdf8"; ctx.fillRect(brickX, brickY, brickWidth, brickHeight);
+          }
+        }
+      }
+      // Ball
+      ctx.beginPath(); ctx.arc(bx, by, ballRadius, 0, Math.PI * 2); ctx.fillStyle = "#ffffff"; ctx.fill(); ctx.closePath();
+      // Paddle
+      ctx.fillStyle = "#4ade80"; ctx.fillRect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+
+      // Collision Bricks
+      for (let c = 0; c < brickColumnCount; c++) {
+        for (let r = 0; r < brickRowCount; r++) {
+          let b = bricks[c][r];
+          if (b.status === 1) {
+            if (bx > b.x && bx < b.x + brickWidth && by > b.y && by < b.y + brickHeight) {
+              dy = -dy; b.status = 0; breakoutScore += 10;
+              document.getElementById('breakout-score').textContent = breakoutScore;
+              updateCoins(5);
+            }
+          }
+        }
+      }
+
+      if (bx + dx > canvas.width - ballRadius || bx + dx < ballRadius) dx = -dx;
+      if (by + dy < ballRadius) dy = -dy;
+      else if (by + dy > canvas.height - ballRadius) {
+        if (bx > paddleX && bx < paddleX + paddleWidth) dy = -dy;
+        else {
+          document.getElementById('breakout-msg').textContent = "💥 Perdu ! Recommence une partie.";
+          clearInterval(breakoutLoop); return;
+        }
+      }
+      bx += dx; by += dy;
+    }
+
+    /* 4. QUIZ */
     const quizData = [
       { q: "Quel pays a remporté la Coupe du Monde 2022 ?", options: ["France", "Brésil", "Argentine", "Allemagne"], answer: 2 },
       { q: "Quel joueur possède le plus de Ballons d'Or ?", options: ["Ronaldo", "Messi", "Cruyff", "Zidane"], answer: 1 },
@@ -520,14 +627,14 @@
       setTimeout(() => { msg.textContent = ''; loadQuiz(); }, 1200);
     }
 
-    /* JONGLES */
+    /* 5. JONGLES */
     let juggles = 0, ballY = 60, ballSpeed = 2, juggleInterval;
     const jBall = document.getElementById('juggle-ball');
 
     function bounceBall() {
       juggles++;
       document.getElementById('juggle-count').textContent = juggles;
-      if (juggles % 5 === 0) updateCoins(10); // 10 coins tous les 5 jongles
+      if (juggles % 5 === 0) updateCoins(10);
       ballY = 40; ballSpeed = -4.5;
     }
 
