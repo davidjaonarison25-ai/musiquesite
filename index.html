@@ -127,7 +127,7 @@
       color: #00f0ff; border: 1px solid rgba(0,240,255,0.3);
     }
 
-    /* ÉTAPE 1 : TERRAIN ROCKET LEAGUE / TRON */
+    /* TERRAIN */
     .pitch {
       position: relative; width: 100%; height: 280px;
       background: radial-gradient(circle, #0d2847 0%, #050e1a 100%);
@@ -146,7 +146,6 @@
       background: repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(0, 240, 255, 0.15) 8px, rgba(0, 240, 255, 0.15) 9px);
     }
 
-    /* ÉTAPE 2 : SILHOUETTE ET SPRITE DU GARDIEN */
     .goalkeeper {
       position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
       width: 42px; height: 50px;
@@ -162,7 +161,6 @@
       border-radius: 50%; transition: left 0.3s; box-shadow: 0 0 15px #00f0ff;
     }
 
-    /* ÉTAPE 3 : TRAÎNÉE ET EFFET BALLON */
     .ball {
       position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
       width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center;
@@ -170,7 +168,6 @@
       z-index: 5;
     }
 
-    /* PARTICULES CANVAS OVERLAY */
     #fxCanvas {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       pointer-events: none; z-index: 4;
@@ -393,7 +390,7 @@
     let unlockedSkins = JSON.parse(localStorage.getItem('unlockedSkins')) || ['classic'];
     let currentSkin = localStorage.getItem('currentSkin') || 'classic';
 
-    /* PARTICLES SYSTEM (Étape 3) */
+    /* PARTICLES SYSTEM */
     const fxCanvas = document.getElementById('fxCanvas');
     const fxCtx = fxCanvas ? fxCanvas.getContext('2d') : null;
     let particles = [];
