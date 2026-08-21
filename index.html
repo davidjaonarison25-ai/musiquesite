@@ -3,24 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Passfoot 🎮 - Cyber Arena Ultra FX</title>
+  <title>Passfoot 🎮 - Cyber Arena 3D</title>
+  <!-- Three.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
 
     body {
       background: #040d1a; color: #ffffff; min-height: 100vh;
       display: flex; flex-direction: column; overflow-x: hidden;
-    }
-
-    /* Screen Shake FX */
-    .shake { animation: shakeAnim 0.3s ease-in-out; }
-    @keyframes shakeAnim {
-      0% { transform: translate(0, 0); }
-      20% { transform: translate(-8px, 6px); }
-      40% { transform: translate(8px, -6px); }
-      60% { transform: translate(-4px, -4px); }
-      80% { transform: translate(4px, 4px); }
-      100% { transform: translate(0, 0); }
     }
 
     /* HEADER CYBER */
@@ -111,7 +102,7 @@
 
     .modal-content {
       background: #0a192f; border-radius: 20px; border: 2px solid #00f0ff;
-      width: 90%; max-width: 650px; padding: 20px; position: relative;
+      width: 90%; max-width: 750px; padding: 20px; position: relative;
       box-shadow: 0 0 35px rgba(0, 240, 255, 0.5); text-align: center;
     }
 
@@ -127,56 +118,12 @@
       color: #00f0ff; border: 1px solid rgba(0,240,255,0.3);
     }
 
-    /* TERRAIN */
-    .pitch {
-      position: relative; width: 100%; height: 280px;
-      background: radial-gradient(circle, #0d2847 0%, #050e1a 100%);
-      background-size: 30px 30px;
-      background-image: 
-        linear-gradient(to right, rgba(0, 240, 255, 0.08) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 240, 255, 0.08) 1px, transparent 1px);
-      border-radius: 12px; overflow: hidden; border: 2px solid #00f0ff;
-      box-shadow: inset 0 0 25px rgba(0, 240, 255, 0.3); cursor: crosshair;
+    /* 3D CANVAS CONTAINER */
+    #container3D {
+      width: 100%; height: 350px; border-radius: 12px;
+      border: 2px solid #00f0ff; box-shadow: inset 0 0 25px rgba(0, 240, 255, 0.3);
+      overflow: hidden; position: relative; cursor: crosshair;
     }
-
-    .goal {
-      position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
-      width: 220px; height: 75px; border: 3px solid #00f0ff; border-bottom: none;
-      box-shadow: 0 0 15px #00f0ff, inset 0 0 15px rgba(0, 240, 255, 0.4);
-      background: repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(0, 240, 255, 0.15) 8px, rgba(0, 240, 255, 0.15) 9px);
-    }
-
-    .goalkeeper {
-      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-      width: 42px; height: 50px;
-      background: linear-gradient(180deg, #ff0055 0%, #990033 100%);
-      clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 85% 50%, 90% 100%, 65% 100%, 50% 65%, 35% 100%, 10% 100%, 15% 50%, 0% 20%);
-      filter: drop-shadow(0 0 10px #ff0055);
-      transition: all 0.15s ease-out;
-    }
-
-    .target {
-      position: absolute; top: 15px; left: 20%; width: 34px; height: 34px;
-      background: radial-gradient(circle, #00f0ff 25%, #ff0055 26%, #ff0055 60%, #00f0ff 61%);
-      border-radius: 50%; transition: left 0.3s; box-shadow: 0 0 15px #00f0ff;
-    }
-
-    .ball {
-      position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
-      width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center;
-      justify-content: center; font-size: 1rem; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-      z-index: 5;
-    }
-
-    #fxCanvas {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none; z-index: 4;
-    }
-
-    .skin-classic { background: #fff; box-shadow: 0 0 12px #fff; }
-    .skin-neon { background: #00f0ff; box-shadow: 0 0 15px #00f0ff; }
-    .skin-champions { background: #3b82f6; box-shadow: 0 0 15px #3b82f6; color: white; }
-    .skin-gold { background: linear-gradient(45deg, #f59e0b, #fbbf24); box-shadow: 0 0 18px #fbbf24; }
 
     #breakoutCanvas { background: #050e1a; border-radius: 10px; border: 1px solid #00f0ff; }
 
@@ -188,22 +135,22 @@
     .message { margin-top: 10px; font-size: 1rem; font-weight: bold; min-height: 25px; color: #00f0ff; text-shadow: 0 0 8px #00f0ff; }
   </style>
 </head>
-<body id="appBody">
+<body>
 
   <!-- HEADER -->
   <header>
     <div style="width: 200px;"></div>
     <div class="brand">
       <h1>Passfoot 🎮</h1>
-      <p>Cyber Arena Ultra FX</p>
+      <p>Cyber Arena 3D Ultra</p>
     </div>
     <input type="text" class="search-bar" placeholder="Rechercher...">
   </header>
 
   <!-- CATEGORIES -->
   <div class="cat-bar">
-    <button class="cat-btn" onclick="openGame('penalties')">⚽ Tir au But</button>
-    <button class="cat-btn" onclick="openGame('precision')">🎯 Précision</button>
+    <button class="cat-btn" onclick="openGame('penalties')">⚽ Tir 3D</button>
+    <button class="cat-btn" onclick="openGame('precision')">🎯 Précision 3D</button>
     <button class="cat-btn" onclick="openGame('quiz')">🧠 Quiz</button>
     <button class="cat-btn" onclick="openGame('juggling')">🤹 Jongles</button>
     <button class="cat-btn" onclick="openGame('shop')">🛒 Boutique</button>
@@ -220,20 +167,20 @@
       <div class="grid">
         <div class="cyber-card" onclick="openGame('penalties')">
           <div class="tag-top-left">⚽</div>
-          <span class="badge nouveau">NOUVEAU</span>
+          <span class="badge nouveau">3D LIVE</span>
           <div class="card-center-icon">🥅</div>
           <div class="card-footer">
-            <span class="game-title">Penalty Power</span>
+            <span class="game-title">Penalty 3D</span>
             <button class="btn-jouer">JOUER 🪙</button>
           </div>
         </div>
 
         <div class="cyber-card" onclick="openGame('precision')">
           <div class="tag-top-left">🎯</div>
-          <span class="badge nouveau">NOUVEAU</span>
+          <span class="badge nouveau">3D LIVE</span>
           <div class="card-center-icon">🎯</div>
           <div class="card-footer">
-            <span class="game-title">Precision Shot</span>
+            <span class="game-title">Précision 3D</span>
             <button class="btn-jouer">JOUER 🪙</button>
           </div>
         </div>
@@ -243,7 +190,7 @@
           <span class="badge nouveau">NOUVEAU</span>
           <div class="card-center-icon">❓</div>
           <div class="card-footer">
-            <span class="game-title">Foot Quiz Champ</span>
+            <span class="game-title">Foot Quiz</span>
             <button class="btn-jouer">JOUER 🪙</button>
           </div>
         </div>
@@ -263,7 +210,7 @@
           <span class="badge nouveau">NOUVEAU</span>
           <div class="card-center-icon">🧱</div>
           <div class="card-footer">
-            <span class="game-title">Ultimate Breakout</span>
+            <span class="game-title">Cyber Breakout</span>
             <button class="btn-jouer">JOUER 🪙</button>
           </div>
         </div>
@@ -273,7 +220,7 @@
           <span class="badge hot">HOT</span>
           <div class="card-center-icon">👕</div>
           <div class="card-footer">
-            <span class="game-title">Skin Shop</span>
+            <span class="game-title">Skins Shop</span>
             <button class="btn-jouer">JOUER 🪙</button>
           </div>
         </div>
@@ -292,32 +239,15 @@
     <div class="modal-content" id="modalContent">
       <button class="close-btn" onclick="closeGame()">✕</button>
 
-      <!-- JEU 1: PENALTIES -->
-      <div id="game-penalties" class="game-view" style="display:none;">
+      <!-- JEU 3D ARENA (PENALTIES ET PRÉCISION) -->
+      <div id="game-3d" class="game-view" style="display:none;">
         <div class="scoreboard">
-          <div>Niveau: <span id="penalty-level">1</span></div>
-          <div>Combo: 🔥x<span id="penalty-combo">1</span></div>
-          <div>Buts: <span id="goals">0</span></div>
+          <div>Mode: <span id="mode-title-3d">3D Arena</span></div>
+          <div>Score: <span id="score-3d">0</span></div>
+          <div>Combo: 🔥x<span id="combo-3d">1</span></div>
         </div>
-        <div class="pitch" id="pitch">
-          <canvas id="fxCanvas"></canvas>
-          <div class="goal" id="goal"><div class="goalkeeper" id="keeper"></div></div>
-          <div class="ball skin-classic" id="ball">⚽</div>
-        </div>
-        <div class="message" id="message">Frappe le ballon vers le but !</div>
-      </div>
-
-      <!-- JEU 2: PRÉCISION -->
-      <div id="game-precision" class="game-view" style="display:none;">
-        <div class="scoreboard">
-          <div>Score: <span id="precision-score">0</span></div>
-          <div>Vitesse: <span id="precision-speed">Normal</span></div>
-        </div>
-        <div class="pitch" id="precision-pitch">
-          <div class="goal"><div class="target" id="target"></div></div>
-          <div class="ball skin-classic" id="precision-ball">⚽</div>
-        </div>
-        <div class="message" id="precision-msg">Touche la cible néon !</div>
+        <div id="container3D"></div>
+        <div class="message" id="msg-3d">Clique dans la cage pour frapper !</div>
       </div>
 
       <!-- JEU 3: CASSE-BRIQUE -->
@@ -350,7 +280,7 @@
           <div>Record: <span id="juggle-record">0</span></div>
         </div>
         <div style="height:250px; background:#050e1a; border-radius:10px; position:relative; border: 1px solid #00f0ff; overflow:hidden;" id="juggle-area">
-          <div class="ball skin-classic" id="juggle-ball" style="top:50px; cursor:pointer;" onclick="bounceBall()">⚽</div>
+          <div class="ball" id="juggle-ball" style="position:absolute; left:50%; top:50px; font-size:2rem; cursor:pointer; transform:translateX(-50%);" onclick="bounceBall()">⚽</div>
         </div>
         <div class="message" id="juggle-msg">Garde la balle en l'air !</div>
       </div>
@@ -366,17 +296,17 @@
           </div>
           <div class="shop-item">
             <div style="font-size:1.5rem">⚡</div>
-            <div>Néon (🪙 50)</div>
+            <div>Néon Cyan (🪙 50)</div>
             <button class="btn-buy" id="btn-skin-neon" onclick="buyOrEquip('neon', 50)">Acheter</button>
           </div>
           <div class="shop-item">
             <div style="font-size:1.5rem">⭐</div>
-            <div>Star (🪙 100)</div>
+            <div>Champions (🪙 100)</div>
             <button class="btn-buy" id="btn-skin-champions" onclick="buyOrEquip('champions', 100)">Acheter</button>
           </div>
           <div class="shop-item">
             <div style="font-size:1.5rem">🏆</div>
-            <div>Or (🪙 200)</div>
+            <div>Or Pur (🪙 200)</div>
             <button class="btn-buy" id="btn-skin-gold" onclick="buyOrEquip('gold', 200)">Acheter</button>
           </div>
         </div>
@@ -390,57 +320,6 @@
     let unlockedSkins = JSON.parse(localStorage.getItem('unlockedSkins')) || ['classic'];
     let currentSkin = localStorage.getItem('currentSkin') || 'classic';
 
-    /* PARTICLES SYSTEM */
-    const fxCanvas = document.getElementById('fxCanvas');
-    const fxCtx = fxCanvas ? fxCanvas.getContext('2d') : null;
-    let particles = [];
-
-    function resizeFxCanvas() {
-      if(!fxCanvas) return;
-      const pitch = document.getElementById('pitch');
-      fxCanvas.width = pitch.clientWidth;
-      fxCanvas.height = pitch.clientHeight;
-    }
-
-    function createSparks(x, y, color) {
-      for(let i=0; i<25; i++) {
-        particles.push({
-          x: x, y: y,
-          vx: (Math.random() - 0.5) * 8,
-          vy: (Math.random() - 0.5) * 8,
-          size: Math.random() * 4 + 2,
-          color: color || '#00f0ff',
-          life: 1
-        });
-      }
-    }
-
-    function renderParticles() {
-      if(!fxCtx) return;
-      fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
-      particles.forEach((p, idx) => {
-        fxCtx.beginPath();
-        fxCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        fxCtx.fillStyle = p.color;
-        fxCtx.globalAlpha = p.life;
-        fxCtx.shadowBlur = 8;
-        fxCtx.shadowColor = p.color;
-        fxCtx.fill();
-        p.x += p.vx;
-        p.y += p.vy;
-        p.life -= 0.03;
-        if(p.life <= 0) particles.splice(idx, 1);
-      });
-      requestAnimationFrame(renderParticles);
-    }
-    renderParticles();
-
-    function triggerShake() {
-      const modal = document.getElementById('modalContent');
-      modal.classList.add('shake');
-      setTimeout(() => modal.classList.remove('shake'), 300);
-    }
-
     function updateCoins(amount) {
       coins += amount;
       localStorage.setItem('passcoins', coins);
@@ -448,43 +327,230 @@
       updateShopUI();
     }
 
+    /* MOTEUR THREE.JS 3D */
+    let scene, camera, renderer;
+    let ball3D, keeper3D, target3D, goal3D;
+    let currentMode3D = 'penalties';
+    let isShooting3D = false;
+    let score3D = 0, combo3D = 1;
+    let raycaster = new THREE.Raycaster();
+    let mouse = new THREE.Vector2();
+
+    function init3D() {
+      const container = document.getElementById('container3D');
+      container.innerHTML = '';
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x040d1a);
+
+      camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+      camera.position.set(0, 1.6, 9);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.shadowMap.enabled = true;
+      container.appendChild(renderer.domElement);
+
+      // Lumières
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+      scene.add(ambientLight);
+
+      const dirLight = new THREE.DirectionalLight(0x00f0ff, 0.8);
+      dirLight.position.set(5, 10, 7);
+      dirLight.castShadow = true;
+      scene.add(dirLight);
+
+      // Terrain
+      const pitchGeo = new THREE.PlaneGeometry(16, 20);
+      const pitchMat = new THREE.MeshStandardMaterial({ color: 0x071e3d, roughness: 0.8 });
+      const pitch = new THREE.Mesh(pitchGeo, pitchMat);
+      pitch.rotation.x = -Math.PI / 2;
+      pitch.receiveShadow = true;
+      scene.add(pitch);
+
+      // Lignes de terrain néon
+      const grid = new THREE.GridHelper(20, 20, 0x00f0ff, 0x00f0ff);
+      grid.position.y = 0.01;
+      scene.add(grid);
+
+      // Cage de But
+      goal3D = new THREE.Group();
+      const postMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.5 });
+      
+      const leftPost = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 2.5), postMat);
+      leftPost.position.set(-2.5, 1.25, -5);
+      
+      const rightPost = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 2.5), postMat);
+      rightPost.position.set(2.5, 1.25, -5);
+
+      const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 5.18), postMat);
+      bar.rotation.z = Math.PI / 2;
+      bar.position.set(0, 2.5, -5);
+
+      goal3D.add(leftPost, rightPost, bar);
+      scene.add(goal3D);
+
+      // Ballon 3D
+      const ballGeo = new THREE.SphereGeometry(0.22, 32, 32);
+      let ballMat = getSkinMaterial(currentSkin);
+      ball3D = new THREE.Mesh(ballGeo, ballMat);
+      ball3D.position.set(0, 0.22, 6);
+      ball3D.castShadow = true;
+      scene.add(ball3D);
+
+      // Gardien 3D
+      const keeperGeo = new THREE.BoxGeometry(0.7, 1.6, 0.4);
+      const keeperMat = new THREE.MeshStandardMaterial({ color: 0xff0055, emissive: 0x330011 });
+      keeper3D = new THREE.Mesh(keeperGeo, keeperMat);
+      keeper3D.position.set(0, 0.8, -4.8);
+      keeper3D.castShadow = true;
+      scene.add(keeper3D);
+
+      // Cible Précision 3D
+      const targetGeo = new THREE.TorusGeometry(0.4, 0.08, 16, 100);
+      const targetMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
+      target3D = new THREE.Mesh(targetGeo, targetMat);
+      target3D.position.set(0, 1.5, -4.9);
+      scene.add(target3D);
+
+      container.addEventListener('click', on3DClick);
+      animate3D();
+    }
+
+    function getSkinMaterial(skin) {
+      if (skin === 'neon') return new THREE.MeshStandardMaterial({ color: 0x00f0ff, emissive: 0x0088aa });
+      if (skin === 'champions') return new THREE.MeshStandardMaterial({ color: 0x3b82f6, metalness: 0.6 });
+      if (skin === 'gold') return new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.9, roughness: 0.2 });
+      return new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.4 });
+    }
+
+    let targetDirection = 1;
+    function animate3D() {
+      requestAnimationFrame(animate3D);
+
+      // Animation Cible en mode Précision
+      if (currentMode3D === 'precision' && target3D) {
+        target3D.position.x += 0.03 * targetDirection;
+        if (target3D.position.x > 2 || target3D.position.x < -2) targetDirection *= -1;
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    function on3DClick(event) {
+      if (isShooting3D) return;
+
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      
+      // Target plane on the goal
+      const targetZ = -5;
+      const targetX = mouse.x * 3.5;
+      const targetY = Math.max(0.3, (mouse.y + 0.5) * 2.2);
+
+      shootBall3D(targetX, targetY, targetZ);
+    }
+
+    function shootBall3D(tx, ty, tz) {
+      isShooting3D = true;
+      const startX = ball3D.position.x;
+      const startY = ball3D.position.y;
+      const startZ = ball3D.position.z;
+
+      // Déplacement Gardien
+      let keeperTx = (Math.random() - 0.5) * 4;
+      if (currentMode3D === 'precision') keeper3D.position.y = -10; // Cacher le gardien
+      else keeper3D.position.y = 0.8;
+
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += 0.04;
+        ball3D.position.x = startX + (tx - startX) * progress;
+        ball3D.position.y = startY + (ty - startY) * progress + Math.sin(progress * Math.PI) * 0.8;
+        ball3D.position.z = startZ + (tz - startZ) * progress;
+        ball3D.rotation.x += 0.2;
+
+        if (currentMode3D === 'penalties') {
+          keeper3D.position.x += (keeperTx - keeper3D.position.x) * 0.1;
+        }
+
+        if (progress >= 1) {
+          clearInterval(interval);
+          check3DHit(tx, ty, keeperTx);
+        }
+      }, 16);
+    }
+
+    function check3DHit(tx, ty, keeperX) {
+      const msg = document.getElementById('msg-3d');
+      const isInsideGoal = Math.abs(tx) <= 2.5 && ty <= 2.5 && ty >= 0.2;
+
+      if (currentMode3D === 'penalties') {
+        const saved = Math.abs(tx - keeperX) < 0.7 && isInsideGoal;
+        if (saved) {
+          combo3D = 1;
+          msg.textContent = "🖐️ ARRÊT DU GARDIEN !";
+        } else if (isInsideGoal) {
+          score3D += 10 * combo3D;
+          updateCoins(10 * combo3D);
+          combo3D++;
+          msg.textContent = `⚽ BUT MAGNIFIQUE 3D ! (+${10 * combo3D} Coins)`;
+        } else {
+          combo3D = 1;
+          msg.textContent = "❌ TIR HORS CADRE !";
+        }
+      } else if (currentMode3D === 'precision') {
+        const hitTarget = Math.abs(tx - target3D.position.x) < 0.6 && Math.abs(ty - target3D.position.y) < 0.6;
+        if (hitTarget) {
+          score3D += 25;
+          updateCoins(25);
+          msg.textContent = "🎯 PLEINE LUCARNE 3D ! (+25 Coins)";
+        } else {
+          msg.textContent = "❌ CIBLE MANQUÉE !";
+        }
+      }
+
+      document.getElementById('score-3d').textContent = score3D;
+      document.getElementById('combo-3d').textContent = combo3D;
+
+      setTimeout(() => {
+        ball3D.position.set(0, 0.22, 6);
+        isShooting3D = false;
+      }, 1000);
+    }
+
+    /* MODALS & NAVIGATION */
     function openGame(gameId) {
       document.querySelectorAll('.game-view').forEach(v => v.style.display = 'none');
       document.getElementById('modalOverlay').classList.add('active');
-      document.getElementById(`game-${gameId}`).style.display = 'block';
 
-      setTimeout(resizeFxCanvas, 100);
-
-      if(gameId === 'precision') startPrecisionTarget();
-      if(gameId === 'breakout') initBreakout();
-      if(gameId === 'quiz') { currentQuizIdx = 0; quizScore = 0; loadQuiz(); }
-      if(gameId === 'juggling') resetJuggling();
+      if (gameId === 'penalties' || gameId === 'precision') {
+        currentMode3D = gameId;
+        document.getElementById('game-3d').style.display = 'block';
+        document.getElementById('mode-title-3d').textContent = gameId === 'penalties' ? 'Penalty 3D' : 'Précision 3D';
+        setTimeout(init3D, 100);
+      } else {
+        document.getElementById(`game-${gameId}`).style.display = 'block';
+        if(gameId === 'breakout') initBreakout();
+        if(gameId === 'quiz') { currentQuizIdx = 0; quizScore = 0; loadQuiz(); }
+        if(gameId === 'juggling') resetJuggling();
+      }
     }
 
     function closeGame() {
       document.getElementById('modalOverlay').classList.remove('active');
-      clearInterval(targetInterval);
       clearInterval(breakoutLoop);
       clearInterval(juggleInterval);
     }
 
     /* SKINS LOGIC */
-    function applySkin(skinName) {
-      const skins = ['classic', 'neon', 'champions', 'gold'];
-      const symbols = { classic: '⚽', neon: '⚡', champions: '⭐', gold: '🏆' };
-
-      [document.getElementById('ball'), document.getElementById('precision-ball'), document.getElementById('juggle-ball')].forEach(b => {
-        if (!b) return;
-        skins.forEach(s => b.classList.remove(`skin-${s}`));
-        b.classList.add(`skin-${skinName}`);
-        b.textContent = symbols[skinName];
-      });
-    }
-
     function equipSkin(skinName) {
       currentSkin = skinName;
       localStorage.setItem('currentSkin', skinName);
-      applySkin(skinName);
+      if (ball3D) ball3D.material = getSkinMaterial(skinName);
       updateShopUI();
     }
 
@@ -510,94 +576,7 @@
       });
     }
 
-    /* 1. PENALTIES AMÉLIORÉS */
-    const pitch = document.getElementById('pitch');
-    const ball = document.getElementById('ball');
-    const keeper = document.getElementById('keeper');
-    let goals = 0, penaltyLevel = 1, combo = 1, isShooting = false;
-
-    pitch.addEventListener('click', (e) => {
-      if (isShooting) return;
-      const rect = pitch.getBoundingClientRect();
-      const clickX = e.clientX - rect.left;
-      const clickY = e.clientY - rect.top;
-      isShooting = true;
-
-      ball.style.left = `${clickX}px`;
-      ball.style.top = `${clickY}px`;
-      ball.style.transform = 'scale(0.55) rotate(360deg)';
-
-      const keeperPositions = [15, 35, 50, 65, 85];
-      const randomPos = keeperPositions[Math.floor(Math.random() * keeperPositions.length)];
-      keeper.style.left = `${randomPos}%`;
-
-      setTimeout(() => {
-        const goalRect = document.getElementById('goal').getBoundingClientRect();
-        const pitchRect = pitch.getBoundingClientRect();
-        const isInside = clickX >= (goalRect.left - pitchRect.left) && clickX <= (goalRect.right - pitchRect.left) && clickY <= (goalRect.bottom - pitchRect.top);
-        const keeperX = (goalRect.width * (randomPos / 100)) + (goalRect.left - pitchRect.left);
-        const isSaved = Math.abs(clickX - keeperX) < (45 - penaltyLevel * 2) && isInside;
-
-        if (isSaved) {
-          combo = 1;
-          createSparks(clickX, clickY, '#ff0055');
-          document.getElementById('penalty-combo').textContent = combo;
-          document.getElementById('message').textContent = "🖐️ ARRÊT DU GARDIEN !";
-        } else if (isInside) {
-          goals++;
-          const earned = 10 * combo;
-          updateCoins(earned);
-          triggerShake();
-          createSparks(clickX, clickY, '#00f0ff');
-          if (goals % 3 === 0) penaltyLevel++;
-          combo++;
-          document.getElementById('penalty-level').textContent = penaltyLevel;
-          document.getElementById('penalty-combo').textContent = combo;
-          document.getElementById('goals').textContent = goals;
-          document.getElementById('message').textContent = `⚽ BUT MAGNIFIQUE !!! (+${earned} Coins)`;
-        } else {
-          combo = 1;
-          document.getElementById('penalty-combo').textContent = combo;
-          document.getElementById('message').textContent = "❌ TIR HORS CADRE !";
-        }
-
-        setTimeout(() => {
-          ball.style.left = '50%';
-          ball.style.top = '';
-          ball.style.bottom = '15px';
-          ball.style.transform = 'translateX(-50%) scale(1) rotate(0deg)';
-          isShooting = false;
-        }, 800);
-      }, 350);
-    });
-
-    /* 2. PRÉCISION AMÉLIORÉE */
-    let targetInterval, precisionScore = 0, targetSpeed = 800;
-    function startPrecisionTarget() {
-      clearInterval(targetInterval);
-      targetInterval = setInterval(() => {
-        document.getElementById('target').style.left = `${Math.floor(Math.random() * 70) + 15}%`;
-      }, targetSpeed);
-    }
-
-    document.getElementById('precision-pitch').addEventListener('click', (e) => {
-      const target = document.getElementById('target');
-      const tRect = target.getBoundingClientRect();
-      if (e.clientX >= tRect.left && e.clientX <= tRect.right && e.clientY >= tRect.top && e.clientY <= tRect.bottom) {
-        precisionScore += 10;
-        updateCoins(15);
-        triggerShake();
-        document.getElementById('precision-score').textContent = precisionScore;
-        document.getElementById('precision-msg').textContent = "🎯 PLEINE LUCARNE ! (+15 Coins)";
-        if (targetSpeed > 300) {
-          targetSpeed -= 50;
-          document.getElementById('precision-speed').textContent = "Rapide ⚡";
-          startPrecisionTarget();
-        }
-      }
-    });
-
-    /* 3. CASSE-BRIQUE */
+    /* CASSE-BRIQUE, QUIZ & JONGLES */
     const canvas = document.getElementById('breakoutCanvas');
     const ctx = canvas.getContext('2d');
     let breakoutLoop, bx = 200, by = 200, dx = 2.5, dy = -2.5, paddleX = 160, breakoutScore = 0, speedMult = 1.0;
@@ -612,20 +591,14 @@
       bx = 200; by = 200; dx = 2.5; dy = -2.5; breakoutScore = 0; speedMult = 1.0;
       breakoutLoop = setInterval(() => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
         ctx.beginPath(); ctx.arc(bx, by, 7, 0, Math.PI*2); ctx.fillStyle = "#00f0ff"; ctx.fill();
-        ctx.shadowBlur = 10; ctx.shadowColor = "#00f0ff";
-
         ctx.fillStyle = "#ff0055"; ctx.fillRect(paddleX, canvas.height - 10, 70, 10);
 
         if (bx + dx > canvas.width || bx + dx < 0) dx = -dx;
         if (by + dy < 0) dy = -dy;
         else if (by + dy > canvas.height - 10) {
           if (bx > paddleX && bx < paddleX + 70) {
-            dy = -dy;
-            breakoutScore += 5;
-            speedMult += 0.05;
-            updateCoins(3);
+            dy = -dy; breakoutScore += 5; speedMult += 0.05; updateCoins(3);
             document.getElementById('breakout-score').textContent = breakoutScore;
             document.getElementById('breakout-speed').textContent = speedMult.toFixed(1);
           } else {
@@ -637,7 +610,6 @@
       }, 10);
     }
 
-    /* 4. QUIZ */
     const quizData = [
       { q: "Vainqueur du Mondial 2022 ?", options: ["France", "Brésil", "Argentine", "Allemagne"], answer: 2 },
       { q: "Plus grand nombre de Ballons d'Or ?", options: ["Ronaldo", "Messi", "Cruyff", "Zidane"], answer: 1 },
@@ -664,7 +636,7 @@
         btn.textContent = opt;
         btn.onclick = () => {
           if(idx === q.answer) {
-            quizScore += 20; updateCoins(20); triggerShake();
+            quizScore += 20; updateCoins(20);
             document.getElementById('quiz-score').textContent = quizScore;
             document.getElementById('quiz-msg').textContent = "✅ EXCELLENT ! (+20 Coins)";
           } else {
@@ -677,13 +649,9 @@
       });
     }
 
-    /* 5. JONGLES */
     let juggles = 0, juggleRecord = 0, ballY = 50, ballSpeedY = 0, juggleInterval;
-
     function bounceBall() {
-      juggles++;
-      ballSpeedY = -8;
-      updateCoins(2);
+      juggles++; ballSpeedY = -8; updateCoins(2);
       if (juggles > juggleRecord) juggleRecord = juggles;
       document.getElementById('juggle-count').textContent = juggles;
       document.getElementById('juggle-record').textContent = juggleRecord;
@@ -693,8 +661,7 @@
       clearInterval(juggleInterval); juggles = 0; ballY = 50; ballSpeedY = 2;
       document.getElementById('juggle-count').textContent = juggles;
       juggleInterval = setInterval(() => {
-        ballSpeedY += 0.4;
-        ballY += ballSpeedY;
+        ballSpeedY += 0.4; ballY += ballSpeedY;
         if (ballY > 210) {
           ballY = 210;
           document.getElementById('juggle-msg').textContent = "💥 BALLON PERDU ! Réessaie !";
@@ -705,7 +672,6 @@
 
     // Init
     document.getElementById('coins-count').textContent = coins;
-    applySkin(currentSkin);
     updateShopUI();
   </script>
 </body>
